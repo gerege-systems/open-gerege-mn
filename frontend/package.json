@@ -28,7 +28,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "eslint": "8.57.0",
-    "eslint-config-next": "15.5.20",
+    "eslint-config-next": "16.2.12",
     "serwist": "^9.5.12",
     "typescript": "5.4.3",
     "vitest": "^4.1.10"

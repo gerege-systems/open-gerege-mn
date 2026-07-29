@@ -21,8 +21,14 @@ export const brand = {
   /** Үндсэн домэйн (схемгүй). */
   domain: 'template.gerege.mn',
 
-  /** Нийтийн баримтын сайт — хэлний угтвар нэмэхэд бэлэн, ард нь `/`-тай. */
-  docsUrl: 'https://docs.gerege.mn/',
+  /**
+   * Нийтийн баримтын сайт — хэлний угтвар нэмэхэд бэлэн, ард нь `/`-тай.
+   *
+   * Энэ бол ЭНЭ репогийн `docs-site/`-аас GitHub Pages руу нийтлэгддэг сайт
+   * (`.github/workflows/docs.yml`). Экосистемийн нэгдсэн `docs.gerege.mn` биш
+   * — толгой мөрний «Баримт бичиг» цэс template-ийн өөрийн баримт руу очно.
+   */
+  docsUrl: 'https://gerege-systems.github.io/public-gerege-template/',
 
   /**
    * Баримтын сайт БОДИТООР ямар хэлтэй вэ — `docs-site/mkdocs.yml`-ийн

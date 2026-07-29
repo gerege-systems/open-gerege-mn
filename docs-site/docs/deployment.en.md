@@ -33,8 +33,8 @@ Internet ──► nginx (80/443, Let's Encrypt)
 
 ```bash
 # 1) get the code
-git clone git@github.com:gerege-systems/sso-dgov-mn.git /srv/sso-dgov-mn
-cd /srv/sso-dgov-mn
+git clone git@github.com:gerege-systems/public-gerege-template.git /srv/public-gerege-template
+cd /srv/public-gerege-template
 
 # 2) create the env files (.env + backend.env)
 
@@ -76,3 +76,36 @@ volumes collide.
 |---|---|---|
 | `sso-dgov-mn` | sso.gerege.mn | web 3008 |
 | `template-dgov-mn` | template.gerege.mn | web 3009 |
+| `public-template` | public.template.gerege.mn | web 3010, api relay 8094 |
+
+The reference deployment of this repository is `public-template`; host-level notes
+(edge nginx, SSO client, first-install steps) live in `deploy/HOST.md`.
+
+## Documentation site
+
+This site is built from `docs-site/` with
+[MkDocs Material](https://squidfunk.github.io/mkdocs-material/) and published at:
+
+<https://gerege-systems.github.io/public-gerege-template/>
+
+- Every push to `main` that touches `docs-site/**` makes
+  `.github/workflows/docs.yml` build and publish to **GitHub Pages** (Pages
+  source = GitHub Actions).
+- Pull requests only run `mkdocs build --strict` — it turns broken internal links
+  and missing nav entries into errors. No deploy.
+- Languages: Mongolian at the root, the rest behind a prefix — `/en/`, `/ru/`,
+  `/zh/`. Keep that list in sync with `docsLangs` in
+  `frontend/src/brand.config.ts` (the “Documentation” item in the user menu
+  builds its URL from it).
+
+Check it locally:
+
+```bash
+cd docs-site
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/mkdocs serve        # http://127.0.0.1:8000
+.venv/bin/mkdocs build --strict
+```
+
+To host it yourself, `docs-site/deploy-docs.sh` builds and copies the site to
+`DOCS_SERVER`:`DOCS_TARGET`.

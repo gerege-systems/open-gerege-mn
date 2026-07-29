@@ -127,6 +127,12 @@ docker compose up -d --build
 
 ## 文档
 
+📖 **文档站点：** <https://gerege-systems.github.io/public-gerege-template/zh/>
+（[Монгол](https://gerege-systems.github.io/public-gerege-template/)
+· [English](https://gerege-systems.github.io/public-gerege-template/en/)
+· [Русский](https://gerege-systems.github.io/public-gerege-template/ru/)）—
+源文件在 `docs-site/`，每次合并到 `main` 都会自动发布到 GitHub Pages。
+
 | 文档 | 内容 |
 |-----|------|
 | [backend/docs/ARCHITECTURE_ZH.md](../backend/docs/ARCHITECTURE_ZH.md) | 分层、依赖流向、组件 |

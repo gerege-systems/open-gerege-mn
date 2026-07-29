@@ -147,6 +147,12 @@ docker compose up -d --build
 
 ## Документация
 
+📖 **Сайт документации:** <https://gerege-systems.github.io/public-gerege-template/ru/>
+([Монгол](https://gerege-systems.github.io/public-gerege-template/)
+· [English](https://gerege-systems.github.io/public-gerege-template/en/)
+· [中文](https://gerege-systems.github.io/public-gerege-template/zh/)) — исходники в
+`docs-site/`, публикуются на GitHub Pages при каждом слиянии в `main`.
+
 | Документ | О чём |
 |-----|------|
 | [backend/docs/ARCHITECTURE_RU.md](../backend/docs/ARCHITECTURE_RU.md) | Слои, поток зависимостей, компоненты |

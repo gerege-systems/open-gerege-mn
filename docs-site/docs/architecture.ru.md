@@ -22,7 +22,7 @@ Internet ──► nginx (TLS)
 | Слой | Технология | Примечания |
 |---|---|---|
 | **Бэкенд** | Go · chi (net/http) · pgx (без ORM) | Clean Architecture, RLS, рукописный SQL |
-| **Фронтенд** | Next.js 15 (BFF) | Браузер общается только со своим origin; токены не попадают в клиентский JS |
+| **Фронтенд** | Next.js 15 (BFF) + `@gerege/ui-core` | Браузер общается только со своим origin; токены не попадают в клиентский JS |
 | **Провайдер OIDC** | Встроенный (Go, usecases/oidc) | платформа сама ведёт вход/согласие/выход |
 | **Идентификация** | eID Mongolia RP | проверка электронного удостоверения |
 | **Кэш/очередь** | Redis | список отозванных сессий, временное состояние |
@@ -56,3 +56,29 @@ backend/
 ├── pkg/                    # eid, oidc, secrethash, gemini, …
 └── migrations/             # нумерованный SQL (N_name.up/down.sql)
 ```
+
+## Структура фронтенда — `@gerege/ui-core`
+
+Большая часть фронтенда живёт в **общем пакете**. Приложению принадлежит только
+то, что специфично для него: брендинг, тексты landing и особые страницы.
+
+```
+frontend/
+├── src/brand.config.ts     # единственный источник брендинга (имя, домен, docsUrl…)
+├── src/components/landing/ # собственные тексты landing
+├── src/app/api/**/route.ts # ОДНОСТРОЧНЫЕ обёртки BFF-маршрутов (158 шт.)
+└── node_modules/@gerege/ui-core
+    ├── src/api/**          # сама логика BFF-маршрутов
+    └── src/components/**   # AppShell, UserMenu, экраны admin/gov/gateway
+```
+
+- Пакет **закреплён по тегу** в `package.json`
+  (`…/ui-core/archive/refs/tags/v0.4.0.tar.gz`) — обновление всегда явное.
+- Каждый маршрут — обёртка: `export { GET, POST } from '@gerege/ui-core/api/<путь>'`.
+  Next.js регистрирует маршруты по файловой системе, поэтому обёртка обязательна;
+  `npm run check:routes` находит маршруты пакета без обёртки в приложении.
+- Пакет никогда не импортирует `brand.config.ts` приложения — значения приходят
+  через `<UiCoreProvider>` (`brandName`, `docsUrl`, `docsLangs`). Имя бренда,
+  вписанное в любой другой файл, отклоняет `npm run check:brand`.
+
+Обе проверки входят в `npm run build`, поэтому их обеспечивает CI.

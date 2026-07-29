@@ -22,7 +22,7 @@ Internet ──► nginx (TLS)
 | Давхарга | Технологи | Тайлбар |
 |---|---|---|
 | **Backend** | Go · chi (net/http) · pgx (ORM-гүй) | Clean Architecture, RLS, hand-written SQL |
-| **Frontend** | Next.js 15 (BFF) | Браузер зөвхөн ижил-origin route-той харилцана; токен client JS-д гардаггүй |
+| **Frontend** | Next.js 15 (BFF) + `@gerege/ui-core` | Браузер зөвхөн ижил-origin route-той харилцана; токен client JS-д гардаггүй |
 | **OIDC provider** | Өөрийн Go код (usecases/oidc) | login/consent/logout урсгалыг платформ өөрөө жолоодоно |
 | **Identity** | eID Mongolia RP | Цахим үнэмлэхээр баталгаажуулалт |
 | **Cache/queue** | Redis | session deny-list, transient state |
@@ -56,3 +56,30 @@ backend/
 ├── pkg/                    # eid, oidc, secrethash, gemini, ...
 └── migrations/             # numbered SQL (N_name.up/down.sql)
 ```
+
+## Frontend бүтэц — `@gerege/ui-core`
+
+Frontend-ийн дийлэнх хэсэг нь **хуваалцсан багц** дотор байна. Апп нь зөвхөн
+өөрийн онцлогийг эзэмшинэ — брэнд, landing текст, платформ тусгай хуудсууд.
+
+```
+frontend/
+├── src/brand.config.ts     # брэндийн ЦОРЫН ГАНЦ эх сурвалж (нэр, домэйн, docsUrl…)
+├── src/components/landing/ # аппын өөрийн landing текст
+├── src/app/api/**/route.ts # BFF route-ын НЭГ МӨРИЙН бүрхүүл (158 ш)
+└── node_modules/@gerege/ui-core
+    ├── src/api/**          # BFF route-ын бодит логик
+    └── src/components/**   # AppShell, UserMenu, admin/gov/gateway дэлгэцүүд
+```
+
+- Багцыг `package.json`-д **tag-аар пинлэнэ**
+  (`…/ui-core/archive/refs/tags/v0.4.0.tar.gz`) — шинэчлэлт нь ил, санамсаргүй
+  биш.
+- Route бүр `export { GET, POST } from '@gerege/ui-core/api/<зам>'` гэсэн бүрхүүл.
+  Next.js route-ыг файлын системээр бүртгэдэг тул бүрхүүл заавал хэрэгтэй;
+  `npm run check:routes` нь багцад байгаад аппад бүрхүүлгүй route-ыг барина.
+- Багц нь аппын `brand.config.ts`-ыг импортлохгүй — утгууд `<UiCoreProvider>`-оор
+  (`brandName`, `docsUrl`, `docsLangs`) дамжина. Брэндийн нэрийг өөр файлд шууд
+  бичихийг `npm run check:brand` хориглоно.
+
+Хоёр шалгалт хоёулаа `npm run build`-ийн нэг хэсэг тул CI-д мөрдөгдөнө.

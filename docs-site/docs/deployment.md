@@ -33,8 +33,8 @@ Internet ──► nginx (80/443, Let's Encrypt)
 
 ```bash
 # 1) код авах
-git clone git@github.com:gerege-systems/sso-dgov-mn.git /srv/sso-dgov-mn
-cd /srv/sso-dgov-mn
+git clone git@github.com:gerege-systems/public-gerege-template.git /srv/public-gerege-template
+cd /srv/public-gerege-template
 
 # 2) env файлуудыг бэлдэх (.env + backend.env)
 
@@ -76,3 +76,35 @@ tag / volume мөргөлдөнө.
 |---|---|---|
 | `sso-dgov-mn` | sso.gerege.mn | web 3008 |
 | `template-dgov-mn` | template.gerege.mn | web 3009 |
+| `public-template` | public.template.gerege.mn | web 3010, api relay 8094 |
+
+Энэ репогийн амьд жишиг байршуулалт нь `public-template` — хостын түвшний
+тэмдэглэл (edge nginx, SSO client, анхны суулгалтын алхмууд) `deploy/HOST.md`
+дотор байна.
+
+## Баримтын сайт (docs)
+
+Энэ сайтыг [MkDocs Material](https://squidfunk.github.io/mkdocs-material/)-ээр
+`docs-site/`-аас бүтээнэ. Нийтлэгдэх хаяг:
+
+<https://gerege-systems.github.io/public-gerege-template/>
+
+- `docs-site/**` өөрчлөгдөж `main` руу орох бүрд `.github/workflows/docs.yml`
+  build хийж **GitHub Pages** руу тавина (Pages-ийн эх сурвалж = GitHub Actions).
+- PR дээр зөвхөн `mkdocs build --strict` ажиллана — эвдэрсэн дотоод линк, дутуу
+  nav бичлэгийг алдаа болгон барина. Deploy хийхгүй.
+- Хэлүүд: монгол нь язгуурт, бусад нь угтвартай — `/en/`, `/ru/`, `/zh/`.
+  Энэ жагсаалт `frontend/src/brand.config.ts`-ийн `docsLangs`-тай ижил байх ёстой
+  (хэрэглэгчийн цэсэн дэх «Баримт бичиг» холбоос үүнээс хаягаа бүрдүүлдэг).
+
+Дотооддоо шалгах:
+
+```bash
+cd docs-site
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/mkdocs serve        # http://127.0.0.1:8000
+.venv/bin/mkdocs build --strict
+```
+
+Өөрийн сервер дээр хостлох бол `docs-site/deploy-docs.sh` — build хийгээд
+`DOCS_SERVER`:`DOCS_TARGET` руу хуулна.

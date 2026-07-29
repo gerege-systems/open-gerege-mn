@@ -22,7 +22,7 @@ Internet ──► nginx (TLS)
 | Layer | Technology | Notes |
 |---|---|---|
 | **Backend** | Go · chi (net/http) · pgx (no ORM) | Clean Architecture, RLS, hand-written SQL |
-| **Frontend** | Next.js 15 (BFF) | The browser talks only to same-origin routes; tokens never reach client JS |
+| **Frontend** | Next.js 15 (BFF) + `@gerege/ui-core` | The browser talks only to same-origin routes; tokens never reach client JS |
 | **OIDC provider** | Built-in (Go, usecases/oidc) | the platform drives login/consent/logout itself |
 | **Identity** | eID Mongolia RP | electronic-ID verification |
 | **Cache/queue** | Redis | session deny-list, transient state |
@@ -56,3 +56,30 @@ backend/
 ├── pkg/                    # eid, oidc, secrethash, gemini, ...
 └── migrations/             # numbered SQL (N_name.up/down.sql)
 ```
+
+## Frontend layout — `@gerege/ui-core`
+
+Most of the frontend lives in a **shared package**. The app owns only what is
+specific to it: branding, landing copy and platform-specific pages.
+
+```
+frontend/
+├── src/brand.config.ts     # single source of truth for branding (name, domain, docsUrl…)
+├── src/components/landing/ # the app's own landing copy
+├── src/app/api/**/route.ts # ONE-LINE wrappers for the BFF routes (158 of them)
+└── node_modules/@gerege/ui-core
+    ├── src/api/**          # the actual BFF route logic
+    └── src/components/**   # AppShell, UserMenu, admin/gov/gateway screens
+```
+
+- The package is **pinned by tag** in `package.json`
+  (`…/ui-core/archive/refs/tags/v0.4.0.tar.gz`) — upgrades are explicit, never
+  accidental.
+- Every route is a wrapper: `export { GET, POST } from '@gerege/ui-core/api/<path>'`.
+  Next.js registers routes from the file system, so the wrapper is mandatory;
+  `npm run check:routes` catches package routes that have no wrapper in the app.
+- The package never imports the app's `brand.config.ts` — values arrive through
+  `<UiCoreProvider>` (`brandName`, `docsUrl`, `docsLangs`). Hard-coding the brand
+  name anywhere else is rejected by `npm run check:brand`.
+
+Both checks are part of `npm run build`, so CI enforces them.

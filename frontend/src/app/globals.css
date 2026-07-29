@@ -2294,6 +2294,9 @@ html[lang="en"] .i18n-banner { display: block; }
      автоматаар томруулдаг (auto-zoom). Тэр үед fixed панел дэлгэцээс халин
      хайчлагддаг тул гар утсан дээр оролтын фонтыг 16px байлгана. */
   .lp-chat__input { font-size: 16px; }
+  /* Hero-д шигтгэсэн нэвтрэх карт (AUTH_MODE=provider) — явцуу дэлгэцэд
+     дотоод зайг багасгана. */
+  .signin-card.lp-hero__login { padding: 26px 20px; }
 }
 
 /* ---------- Responsive ---------- */

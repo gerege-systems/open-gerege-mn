@@ -5,7 +5,7 @@
 import { redirect } from 'next/navigation';
 import { getAccessToken } from '@gerege/ui-core/lib/session';
 import { backendFetch } from '@gerege/ui-core/lib/api';
-import LoginForm from '@/app/login/LoginForm';
+import LoginForm from '@gerege/ui-core/components/LoginForm';
 import AcceptClient from './AcceptClient';
 
 export const dynamic = 'force-dynamic';

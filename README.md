@@ -14,7 +14,7 @@ Architecture Go backend + Next.js BFF frontend + Gemini AI pipeline-ийг хо�
 холбож, аюулгүй байдлыг хатууруулж, ямар ч систем рүү өргөтгөхөд бэлэн болгосон.
 Та дэд бүтэц бус, үнэ цэнийг л бүтээнэ — identity, аюулгүй байдал, AI, үйлчилгээний
 тулгуур эхний өдрөөс шийдэгдсэн ирнэ. Жишээ deployment нь **Gerege Template Platform**
-нэрээр [template.gerege.mn](https://template.gerege.mn)-д ажиллаж, платформын eID
+нэрээр [public.template.gerege.mn](https://public.template.gerege.mn)-д ажиллаж, платформын eID
 нэвтрэлтийг production-д харуулж байна.
 
 Уг платформ нь **Gerege Systems ХХК**-ийн эрхэм зорилго болох *«Төрийн болон
@@ -39,6 +39,28 @@ Go (**chi · net/http + pgx (pgxpool) + PostgreSQL + Redis**) backend болон
 `net/http`-ийг [go-chi/chi](https://github.com/go-chi/chi) router болон гар бичмэл
 SQL-тэй [jackc/pgx](https://github.com/jackc/pgx) драйвертэй хослуулдаг — ORM
 ашиглахгүй.
+
+## 🧬 Удамшлын гинж
+
+Энэ репо флотын удамшлын мод дотор дараах байрлалтай:
+
+```
+public-gerege-template        ← ЭНЭ РЕПО (git удамшлын эх)
+   ├─► private-gerege-template ──► gerege урсгалын 6 апп
+   └─► template-dgov-mn        ──► gov урсгалын 4 апп
+```
+
+| Юу удамшдаг | Хаанаас | Механизм |
+|---|---|---|
+| Go цөм | `public-gerege-core v1.0.0` | `backend/go.mod` |
+| Frontend бүрэлдэхүүн | `@gerege/ui-core v0.4.0` | `frontend/package.json` (HTTPS tarball) |
+
+**Энэ репогийн өөрийнх — удамшдаггүй:**
+брэнд (`frontend/src/brand.config.ts`, `components/landing/copy.ts`), байршуулалт (`deploy/**`, `docker-compose.yml`), CI/CD (`.github/**`), баримт (`README.md`, `docs/**`), iOS/Android таних тэмдэг. Эдгээр нь [`.gitattributes`](.gitattributes)-д `merge=ours` тэмдэгтэй тул upstream-ээс merge хийхэд дарагдахгүй.
+
+**Байршилт:** <https://public.template.gerege.mn>
+
+---
 
 ## 📌 Эх сурвалж ба нээлттэй эх
 

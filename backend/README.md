@@ -19,7 +19,7 @@ security hardening — all bilingual (mn/en) and observable from day one. Built 
 **chi (net/http)** for HTTP, **pgx (pgxpool) + PostgreSQL** for data, and
 **Redis + Ristretto** for cache.
 
-> **Reference deployment:** **Gerege Template Platform** ([template.gerege.mn](https://template.gerege.mn))
+> **Reference deployment:** **Gerege Template Platform** ([public.template.gerege.mn](https://public.template.gerege.mn))
 > — a government service platform and Relying Party of Gerege SSO built on this
 > foundation, showcasing eID single sign-on and a built-in OIDC provider for other apps.
 
@@ -169,7 +169,7 @@ GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 
 # OIDC PROVIDER side (the platform is its own issuer) — provider flows are inert unless set
-OAUTH_ISSUER=                    # issuer, e.g. https://template.gerege.mn (empty = provider off)
+OAUTH_ISSUER=                    # issuer, e.g. https://public.template.gerege.mn (empty = provider off)
 SSO_STATE_KEY=                   # >= 32 bytes; login/consent state cookie HMAC
 SSO_FIRSTPARTY_CLIENTS=          # CSV client_ids that skip the consent screen
 SSO_ADMIN_API_KEYS=              # CSV bootstrap keys for the /admin surface

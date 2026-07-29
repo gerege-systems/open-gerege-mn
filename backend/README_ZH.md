@@ -17,7 +17,7 @@
 HTTP 层基于 **chi (net/http)**，数据层基于 **pgx (pgxpool) + PostgreSQL**，
 缓存基于 **Redis + Ristretto**。
 
-> **参考部署：** **Gerege Template Platform**（[template.gerege.mn](https://template.gerege.mn)）
+> **参考部署：** **Gerege Template Platform**（[public.template.gerege.mn](https://public.template.gerege.mn)）
 > — 一个构建在本基础平台之上的政务服务平台，同时也是 Gerege SSO 的依赖方，
 > 展示了 eID 单点登录以及面向其他应用的内置 OIDC 提供方。
 
@@ -178,7 +178,7 @@ GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 
 # OIDC 提供方侧（平台自身即 issuer）— 未设置时提供方流程处于惰性状态
-OAUTH_ISSUER=                    # issuer，例如 https://template.gerege.mn（留空 = 关闭提供方）
+OAUTH_ISSUER=                    # issuer，例如 https://public.template.gerege.mn（留空 = 关闭提供方）
 SSO_STATE_KEY=                   # >= 32 字节；登录/授权 state cookie 的 HMAC
 SSO_FIRSTPARTY_CLIENTS=          # 跳过授权确认页的 client_id，逗号分隔
 SSO_ADMIN_API_KEYS=              # /admin 能力面的引导密钥，逗号分隔

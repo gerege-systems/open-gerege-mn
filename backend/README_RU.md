@@ -20,7 +20,7 @@ Go-бэкенд **Gerege Template Platform V3.0** — готовой к прод
 **pgx (pgxpool) + PostgreSQL** для данных и **Redis + Ristretto** для кэша.
 
 > **Эталонное развёртывание:** **Gerege Template Platform**
-> ([template.gerege.mn](https://template.gerege.mn)) — платформа государственных
+> ([public.template.gerege.mn](https://public.template.gerege.mn)) — платформа государственных
 > услуг и доверяющая сторона Gerege SSO, построенная на этой основе; она
 > демонстрирует единый вход через eID и встроенный провайдер OIDC для других приложений.
 
@@ -194,7 +194,7 @@ GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 
 # Сторона провайдера OIDC (платформа сама является issuer) — потоки неактивны, пока не задано
-OAUTH_ISSUER=                    # issuer, например https://template.gerege.mn (пусто = провайдер выключен)
+OAUTH_ISSUER=                    # issuer, например https://public.template.gerege.mn (пусто = провайдер выключен)
 SSO_STATE_KEY=                   # >= 32 байт; HMAC для cookie состояния входа/согласия
 SSO_FIRSTPARTY_CLIENTS=          # client_id через запятую, которые пропускают экран согласия
 SSO_ADMIN_API_KEYS=              # стартовые ключи для поверхности /admin, через запятую

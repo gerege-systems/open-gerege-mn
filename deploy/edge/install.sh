@@ -22,7 +22,8 @@ set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 EDGE_CONTAINER="${EDGE_CONTAINER:-gerege-nginx}"
-SRC="$HERE/template.gerege.mn.conf"
+VHOST="public.template.gerege.mn.conf"
+SRC="$HERE/$VHOST"
 
 [[ -f "$SRC" ]] || { echo "✖ $SRC олдсонгүй"; exit 1; }
 
@@ -38,10 +39,10 @@ fi
   echo "✖ conf.d mount олдсонгүй. EDGE_CONF_D-г гараар зааж өгнө үү."; exit 1;
 }
 
-TARGET="$EDGE_CONF_D/template.gerege.mn.conf"
+TARGET="$EDGE_CONF_D/$VHOST"
 # Backup нь sudo-гоор үүсдэг тул root эзэмшилтэй болно; /tmp дээр sticky bit
 # байдаг учир түүнийг УСТГАХАД ч sudo хэрэгтэй.
-BACKUP=/tmp/template.gerege.mn.conf.prev
+BACKUP="/tmp/$VHOST.prev"
 
 echo "▶ Edge vhost суулгаж байна → $TARGET"
 
@@ -69,4 +70,4 @@ fi
 
 docker exec "$EDGE_CONTAINER" nginx -s reload
 sudo rm -f "$BACKUP"
-echo "✅ Edge vhost суулгагдаж, nginx reload хийгдлээ → https://template.gerege.mn/"
+echo "✅ Edge vhost суулгагдаж, nginx reload хийгдлээ → https://public.template.gerege.mn/"

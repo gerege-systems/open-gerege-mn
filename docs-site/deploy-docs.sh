@@ -3,6 +3,10 @@
 # Gerege Systems Development Team & Claude AI, 2026
 #
 # Build the MkDocs documentation site and deploy it to the server (one command).
+#
+# Нийтийн хувилбар нь GitHub Pages дээр АВТОМАТААР шинэчлэгддэг
+# (`.github/workflows/docs.yml` → https://gerege-systems.github.io/public-gerege-template/).
+# Энэ скрипт нь СОНГОЛТ — сайтыг өөрийн сервер дээр нэмж хостлох үед л хэрэгтэй.
 # Хостлогддог: https://template.gerege.mn/docs/  (nginx → /var/www/template-docs)
 #
 # Ашиглах:

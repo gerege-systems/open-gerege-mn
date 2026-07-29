@@ -26,6 +26,39 @@
 - `BACKEND_URL`-ийг `http://public-template-api-1:8080` руу **pin** хийнэ.
   Үүнгүйгээр хуваалцсан сүлжээн дэх өөр `api` руу очиж бүх `/api/v1/*` 404 болно.
 
+## SSO client (`backend.env`, git-д БАЙХГҮЙ)
+
+Энэ байршуулалт нь `sso.gerege.mn`-ий **өөрийн** OAuth2 client-ийг хэрэглэнэ —
+хаалттай `template.gerege.mn`-ийнхийг ЗЭЭЛЖ БОЛОХГҮЙ (redirect_uri таарахгүй):
+
+| Түлхүүр | Утга |
+|---|---|
+| `SSO_ISSUER` | `https://sso.gerege.mn` |
+| `SSO_CLIENT_ID` | `public-template-gerege-mn` |
+| `SSO_CLIENT_SECRET` | (нууц — зөвхөн хостын `backend.env`) |
+| `SSO_SCOPE` | `openid profile email nationalid` |
+| `SSO_REDIRECT_URI` | `https://public.template.gerege.mn/sso/callback` |
+
+⚠️ `SSO_REDIRECT_URI`-ийн зам нь **`/sso/callback`** — BFF-ийн бодит route
+(`frontend/src/app/sso/callback/route.ts`). `/api/auth/sso/callback` гэсэн
+route БАЙХГҮЙ (`/api/auth/sso/` дор зөвхөн `start` ба `native` байна), тиймээс
+тэр замыг бичвэл нэвтрэлт `?error=sso`-оор унана.
+
+Шалгах (нэвтрэхгүйгээр):
+
+```bash
+curl -sS -o /dev/null -w '%{redirect_url}\n' \
+  https://public.template.gerege.mn/api/auth/sso/start
+# → https://sso.gerege.mn/oauth2/auth?client_id=public-template-gerege-mn&…&redirect_uri=…%2Fsso%2Fcallback
+```
+
+`backend.env` нь uid `65532` (distroless nonroot)-ийн эзэмшилтэй тул `grgdev`
+шууд уншиж/бичиж чадахгүй — контейнерээр дамжина:
+
+```bash
+docker run --rm -i -v "$PWD:/w" busybox sh -c 'grep ^SSO_ /w/backend.env'
+```
+
 ## Edge nginx
 
 vhost: `public.template.gerege.mn.conf` — edge контейнерийн `conf.d`

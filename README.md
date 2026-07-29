@@ -133,6 +133,12 @@ docker compose up -d --build
 
 ## Баримтжуулалт
 
+📖 **Баримтын сайт:** <https://gerege-systems.github.io/public-gerege-template/>
+(монгол · [English](https://gerege-systems.github.io/public-gerege-template/en/)
+· [Русский](https://gerege-systems.github.io/public-gerege-template/ru/)
+· [中文](https://gerege-systems.github.io/public-gerege-template/zh/)) — эх нь
+`docs-site/`, `main` руу нэгдэх бүрд GitHub Pages руу автоматаар нийтлэгдэнэ.
+
 | Doc | Юу |
 |-----|------|
 | [backend/docs/ARCHITECTURE_MN.md](backend/docs/ARCHITECTURE_MN.md) | Давхаргууд, dependency flow |

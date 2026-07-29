@@ -33,8 +33,8 @@ Internet ──► nginx (80/443, Let's Encrypt)
 
 ```bash
 # 1) 获取代码
-git clone git@github.com:gerege-systems/sso-dgov-mn.git /srv/sso-dgov-mn
-cd /srv/sso-dgov-mn
+git clone git@github.com:gerege-systems/public-gerege-template.git /srv/public-gerege-template
+cd /srv/public-gerege-template
 
 # 2) 创建环境文件（.env + backend.env）
 
@@ -75,3 +75,35 @@ server {
 |---|---|---|
 | `sso-dgov-mn` | sso.gerege.mn | web 3008 |
 | `template-dgov-mn` | template.gerege.mn | web 3009 |
+| `public-template` | public.template.gerege.mn | web 3010、api relay 8094 |
+
+本仓库的参考部署是 `public-template`；主机层面的说明（edge nginx、SSO 客户端、
+首次安装步骤）见 `deploy/HOST.md`。
+
+## 文档站点
+
+本站点由 `docs-site/` 通过
+[MkDocs Material](https://squidfunk.github.io/mkdocs-material/) 构建，发布地址：
+
+<https://gerege-systems.github.io/public-gerege-template/>
+
+- 每次涉及 `docs-site/**` 的 `main` 推送都会触发
+  `.github/workflows/docs.yml` 构建并发布到 **GitHub Pages**
+  （Pages 来源 = GitHub Actions）。
+- Pull request 只运行 `mkdocs build --strict` — 它会把失效的内部链接和缺失的
+  nav 条目当作错误。不会发布。
+- 语言：蒙古语位于根路径，其余带前缀 — `/en/`、`/ru/`、`/zh/`。该列表须与
+  `frontend/src/brand.config.ts` 中的 `docsLangs` 保持一致（用户菜单中的
+  「文档」链接据此拼接地址）。
+
+本地检查：
+
+```bash
+cd docs-site
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/mkdocs serve        # http://127.0.0.1:8000
+.venv/bin/mkdocs build --strict
+```
+
+若要自行托管，`docs-site/deploy-docs.sh` 会构建并把站点复制到
+`DOCS_SERVER`:`DOCS_TARGET`。

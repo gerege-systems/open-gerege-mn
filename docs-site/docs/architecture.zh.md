@@ -22,7 +22,7 @@ Internet ──► nginx (TLS)
 | 层 | 技术 | 说明 |
 |---|---|---|
 | **后端** | Go · chi (net/http) · pgx（无 ORM） | 整洁架构、RLS、手写 SQL |
-| **前端** | Next.js 15 (BFF) | 浏览器只与同源路由通信；令牌绝不进入客户端 JS |
+| **前端** | Next.js 15 (BFF) + `@gerege/ui-core` | 浏览器只与同源路由通信；令牌绝不进入客户端 JS |
 | **OIDC 提供方** | 内置（Go，usecases/oidc） | 平台自行驱动登录/授权/登出流程 |
 | **身份** | eID Mongolia RP | 电子身份证验证 |
 | **缓存/队列** | Redis | 会话拒绝名单、临时状态 |
@@ -56,3 +56,29 @@ backend/
 ├── pkg/                    # eid、oidc、secrethash、gemini …
 └── migrations/             # 编号 SQL (N_name.up/down.sql)
 ```
+
+## 前端目录结构 — `@gerege/ui-core`
+
+前端的大部分代码位于**共享包**中。应用只保留自身特有的部分：品牌、landing 文案
+以及平台特定页面。
+
+```
+frontend/
+├── src/brand.config.ts     # 品牌信息的唯一来源（名称、域名、docsUrl…）
+├── src/components/landing/ # 应用自己的 landing 文案
+├── src/app/api/**/route.ts # BFF 路由的单行包装（共 158 个）
+└── node_modules/@gerege/ui-core
+    ├── src/api/**          # BFF 路由的真正逻辑
+    └── src/components/**   # AppShell、UserMenu、admin/gov/gateway 页面
+```
+
+- 该包在 `package.json` 中**按 tag 固定**
+  （`…/ui-core/archive/refs/tags/v0.4.0.tar.gz`）— 升级是显式的，不会误升。
+- 每个路由都是包装：`export { GET, POST } from '@gerege/ui-core/api/<路径>'`。
+  Next.js 依据文件系统注册路由，因此包装不可省略；`npm run check:routes`
+  会抓出包内存在、但应用中没有包装的路由。
+- 该包绝不 import 应用的 `brand.config.ts` — 相关值通过 `<UiCoreProvider>`
+  传入（`brandName`、`docsUrl`、`docsLangs`）。在其他文件里硬编码品牌名会被
+  `npm run check:brand` 拒绝。
+
+两项检查都属于 `npm run build`，因此由 CI 强制执行。

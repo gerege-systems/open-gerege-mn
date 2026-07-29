@@ -103,6 +103,12 @@ Open **http://localhost:3000** and choose **Login with eID** (scan the QR / open
 
 ## Documentation
 
+📖 **Documentation site:** <https://gerege-systems.github.io/public-gerege-template/en/>
+([Монгол](https://gerege-systems.github.io/public-gerege-template/)
+· [Русский](https://gerege-systems.github.io/public-gerege-template/ru/)
+· [中文](https://gerege-systems.github.io/public-gerege-template/zh/)) — sources in
+`docs-site/`, published to GitHub Pages on every merge to `main`.
+
 | Doc | What |
 |-----|------|
 | [backend/docs/ARCHITECTURE.md](../backend/docs/ARCHITECTURE.md) | Layers, dependency flow, components |

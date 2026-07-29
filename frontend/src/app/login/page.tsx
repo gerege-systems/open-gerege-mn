@@ -1,61 +1,50 @@
 // Gerege Systems Development Team & Claude AI, 2026
 import React from 'react';
-import { LogIn } from 'lucide-react';
 import SigninShell from '@gerege/ui-core/components/SigninShell';
+import LoginPanel from '@gerege/ui-core/components/LoginPanel';
 import { safeNext } from '@gerege/ui-core/lib/navigation';
+import { fetchAuthMode } from '@gerege/ui-core/lib/authMode';
 import { pageTitle } from '@/brand.config';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = { title: pageTitle('Нэвтрэх') };
 
-// Нэвтрэлт нь Gerege SSO (sso.gerege.mn)-оор дамжина. Товч дарахад sso.gerege.mn
-// руу шилжиж, тэндээ нэвтэрч, буцаж ирнэ (OIDC RP урсгал). SSO callback амжилтгүй
-// бол энд ?error=sso-тэй буцаж, дахин оролдох боломж өгнө.
+// Нэвтрэх гадаргуу нь кодоор БИШ, backend-ийн AUTH_MODE-оор тодорхойлогдоно:
+//
+//   provider — платформ өөрөө нэвтрүүлнэ (eID РД/QR · нууц үг · Google карт);
+//   client   — дээд SSO (SSO_ISSUER) руу шилжинэ, тэндээ нэвтэрч буцаж ирнэ
+//              (OIDC RP урсгал). SSO callback амжилтгүй бол энд ?error=sso-тэй
+//              буцаж, дахин оролдох боломж өгнө.
+//
+// Ингэснээр энэ хуудас нь SSO үйлчилгээ (sso.dgov.mn маягийн) болон түүний
+// хэрэглэгч платформ хоёуланд НЭГ кодоор үйлчилнэ.
 export default async function LoginPage(props: {
-  searchParams: Promise<{ next?: string; error?: string }>;
+  searchParams: Promise<{
+    next?: string;
+    error?: string;
+    notice?: string;
+    glink?: string;
+    gerror?: string;
+    mfa?: string;
+  }>;
 }) {
   const searchParams = await props.searchParams;
   const next = safeNext(searchParams.next);
-  const ssoHref = `/api/auth/sso/start${next && next !== '/' ? `?next=${encodeURIComponent(next)}` : ''}`;
-  const failed = searchParams.error === 'sso';
+  const auth = await fetchAuthMode();
 
   return (
     <SigninShell>
-      <section
-        className="signin-card"
-        aria-labelledby="login-title"
-        style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '1.1rem' }}
-      >
-        <div>
-          <h1 id="login-title" style={{ margin: '0 0 0.4rem' }}>Нэвтрэх</h1>
-          <p style={{ margin: 0, opacity: 0.7 }}>Gerege SSO (sso.gerege.mn)-оор нэвтэрнэ үү.</p>
-        </div>
-
-        {failed && (
-          <p
-            role="alert"
-            style={{
-              margin: 0,
-              color: '#b42318',
-              background: 'rgba(180,35,24,0.08)',
-              padding: '0.6rem 0.9rem',
-              borderRadius: 10,
-              fontSize: '0.9rem',
-            }}
-          >
-            Нэвтрэлт амжилтгүй боллоо. Дахин оролдоно уу.
-          </p>
-        )}
-
-        <a
-          className="btn btn--eid btn--lg btn--block"
-          href={ssoHref}
-          style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
-        >
-          <LogIn size={18} strokeWidth={2} />
-          <span>Gerege SSO-оор нэвтрэх</span>
-        </a>
+      <section className="signin-card" aria-labelledby="login-title">
+        <LoginPanel
+          auth={auth}
+          next={next}
+          notice={searchParams.notice}
+          googleLink={searchParams.glink === '1'}
+          googleError={!!searchParams.gerror}
+          mfaGate={searchParams.mfa === '1'}
+          ssoFailed={searchParams.error === 'sso'}
+        />
       </section>
     </SigninShell>
   );

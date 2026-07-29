@@ -45,11 +45,20 @@ const GitHubMark = ({ size = 18 }: { size?: number }) => (
 const EVERYTHING_ICONS = [Fingerprint, Globe, KeyRound, ScrollText, CheckCircle2, Languages, Gauge, ShieldAlert];
 
 interface Props {
-  /** LoginForm-д дамжуулах — нэвтэрсний дараа буцах зам. */
-  next: string;
-  notice?: string;
-  googleLink?: boolean;
-  googleError?: boolean;
+  /**
+   * Нэвтрэх товчнуудын зорилго. `AUTH_MODE`-оос хамаарч server талд бодогдоно
+   * (`loginHref(auth, next)`): provider горимд '#login' (доорх карт руу
+   * гүйлгэнэ), client горимд '/api/auth/sso/start' (дээд SSO руу шилжүүлнэ).
+   */
+  loginHref: string;
+  /**
+   * Hero-д шигтгэх нэвтрэх карт — зөвхөн provider горимд. client горимд `null`
+   * ирнэ (нэвтрэлт өөр домэйн дээр болно) тул карт огт дүрслэгдэхгүй.
+   *
+   * Карт нь SERVER талаас бэлэн node болж ирдэг: горим нь server-only эх
+   * сурвалжаас ирдэг тул энэ client компонент түүнийг өөрөө мэдэх боломжгүй.
+   */
+  loginSlot?: React.ReactNode;
   /** Идэвхтэй theme-ийн landing текст/цэс (mn/en/zh/ru) — copy.ts default дээр давхарлана. */
   themeLanding?: {
     mn?: Partial<LandingCopy>;
@@ -60,13 +69,16 @@ interface Props {
 }
 
 /**
- * Платформын нүүр — «Цахим үйлчилгээг бүтээх суурь»
- * (landing). Нэвтрээгүй зочдод харагдах маркетингийн нүүр. Платформын бүх
- * чадварыг харуулж, hero-ийн баруун талд Gerege SSO (sso.gerege.mn)-оор
- * нэвтрэх картыг шигтгэв. Нэвтрэх товч дарахад sso.gerege.mn руу шилжиж, тэндээ
- * нэвтэрч, буцаж ирнэ (OIDC RP урсгал). Брэнд токен (blue + gold) дээр найруулав.
+ * Платформын нүүр — «Цахим үйлчилгээг бүтээх суурь» (landing). Нэвтрээгүй
+ * зочдод харагдах маркетингийн нүүр; платформын бүх чадварыг харуулна.
+ * Брэнд токен (blue + gold) дээр найруулав.
+ *
+ * Нэвтрэлт нь энэ файлын мэдэх зүйл БИШ: `loginHref` товчнуудын зорилгыг,
+ * `loginSlot` hero-ийн картыг гаднаас (server талаас, AUTH_MODE-оор) өгнө.
+ * Иймд ижил landing нь SSO үйлчилгээ (нүүрэн дээрээ нэвтрүүлдэг) болон түүний
+ * хэрэглэгч платформ (SSO руу шилжүүлдэг) хоёуланд үйлчилнэ.
  */
-export default function LandingPage({ next, themeLanding }: Props) {
+export default function LandingPage({ loginHref, loginSlot, themeLanding }: Props) {
   const { lang, setLang } = useLang();
   // Mobile (<900px)-д хэсгүүдийн цэс inline харагдахгүй тул hamburger-ээр нээгдэх
   // dropdown цэс.
@@ -78,9 +90,6 @@ export default function LandingPage({ next, themeLanding }: Props) {
   const base = landingCopyFor(lang);
   const t = override ? deepMerge(base, override) : base;
   const brand = t.brand || brandConfig.name;
-  // Gerege SSO (sso.gerege.mn) руу нэвтрэлт эхлүүлэх — backend /sso/start руу
-  // прокси хийж, browser-ийг sso.gerege.mn-ий authorize URL руу шилжүүлнэ.
-  const ssoHref = `/api/auth/sso/start${next ? `?next=${encodeURIComponent(next)}` : ''}`;
 
   return (
     <div className="lp">
@@ -110,7 +119,7 @@ export default function LandingPage({ next, themeLanding }: Props) {
               <Languages size={15} strokeWidth={2} />
               <span>{LANG_SHORT[nextLang(lang)]}</span>
             </button>
-            <a className="lp-btn lp-btn--gold lp-btn--sm" href={ssoHref}>
+            <a className="lp-btn lp-btn--gold lp-btn--sm" href={loginHref}>
               <LogIn size={16} strokeWidth={2} />
               <span>{t.nav.login}</span>
             </a>
@@ -155,7 +164,7 @@ export default function LandingPage({ next, themeLanding }: Props) {
               <p className="lp-hero__lede">{t.hero.lede}</p>
 
               <div className="lp-hero__cta">
-                <a className="lp-btn lp-btn--gold lp-btn--lg" href={ssoHref}>
+                <a className="lp-btn lp-btn--gold lp-btn--lg" href={loginHref}>
                   {t.hero.ctaLogin}
                   <ArrowRight size={18} strokeWidth={2} />
                 </a>
@@ -174,6 +183,16 @@ export default function LandingPage({ next, themeLanding }: Props) {
                 ))}
               </div>
             </div>
+
+            {/* Нэвтрэх карт — зөвхөн provider горимд ирнэ. client горимд
+                `loginSlot` хоосон тул hero нь ганц баганат хэвээр үлдэнэ. */}
+            {loginSlot && (
+              <div className="lp-hero__visual">
+                <section id="login" className="signin-card lp-hero__login" aria-labelledby="login-title">
+                  {loginSlot}
+                </section>
+              </div>
+            )}
           </div>
         </section>
 
@@ -327,7 +346,7 @@ export default function LandingPage({ next, themeLanding }: Props) {
             <h2>{t.cta.title}</h2>
             <p>{t.cta.sub}</p>
             <div className="lp-cta__buttons">
-              <a className="lp-btn lp-btn--gold lp-btn--lg" href={ssoHref}>
+              <a className="lp-btn lp-btn--gold lp-btn--lg" href={loginHref}>
                 {t.cta.ctaLogin}
                 <ArrowRight size={18} strokeWidth={2} />
               </a>

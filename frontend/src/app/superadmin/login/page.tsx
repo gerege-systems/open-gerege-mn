@@ -1,7 +1,7 @@
 import React from 'react';
 import SigninShell from '@gerege/ui-core/components/SigninShell';
 import { safeNext } from '@gerege/ui-core/lib/navigation';
-import LoginForm from '@/app/login/LoginForm';
+import LoginForm from '@gerege/ui-core/components/LoginForm';
 import { pageTitle } from '@/brand.config';
 
 export const dynamic = 'force-dynamic';

@@ -32,7 +32,7 @@ docker compose up -d --build
 
     ```bash
     cd backend
-    cp internal/config/.env.example internal/config/.env
+    cp .env.example .env
     # задайте JWT_SECRET (≥32 символов), БД, Redis и свои учётные данные EID_* RP
     go run ./cmd/api          # → http://localhost:8080
     ```

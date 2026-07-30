@@ -62,7 +62,7 @@ The system prompt is assembled per request from three layers:
 3. **Instructions** — likewise configured from the database.
 
 !!! tip "Reply language"
-    The frontend sends its UI language (`mn`/`en`/`zh`/`ru`) in the `lang` field and the
+    The frontend sends its UI language (`mn`/`en`/`ar`/`zh`/`fr`/`ru`/`es`) in the `lang` field and the
     assistant answers **only** in it — the language the user typed in, the conversation
     history, the knowledge base and tool results never override it (other-language
     sources are translated). The `degraded` fallback reply is localized the same way.

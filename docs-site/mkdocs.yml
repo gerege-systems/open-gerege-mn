@@ -83,6 +83,28 @@ plugins:
             "Аюулгүй байдал": "Security"
             Байршуулалт: Deployment
             "Тохиргоо (env)": "Configuration (env)"
+        - locale: ar
+          name: العربية
+          build: true
+          site_name: Gerege Template Platform V3.0
+          nav_translations:
+            # Хэсгийн нэрс
+            Танилцуулга: البداية
+            Архитектур: البنية
+            Нэвтрэлт: المصادقة
+            Ажиллагаа: التشغيل
+            # Хуудсууд
+            Тойм: نظرة عامة
+            Түргэн эхлэл: البدء السريع
+            Ерөнхий бүтэц: البنية النظيفة
+            "AI pipeline": "خطّ الذكاء الاصطناعي"
+            "eID + SSO": "eID + الدخول الموحّد"
+            "Апп холбох (OIDC RP)": "تكامل التطبيقات (OIDC RP)"
+            "eID Service Proxy": "وكيل خدمات eID"
+            "API Gateway": "بوّابة API"
+            "Аюулгүй байдал": "الأمان"
+            Байршуулалт: النشر
+            "Тохиргоо (env)": "الإعدادات (env)"
         - locale: ru
           name: Русский
           build: true
@@ -128,6 +150,50 @@ plugins:
             Байршуулалт: 部署
             "Тохиргоо (env)": "配置 (env)"
 
+        - locale: fr
+          name: Français
+          build: true
+          site_name: Gerege Template Platform V3.0
+          nav_translations:
+            # Хэсгийн нэрс
+            Танилцуулга: Prise en main
+            Архитектур: Architecture
+            Нэвтрэлт: Authentification
+            Ажиллагаа: Exploitation
+            # Хуудсууд
+            Тойм: Vue d'ensemble
+            Түргэн эхлэл: Démarrage rapide
+            Ерөнхий бүтэц: Clean Architecture
+            "AI pipeline": "Chaîne IA"
+            "eID + SSO": "eID + SSO"
+            "Апп холбох (OIDC RP)": "Intégration d'une application (RP OIDC)"
+            "eID Service Proxy": "Proxy des services eID"
+            "API Gateway": "Passerelle API"
+            "Аюулгүй байдал": "Sécurité"
+            Байршуулалт: Déploiement
+            "Тохиргоо (env)": "Configuration (env)"
+        - locale: es
+          name: Español
+          build: true
+          site_name: Gerege Template Platform V3.0
+          nav_translations:
+            # Хэсгийн нэрс
+            Танилцуулга: Primeros pasos
+            Архитектур: Arquitectura
+            Нэвтрэлт: Autenticación
+            Ажиллагаа: Operación
+            # Хуудсууд
+            Тойм: Resumen
+            Түргэн эхлэл: Inicio rápido
+            Ерөнхий бүтэц: Arquitectura limpia
+            "AI pipeline": "Canal de IA"
+            "eID + SSO": "eID + SSO"
+            "Апп холбох (OIDC RP)": "Integración de una aplicación (RP OIDC)"
+            "eID Service Proxy": "Proxy de servicios eID"
+            "API Gateway": "Pasarela de API"
+            "Аюулгүй байдал": "Seguridad"
+            Байршуулалт: Despliegue
+            "Тохиргоо (env)": "Configuración (env)"
 markdown_extensions:
   - admonition
   - attr_list

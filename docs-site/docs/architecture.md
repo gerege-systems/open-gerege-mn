@@ -22,7 +22,7 @@ Internet ──► nginx (TLS)
 | Давхарга | Технологи | Тайлбар |
 |---|---|---|
 | **Backend** | Go · chi (net/http) · pgx (ORM-гүй) | Clean Architecture, RLS, hand-written SQL |
-| **Frontend** | Next.js 15 (BFF) + `@gerege/ui-core` | Браузер зөвхөн ижил-origin route-той харилцана; токен client JS-д гардаггүй |
+| **Frontend** | Next.js 16 (BFF) + `@gerege/ui-core` | Браузер зөвхөн ижил-origin route-той харилцана; токен client JS-д гардаггүй |
 | **OIDC provider** | Өөрийн Go код (usecases/oidc) | login/consent/logout урсгалыг платформ өөрөө жолоодоно |
 | **Identity** | eID Mongolia RP | Цахим үнэмлэхээр баталгаажуулалт |
 | **Cache/queue** | Redis | session deny-list, transient state |
@@ -37,25 +37,32 @@ Internet ──► nginx (TLS)
 - **Security headers** — CSP, HSTS, COOP/COEP/CORP; per-IP rate limiting.
 - **Аудит** — hash-chain холбоост, зөвхөн-нэмэх бүртгэл.
 
-## Backend бүтэц (тойм)
+## Backend бүтэц — цөмөөс ирдэг
+
+Дээрх бүх чадвар (танилт, RBAC, gateway, audit, OIDC provider, eID/SSO, AI) нь
+**энэ репод бичигдээгүй** — `public-gerege-core` Go модулиас `go.mod`-оор ирнэ.
+Иймд `backend/` дотор ердөө **нэг Go файл** байна:
 
 ```
 backend/
-├── cmd/api/server/        # manual DI wiring (server.go)
-├── internal/
-│   ├── business/
-│   │   ├── domain/         # цэвэр домэйн (import-гүй)
-│   │   └── usecases/       # бизнес логик (interface-д хамааралтай)
-│   ├── datasources/
-│   │   ├── repositories/   # pgx adapter + interface
-│   │   └── caches/         # redis
-│   └── http/
-│       ├── handlers/       # func(w,r) error, v1.Wrap
-│       ├── middlewares/    # auth, oauth-bearer, rate-limit, ...
-│       └── routes/         # route группировка
-├── pkg/                    # eid, oidc, secrethash, gemini, ...
-└── migrations/             # numbered SQL (N_name.up/down.sql)
+├── cmd/api/main.go        # ~30 мөр: цөмийг эхлүүлж, өөрийн маршрутаа нэмнэ
+├── deploy/                # Dockerfile, db init
+└── .env.example           # тохиргооны загвар
 ```
+
+```go
+func main() {
+    server.ServiceName = "gerege-template"
+    app, err := server.NewApp()          // ← бүх чадвар цөмөөс
+    // Аппын өөрийн маршрутыг энд нэмнэ:
+    //   app.Router().Route("/api/xxx", xxx.Routes(app.Pool()))
+    app.Run()
+}
+```
+
+Цөм нь хоёр давхар: **`public-gerege-core`** (нээлттэй суурь, төрийн урсгал
+шууд хэрэглэнэ) ба түүнээс `go.mod`-оор удамшсан **`private-gerege-core`**
+(хаалттай, Gerege урсгал хэрэглэнэ).
 
 ## Frontend бүтэц — `@gerege/ui-core`
 

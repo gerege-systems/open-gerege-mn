@@ -22,7 +22,7 @@ Internet ──► nginx (TLS)
 | Layer | Technology | Notes |
 |---|---|---|
 | **Backend** | Go · chi (net/http) · pgx (no ORM) | Clean Architecture, RLS, hand-written SQL |
-| **Frontend** | Next.js 15 (BFF) + `@gerege/ui-core` | The browser talks only to same-origin routes; tokens never reach client JS |
+| **Frontend** | Next.js 16 (BFF) + `@gerege/ui-core` | The browser talks only to same-origin routes; tokens never reach client JS |
 | **OIDC provider** | Built-in (Go, usecases/oidc) | the platform drives login/consent/logout itself |
 | **Identity** | eID Mongolia RP | electronic-ID verification |
 | **Cache/queue** | Redis | session deny-list, transient state |
@@ -37,25 +37,32 @@ Internet ──► nginx (TLS)
 - **Security headers** — CSP, HSTS, COOP/COEP/CORP; per-IP rate limiting.
 - **Audit** — hash-chained, append-only trail.
 
-## Backend layout (overview)
+## Backend layout — it comes from the core
+
+Every capability above (auth, RBAC, gateway, audit, OIDC provider, eID/SSO, AI)
+is **not written in this repository** — it arrives from the `public-gerege-core`
+Go module via `go.mod`. As a result `backend/` holds **exactly one Go file**:
 
 ```
 backend/
-├── cmd/api/server/        # manual DI wiring (server.go)
-├── internal/
-│   ├── business/
-│   │   ├── domain/         # pure domain (no internal imports)
-│   │   └── usecases/       # business logic (depends on interfaces)
-│   ├── datasources/
-│   │   ├── repositories/   # pgx adapters + interfaces
-│   │   └── caches/         # redis
-│   └── http/
-│       ├── handlers/       # func(w,r) error, v1.Wrap
-│       ├── middlewares/    # auth, oauth-bearer, rate-limit, ...
-│       └── routes/         # route grouping
-├── pkg/                    # eid, oidc, secrethash, gemini, ...
-└── migrations/             # numbered SQL (N_name.up/down.sql)
+├── cmd/api/main.go        # ~30 lines: start the core, add your own routes
+├── deploy/                # Dockerfile, db init
+└── .env.example           # configuration template
 ```
+
+```go
+func main() {
+    server.ServiceName = "gerege-template"
+    app, err := server.NewApp()          // ← every capability from the core
+    // Add this app's own routes here:
+    //   app.Router().Route("/api/xxx", xxx.Routes(app.Pool()))
+    app.Run()
+}
+```
+
+The core comes in two layers: **`public-gerege-core`** (the open foundation,
+consumed directly by the government line) and **`private-gerege-core`**, which
+inherits from it via `go.mod` (closed, used by the Gerege line).
 
 ## Frontend layout — `@gerege/ui-core`
 

@@ -15,16 +15,23 @@ import LandingChat from './LandingChat';
 import { deepMerge } from '@gerege/ui-core/lib/theme';
 import { brand as brandConfig } from '@/brand.config';
 
-// Нүүрэн дээрх хэлний товч нь mn → en → zh → ru → mn гэж эргэлдэнэ (дараагийн
-// хэлийг шошгонд харуулна).
-const NEXT_LANG: Record<Lang, Lang> = { mn: 'en', en: 'zh', zh: 'ru', ru: 'mn' };
-const LANG_SHORT: Record<Lang, string> = { mn: 'МН', en: 'EN', zh: '中文', ru: 'RU' };
+// Landing-ийн МАРКЕТИНГИЙН текст ямар хэлтэй вэ (`copy.ts`-тэй нэг эх).
+//
+// Интерфэйс нь Монгол + НҮБ-ийн 6 хэлтэй (`@gerege/ui-core`-ийн `Lang`), харин
+// энэ landing нь дөрөвтэй — маркетингийн текст орчуулах нь тусдаа ажил. Иймд
+// нүүрний хэлний товч зөвхөн ЭДГЭЭР хэлээр эргэлдэнэ; шинэ хэл нэмэхийн тулд
+// `copy.ts`-д текст нэмээд энд бүртгэнэ.
+const LANDING_LANGS = ['mn', 'en', 'zh', 'ru'] as const;
+type LandingLang = (typeof LANDING_LANGS)[number];
 
-// Дараагийн хэл рүү шилжих (нүүрний хоёр товчлуурт сонгогч). Landing нь зөвхөн
-// багцлагдсан хэлээр тексттэй тул DB-ээс нэмэгдсэн хэл дээр байхад англиас
-// эргэлт эхэлнэ.
-function nextLang(current: LangCode): Lang {
-  return NEXT_LANG[current as Lang] ?? 'en';
+const LANG_SHORT: Record<LandingLang, string> = { mn: 'МН', en: 'EN', zh: '中文', ru: 'RU' };
+
+// Дараагийн хэл рүү шилжих (нүүрний хоёр товчлуурт сонгогч). Landing-д тексгүй
+// хэл дээр байвал (DB-ээс нэмэгдсэн, эсвэл орчуулаагүй НҮБ-ийн хэл) эргэлт
+// англиас эхэлнэ.
+function nextLang(current: LangCode): LandingLang {
+  const i = (LANDING_LANGS as readonly string[]).indexOf(current);
+  return i < 0 ? 'en' : LANDING_LANGS[(i + 1) % LANDING_LANGS.length];
 }
 
 // Нээлттэй эх (Open Source) кодын GitHub репозитор.
@@ -59,13 +66,12 @@ interface Props {
    * сурвалжаас ирдэг тул энэ client компонент түүнийг өөрөө мэдэх боломжгүй.
    */
   loginSlot?: React.ReactNode;
-  /** Идэвхтэй theme-ийн landing текст/цэс (mn/en/zh/ru) — copy.ts default дээр давхарлана. */
-  themeLanding?: {
-    mn?: Partial<LandingCopy>;
-    en?: Partial<LandingCopy>;
-    zh?: Partial<LandingCopy>;
-    ru?: Partial<LandingCopy>;
-  };
+  /**
+   * Идэвхтэй theme-ийн landing текст/цэс — `copy.ts` default дээр давхарлана.
+   * Түлхүүрийг `Lang`-аас гаргана: багц долоон хэлтэй тул шинэ хэл нэмэхэд энэ
+   * газар мартагдахгүй (landing өөрөө цөөн хэлтэй байсан ч override ирж болно).
+   */
+  themeLanding?: Partial<Record<Lang, Partial<LandingCopy>>>;
 }
 
 /**

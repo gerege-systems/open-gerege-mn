@@ -563,7 +563,11 @@ const ru: LandingCopy = {
   },
 };
 
-export const landingCopy: Record<Lang, LandingCopy> = { mn, en, zh, ru };
+// Landing текст нь ПЛАТФОРМЫН өмч тул интерфэйсээс цөөн хэлтэй байж болно.
+// Интерфэйс нь Монгол + НҮБ-ийн 6 хэлтэй (`Lang`), харин энэ маркетингийн
+// текст дөрөвтэй — иймд `Partial`. Байхгүй хэлэнд `landingCopyFor` нь англи
+// руу уналт хийнэ, ThemeEditor мөн зөвхөн байгаа хэлийг үзүүлнэ.
+export const landingCopy: Partial<Record<Lang, LandingCopy>> = { mn, en, zh, ru };
 
 /**
  * Landing-ийн текстийг хэлээр авна. Landing copy нь кодод БАГЦЛАГДСАН (dictionary
@@ -571,5 +575,5 @@ export const landingCopy: Record<Lang, LandingCopy> = { mn, en, zh, ru };
  * уналт хийнэ — нүүр хуудас хэзээ ч хоосон болохгүй.
  */
 export function landingCopyFor(lang: LangCode): LandingCopy {
-  return landingCopy[lang as Lang] ?? landingCopy.en;
+  return landingCopy[lang as Lang] ?? en;
 }

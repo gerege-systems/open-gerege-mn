@@ -7,6 +7,7 @@ import { getAccessToken } from '@gerege/ui-core/lib/session';
 import { backendFetch } from '@gerege/ui-core/lib/api';
 import LoginForm from '@gerege/ui-core/components/LoginForm';
 import AcceptClient from './AcceptClient';
+import { brand } from '@/brand.config';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +42,7 @@ export default async function OAuthLoginPage(props: {
             {rpName}
           </div>
           <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 3 }}>
-            Gerege SSO — нэгдсэн нэвтрэлтээр нэвтрэх гэж байна
+            {brand.name} — нэгдсэн нэвтрэлтээр нэвтрэх гэж байна
           </div>
         </div>
       )}

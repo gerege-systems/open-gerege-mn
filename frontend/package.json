@@ -15,7 +15,7 @@
     "check:routes": "node scripts/check-routes.mjs"
   },
   "dependencies": {
-    "@gerege/ui-core": "https://github.com/gerege-systems/ui-core/archive/refs/tags/v0.8.1.tar.gz",
+    "@gerege/ui-core": "https://github.com/gerege-systems/ui-core/archive/refs/tags/v0.10.2.tar.gz",
     "@serwist/next": "^9.5.12",
     "@tanstack/react-query": "^5.101.4",
     "lucide-react": "^1.27.0",

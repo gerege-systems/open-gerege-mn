@@ -5,17 +5,18 @@
   "description": "Gerege Template Platform V3.0-ийн Next.js BFF frontend — төр, хувийн хэвшлийн цахим үйлчилгээний суурь.",
   "scripts": {
     "dev": "next dev --webpack -p 3000",
-    "build": "npm run check:brand && npm run check:routes && npm run typecheck:sw && next build --webpack",
+    "build": "npm run check:brand && npm run check:routes && npm run check:styles && npm run typecheck:sw && next build --webpack",
     "typecheck:sw": "tsc -p tsconfig.sw.json",
     "icons:pwa": "python3 scripts/make-pwa-icons.py",
     "start": "next start -p 3000",
     "lint": "eslint .",
     "test": "vitest run",
     "check:brand": "node scripts/check-brand.mjs",
-    "check:routes": "node scripts/check-routes.mjs"
+    "check:routes": "node scripts/check-routes.mjs",
+    "check:styles": "node scripts/check-styles.mjs"
   },
   "dependencies": {
-    "@gerege/ui-core": "https://github.com/gerege-systems/ui-core/archive/refs/tags/v0.11.2.tar.gz",
+    "@gerege/ui-core": "https://github.com/gerege-systems/ui-core/archive/refs/tags/v0.11.3.tar.gz",
     "@serwist/next": "^9.5.12",
     "@tanstack/react-query": "^5.101.4",
     "lucide-react": "^1.27.0",

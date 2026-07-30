@@ -4,7 +4,7 @@
 > [`backend/.env.example`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/.env.example)。
 
 !!! danger "切勿提交密钥"
-    `backend/internal/config/.env*`、根目录的 `.env` 和 `backend.env` 全部已
+    `backend/.env`、根目录的 `.env` 和 `backend.env` 全部已
     **加入 gitignore**。新增变量时，请在各 README 中记录该变量 — 但绝不要记录它的值。
 
 ## 核心
@@ -72,6 +72,49 @@
 | `SSO_STATE_KEY` | 登录/授权临时 state 的 HMAC 密钥（**≥32 字节**） |
 | `SSO_FIRSTPARTY_CLIENTS` | 跳过授权确认页的第一方客户端 |
 | `SSO_ADMIN_API_KEYS`、`SSO_ADMIN_SUBS` | 管理 API 访问权限 |
+
+## 登录界面（`AUTH_MODE`）
+
+平台是**自行认证用户**，还是**跳转到上游 SSO**，并非代码差异 —— 由这一个变量
+决定：
+
+| 取值 | 在首页与 `/login` 上 |
+|---|---|
+| `provider` | 登录卡片（eID 登记号／二维码 · Google）显示在这里 |
+| `client` | 跳转到上游 SSO（`SSO_ISSUER`） |
+
+```bash
+AUTH_MODE=client      # 本模板的参考部署 —— SSO 的依赖方
+AUTH_MODE=provider    # 诸如 sso.dgov.mn / sso.gerege.mn 的身份服务
+```
+
+留空时会根据是否配置了 `SSO_CLIENT_ID` **自动推导** —— 因此现有部署无需改动。
+
+!!! warning "拼写错误不会被静默兜底"
+    取值无法识别时，后端会**拒绝启动**。否则平台会以与预期不同的登录界面悄然
+    启动。
+
+!!! note "与 `OAUTH_ISSUER` 是不同的维度"
+    `OAUTH_ISSUER` 回答「本平台是否为**其他应用**签发令牌」；`AUTH_MODE` 回答
+    「**本平台的用户**在哪里登录」。两者可以同时启用 —— 形成**链式**结构。
+
+前端从公开接口 `GET /api/v1/site/auth` 读取自身模式（无需认证、不含机密），
+因此前端不存在重复的环境变量。
+
+## 界面语言
+
+平台内置了**蒙古语 + 联合国六种官方语言**（阿拉伯语 · 汉语 · 英语 · 法语 ·
+俄语 · 西班牙语）的完整翻译。七种语言开箱即用 —— 数据库为空也无需任何翻译
+步骤。
+
+阿拉伯语会自动设置 `<html dir="rtl">`。
+
+| 变量 | 说明 |
+|---|---|
+| — | 无需配置；这些语言以 `is_builtin` 形式写入 `languages` 表 |
+
+如需更多语言，超级管理员可在**语言**页面添加，并用 Gemini 填充翻译 —— 它们以
+数据库 overlay 的形式保存。
 
 ## 第三方与存储
 

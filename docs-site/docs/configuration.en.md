@@ -4,7 +4,7 @@
 > is [`backend/.env.example`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/.env.example).
 
 !!! danger "Never commit secrets"
-    `backend/internal/config/.env*`, the root `.env` and `backend.env` are all
+    `backend/.env`, the root `.env` and `backend.env` are all
     **gitignored**. When you add a variable, document it in the READMEs — never
     its value.
 
@@ -73,6 +73,52 @@
 | `SSO_STATE_KEY` | HMAC key for transient login/consent state (**≥32 bytes**) |
 | `SSO_FIRSTPARTY_CLIENTS` | First-party clients that skip the consent screen |
 | `SSO_ADMIN_API_KEYS`, `SSO_ADMIN_SUBS` | Admin API access |
+
+## Sign-in surface (`AUTH_MODE`)
+
+Whether the platform **authenticates users itself** or **redirects to an
+upstream SSO** is not a code difference — this single variable decides:
+
+| Value | On the landing page and `/login` |
+|---|---|
+| `provider` | The sign-in card (eID national ID/QR · Google) is rendered here |
+| `client` | Redirect to the upstream SSO (`SSO_ISSUER`) |
+
+```bash
+AUTH_MODE=client      # this template's reference deployment — an SSO relying party
+AUTH_MODE=provider    # an identity service such as sso.dgov.mn / sso.gerege.mn
+```
+
+Leave it empty and it is **derived** from whether `SSO_CLIENT_ID` is
+configured — so existing deployments need no change.
+
+!!! warning "A typo is NOT a silent fallback"
+    An unrecognised value makes the backend **refuse to start**. Otherwise the
+    platform would quietly boot with a different sign-in surface than intended.
+
+!!! note "A SEPARATE axis from `OAUTH_ISSUER`"
+    `OAUTH_ISSUER` answers "is this platform an issuer **for other apps**";
+    `AUTH_MODE` answers "where do **this platform's users** sign in". Both can
+    be active at once — a **chained** setup.
+
+The frontend reads its mode from the public `GET /api/v1/site/auth` (no
+authentication, no secrets), so there is no duplicated env on the frontend.
+
+## Interface languages
+
+The platform ships with bundled translations for **Mongolian + the six official
+UN languages** (Arabic · Chinese · English · French · Russian · Spanish). All
+seven work immediately — with an empty database and without any translation
+step.
+
+Arabic automatically gets `<html dir="rtl">`.
+
+| Variable | Notes |
+|---|---|
+| — | No configuration needed; the languages arrive in the `languages` table as `is_builtin` |
+
+If you need more languages, a super admin adds them under **Languages** and
+fills the translations with Gemini — those are stored as a database overlay.
 
 ## Third parties and storage
 

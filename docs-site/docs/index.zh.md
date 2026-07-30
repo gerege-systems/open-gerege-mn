@@ -17,7 +17,15 @@
   应用一键即可接入。
 
 - :material-layers: **整洁架构（Clean Architecture）**  
-  Go（chi · net/http · pgx，无 ORM）后端 + Next.js 15 BFF 前端。分层清晰，易于扩展。
+  Go（chi · net/http · pgx，无 ORM）后端 + Next.js 16 BFF 前端。分层清晰，易于扩展。
+
+- :material-package-variant: **共享代码**  
+  后端内核通过 `go.mod` 引入，前端层通过 npm 包引入。本仓库只拥有自己的品牌、
+  首页文案与路由注册。
+
+- :material-translate: **蒙古语 + 联合国六种语言**  
+  阿拉伯语 · 汉语 · 英语 · 法语 · 俄语 · 西班牙语 —— 完整内置翻译，阿拉伯语
+  自动启用 RTL。
 
 - :material-account-network: **eID 服务代理**  
   已注册的应用通过授权（代理）调用 SSO 的 eID 服务 — 自身无需持有 eID 凭据。
@@ -49,6 +57,9 @@ eID 服务。只有 SSO 持有与 eID Mongolia 通信的 RP 凭据，因此各�
 - **API 网关** — 服务目录、按应用授权、请求遥测。
 - **AI 助手（Gemini）** — 聊天、语音、翻译。
 - **RBAC 与超级管理员**、**审计日志**、**安全加固**（RLS、CSP、HSTS、CSRF）。
+- **登录界面即配置** —— `AUTH_MODE` 让平台成为身份服务（`provider`）或上游 SSO
+  的使用方（`client`）；代码保持不变。
+- **开箱七种语言** —— 界面内置蒙古语与联合国六种官方语言的翻译。
 
 !!! tip "从哪里开始？"
     要将您的应用接入 Gerege SSO，请参阅[应用接入](sso-integration.md)。

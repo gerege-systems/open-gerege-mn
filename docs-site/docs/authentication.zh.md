@@ -6,6 +6,32 @@
 - **Google 绑定** — 在完成 eID 验证后绑定 Google 账户。
 - **Gerege SSO（OIDC）** — 平台自身即为 OpenID Connect 提供方；各应用通过它登录。
 
+## 两种角色 —— `AUTH_MODE`
+
+终端用户在本平台上**在哪里登录**，不是代码差异，而是**配置**：
+
+| `AUTH_MODE` | 在首页与 `/login` 上 | 典型用途 |
+|---|---|---|
+| `provider` | 登录卡片（eID 登记号／二维码 · Google）显示在这里 | 身份服务（`sso.dgov.mn`、`sso.gerege.mn`） |
+| `client` | 跳转到上游 SSO（`SSO_ISSUER`） | 使用它的平台（本模板的参考部署） |
+
+未设置时，会根据是否配置了 `SSO_CLIENT_ID` 自动推导。
+
+因此 **SSO 服务与使用它的平台运行同一份代码** —— 同一个 Docker 镜像会依据环境
+变量启动为其中任一角色。
+
+!!! note "是否作为 issuer 是另一个问题"
+    `AUTH_MODE` 回答的是「**本平台的用户**在哪里登录」。本平台是否为**其他应用**
+    签发令牌，由下文的 `OAUTH_ISSUER` 单独决定 —— 两者可以同时启用。
+
+前端从公开接口 `GET /api/v1/site/auth` 读取自身模式：
+
+```json
+{ "mode": "client", "sso_issuer": "https://sso.gerege.mn", "provider": false }
+```
+
+详见：[配置](configuration.md)。
+
 ## eID 登录
 
 可直接向 eID 应用推送（App2App），也可扫描二维码。会话采用 JWT access + refresh

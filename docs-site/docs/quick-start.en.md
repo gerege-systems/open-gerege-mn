@@ -32,7 +32,7 @@ Then open **<http://localhost:3000>**.
 
     ```bash
     cd backend
-    cp internal/config/.env.example internal/config/.env
+    cp .env.example .env
     # set JWT_SECRET (≥32 chars), DB, Redis and your EID_* RP credentials
     go run ./cmd/api          # → http://localhost:8080
     ```

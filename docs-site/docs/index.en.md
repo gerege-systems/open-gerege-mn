@@ -19,8 +19,16 @@ identity, security, AI and service scaffolding come solved from day one.
   SSO provider. Apps connect with a single tap.
 
 - :material-layers: **Clean Architecture**  
-  Go (chi · net/http · pgx, no ORM) backend + Next.js 15 BFF frontend. Clear
+  Go (chi · net/http · pgx, no ORM) backend + Next.js 16 BFF frontend. Clear
   layers, easy to extend.
+
+- :material-package-variant: **Shared code**  
+  The backend core arrives via `go.mod`, the frontend layer via an npm package.
+  This repository owns only its brand, landing copy and route registrations.
+
+- :material-translate: **Mongolian + the six UN languages**  
+  Arabic · Chinese · English · French · Russian · Spanish — fully bundled
+  translations, with automatic RTL for Arabic.
 
 - :material-account-network: **eID Service Proxy**  
   Registered apps call the SSO's eID services by authorization (proxy) — they
@@ -54,6 +62,11 @@ talk to eID Mongolia, so apps are freed from that security burden.
 - **API Gateway** — service catalog, per-app authorization, request telemetry.
 - **AI assistant (Gemini)** — chat, voice, translation.
 - **RBAC & super admin**, **audit log**, **security hardening** (RLS, CSP, HSTS, CSRF).
+- **The sign-in surface is configuration** — `AUTH_MODE` makes the platform
+  either an identity service (`provider`) or a consumer of an upstream SSO
+  (`client`); the code stays the same.
+- **Seven languages out of the box** — the interface ships bundled in Mongolian
+  plus the six official UN languages.
 
 !!! tip "Where to start?"
     To connect your app to Gerege SSO, see [App integration](sso-integration.md).

@@ -22,7 +22,7 @@ Internet ──► nginx (TLS)
 | 层 | 技术 | 说明 |
 |---|---|---|
 | **后端** | Go · chi (net/http) · pgx（无 ORM） | 整洁架构、RLS、手写 SQL |
-| **前端** | Next.js 15 (BFF) + `@gerege/ui-core` | 浏览器只与同源路由通信；令牌绝不进入客户端 JS |
+| **前端** | Next.js 16 (BFF) + `@gerege/ui-core` | 浏览器只与同源路由通信；令牌绝不进入客户端 JS |
 | **OIDC 提供方** | 内置（Go，usecases/oidc） | 平台自行驱动登录/授权/登出流程 |
 | **身份** | eID Mongolia RP | 电子身份证验证 |
 | **缓存/队列** | Redis | 会话拒绝名单、临时状态 |
@@ -37,25 +37,31 @@ Internet ──► nginx (TLS)
 - **安全响应头** — CSP、HSTS、COOP/COEP/CORP；按 IP 限流。
 - **审计** — 哈希链式、仅追加的审计轨迹。
 
-## 后端目录结构（概览）
+## 后端目录结构 —— 来自内核
+
+上述所有能力（认证、RBAC、网关、审计、OIDC 提供方、eID/SSO、AI）**都没有写在
+本仓库里** —— 它们通过 `go.mod` 来自 `public-gerege-core` 这个 Go 模块。因此
+`backend/` 中**只有一个 Go 文件**：
 
 ```
 backend/
-├── cmd/api/server/        # 手动依赖注入接线 (server.go)
-├── internal/
-│   ├── business/
-│   │   ├── domain/         # 纯领域层（不 import 任何内部包）
-│   │   └── usecases/       # 业务逻辑（仅依赖接口）
-│   ├── datasources/
-│   │   ├── repositories/   # pgx 适配器 + 接口
-│   │   └── caches/         # redis
-│   └── http/
-│       ├── handlers/       # func(w,r) error、v1.Wrap
-│       ├── middlewares/    # 认证、oauth-bearer、限流 …
-│       └── routes/         # 路由分组
-├── pkg/                    # eid、oidc、secrethash、gemini …
-└── migrations/             # 编号 SQL (N_name.up/down.sql)
+├── cmd/api/main.go        # 约 30 行：启动内核，再加上自己的路由
+├── deploy/                # Dockerfile、数据库初始化
+└── .env.example           # 配置模板
 ```
+
+```go
+func main() {
+    server.ServiceName = "gerege-template"
+    app, err := server.NewApp()          // ← 全部能力来自内核
+    // 在此添加本应用自己的路由：
+    //   app.Router().Route("/api/xxx", xxx.Routes(app.Pool()))
+    app.Run()
+}
+```
+
+内核分为两层：**`public-gerege-core`**（开放基座，政务线直接使用）与通过
+`go.mod` 继承它的 **`private-gerege-core`**（封闭，供 Gerege 线使用）。
 
 ## 前端目录结构 — `@gerege/ui-core`
 

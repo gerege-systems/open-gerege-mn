@@ -101,6 +101,25 @@ Windows/Linux 仍使用**标准窗口边框**（不写入 `data-titlebar`）—�
 这两个平台上窗口控件的位置与顺序取决于桌面环境主题（Windows 11 snap、GNOME/KDE），
 自绘的话任何细微差异都会显得像故障。`data-desktop` 标记在所有平台都会写入。
 
+### 外壳自身的页面
+
+应用几乎全部加载 Web UI，但**有两个页面属于外壳**：`static/offline.html`
+（服务器不可达）与 `static/server.html`（切换服务器）。它们是 `file://` 页面，
+因此接触不到 Web 的 CSS。
+
+**规则：`static/shell.css` 与 `frontend/src/app/globals.css` 保持 lockstep。**
+所有令牌（颜色、圆角、字体）与基础组件（`.card`、`.btn`、`.input`、`.field`）
+都从那里复制而来 —— 不要在 `shell.css` 里新增 hex/颜色；`globals.css` 变更时同步
+更新本文件。原因：这些页面出现在应用**之前**（断网、首次配置），若用另一套配色，
+用户会感觉这是另一个程序。该做法取自
+[eid-platform-mn](https://github.com/gerege-systems/eid-platform-mn) 的桌面客户端 ——
+其 macOS（`Design/Colors.swift`）与 Windows（`Colors.xaml`）层同样由 Web 的
+`globals.css` 供给。
+
+两处差异是有意为之：(1) 主题走 `prefers-color-scheme` —— Web 中设置
+`html[data-theme]` 的 bootstrap 脚本和用户选择在 `file://` 页面都不存在；
+(2) 字体栈直接写死 —— `next/font` 的变量到不了这里。
+
 ## 自动更新
 
 应用会**自行**发现新版本、下载并重启——用户无需手动下载安装。基于

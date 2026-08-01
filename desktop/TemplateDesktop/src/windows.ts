@@ -277,7 +277,10 @@ function attachFullScreenStyle(win: BrowserWindow): void {
  */
 export function showOffline(win: BrowserWindow, reason: string): void {
   void win.loadFile(path.join(STATIC_DIR, 'offline.html'), {
-    query: { origin: appOrigin, reason },
+    // `overlay` — гарчгийн мөр цонхонд шингэсэн эсэх. Хуудас өөрөө платформоо
+    // мэдэх аргагүй (file:// хуудсанд зөвхөн geregeShell гүүр нээгддэг) тул
+    // чирэх бүс хэрэгтэй эсэхийг main процесс хэлж өгнө.
+    query: { origin: appOrigin, reason, overlay: usesOverlayTitleBar() ? '1' : '0' },
   });
 }
 

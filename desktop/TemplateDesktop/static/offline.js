@@ -10,6 +10,10 @@
   document.getElementById('origin').textContent = params.get('origin') || '—';
   document.getElementById('reason').textContent = params.get('reason') || '—';
 
+  // Чирэх бүс зөвхөн гарчгийн мөргүй цонхонд (macOS hiddenInset) хэрэгтэй —
+  // стандарт хүрээтэй Windows/Linux дээр энэ нь зүгээр нэг хоосон зурвас болно.
+  document.body.dataset.overlay = params.get('overlay') === '1' ? '1' : '0';
+
   document.getElementById('retry').addEventListener('click', function () {
     window.geregeShell.retry();
   });

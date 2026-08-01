@@ -9,7 +9,7 @@ frontend + Gemini AI pipeline, wired together, security-hardened and ready to
 extend into any system. Build the value, not the plumbing — the identity,
 security, AI and service scaffolding come solved from day one. A reference
 deployment runs as **Gerege Template Platform** at
-[template.gerege.mn](https://template.gerege.mn), showcasing the platform's eID
+[public.template.gerege.mn](https://public.template.gerege.mn), showcasing the platform's eID
 single sign-on in production.
 
 The platform is the code expression of **Gerege Systems LLC**'s stated mission —
@@ -50,12 +50,16 @@ gerege-template-platform/
 ├── backend/           # Go · chi (net/http) · pgx (pgxpool) · PostgreSQL · Redis · eID/Google/SSO auth
 │   └── docs/          # ARCHITECTURE · DEVELOPMENT · API_CONTRACT · SECURITY (EN/MN)
 ├── frontend/          # Next.js BFF (server-side proxy to the backend; cookie sessions)
-└── desktop/           # Electron shell loading the web app 1:1 (macOS · Windows · Linux)
+├── mobile/            # Native mobile clients — ios/TemplateApp (SwiftUI) · android/TemplateApp (Kotlin · Compose)
+└── desktop/           # Native desktop clients — macos-app (SwiftUI) · windows-app (WinUI 3)
 ```
 
 - **[backend/README.md](../backend/README.md)** — Clean Architecture Go API.
 - **[frontend/README.md](../frontend/README.md)** — Next.js Backend-for-Frontend.
-- **[desktop/TemplateDesktop/README.md](../desktop/TemplateDesktop/README.md)** — cross-platform desktop client.
+- **[mobile/ios/TemplateApp/README.md](../mobile/ios/TemplateApp/README.md)** — native iOS client (SwiftUI).
+- **[mobile/android/TemplateApp/README.md](../mobile/android/TemplateApp/README.md)** — native Android client (Kotlin · Compose).
+- **[desktop/macos-app/README.md](../desktop/macos-app/README.md)** — native macOS client (SwiftUI).
+- **[desktop/windows-app/README.md](../desktop/windows-app/README.md)** — native Windows client (WinUI 3).
 
 ## Features
 

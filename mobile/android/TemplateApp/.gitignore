@@ -1,0 +1,19 @@
+# Gradle / Android build артефактууд
+.gradle/
+build/
+app/build/
+captures/
+*.apk
+*.aab
+*.aar
+
+# SDK-ийн локал зам — машин бүрт өөр (ANDROID_HOME-оор ч өгч болно)
+local.properties
+
+# IDE
+.idea/
+*.iml
+.cxx/
+
+# OS
+.DS_Store

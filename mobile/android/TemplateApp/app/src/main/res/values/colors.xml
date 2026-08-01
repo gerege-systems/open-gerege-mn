@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Gerege Template Platform V3.0
+  Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
+
+  ЭХ СУРВАЛЖ: frontend/src/app/globals.css (Compose талын хуулбар нь
+  ui/Tokens.kt). Энд зөвхөн Compose эхлэхээс ӨМНӨ хэрэгтэй өнгө (цонхны дэвсгэр,
+  дүрсний дэвсгэр) байна — бусад бүх өнгө Tokens.kt-д.
+-->
+<resources>
+    <color name="window_bg">#FAFAFB</color>
+    <color name="ic_launcher_background">#0B5CD8</color>
+</resources>

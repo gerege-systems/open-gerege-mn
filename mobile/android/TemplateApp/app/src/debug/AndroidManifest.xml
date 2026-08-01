@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Gerege Template Platform V3.0
+  Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
+
+  Зөвхөн debug build: локал BFF (`npm run dev`) нь TLS-гүй тул эмулятороос
+  харагдах хостын хаягуудад cleartext-ийг цэгцтэйгээр нээнэ. Release build
+  энэ overlay-г ОГТ авахгүй — прод апп зөвхөн https-ээр ярина.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application android:networkSecurityConfig="@xml/network_security_config" />
+</manifest>

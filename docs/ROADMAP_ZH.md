@@ -7,14 +7,14 @@
 > 政府机构与私营部门的任何数字服务都能放心地在其上构建。
 > 一套基础 — 承载政府与私营部门的所有服务。其核心能力是基于 eID 的
 > 单点登录（Single Sign-On），现成的标杆部署是
-> **Gerege Template Platform**（[template.gerege.mn](https://template.gerege.mn)）。
+> **Gerege Template Platform**（[public.template.gerege.mn](https://public.template.gerege.mn)）。
 > 本文件展示已完成的工作与后续计划。
 > 详细文档：[README.md](../README.md#documentation)。
 
 **当前状态：** 平台的所有组成部分都已在生产中得到验证 — eID 登录、Google 绑定、
 dgov SSO 消费方、自有 OIDC 提供方（Hydra）、组织/成员、政务服务、API 网关、
 PAdES 签名、第三方集成、审计、RBAC/超级管理员、站点外观 — 全部在标杆部署
-（[template.gerege.mn](https://template.gerege.mn)）上稳定运行（CI 绿色）。
+（[public.template.gerege.mn](https://public.template.gerege.mn)）上稳定运行（CI 绿色）。
 
 ---
 
@@ -96,7 +96,7 @@ PAdES 签名、第三方集成、审计、RBAC/超级管理员、站点外观 �
 
 ### 部署
 
-- 在 [template.gerege.mn](https://template.gerege.mn) 上完成生产部署
+- 在 [public.template.gerege.mn](https://public.template.gerege.mn) 上完成生产部署
   （docker compose：db + redis + migrate + api + web）
 - 所有文档已按 EN/MN 成对更新；DEPLOYMENT(_MN).md、AI_PIPELINE(_MN).md、CLAUDE.md
 

@@ -19,7 +19,7 @@
 
 services:
   web:
-    # Edge nginx энэ нэрээр прокси хийдэг (deploy/edge/template.gerege.mn.conf).
+    # Edge nginx энэ нэрээр прокси хийдэг (deploy/edge/public.template.gerege.mn.conf).
     container_name: template-gerege-web
 
     environment:

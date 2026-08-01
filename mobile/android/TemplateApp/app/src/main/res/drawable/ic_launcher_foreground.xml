@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Gerege Template Platform V3.0
+  Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
+
+  Аппын дүрсний урд талын давхарга — бамбай + баталгааны тэмдэг (iOS-ийн
+  `shield.checkerboard`-ийн дүйцэл). 108dp viewport, аюулгүй бүс = төв 66dp.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#FCFCFD"
+        android:pathData="M54,28 L78,38 L78,56 C78,71 68,82 54,86 C40,82 30,71 30,56 L30,38 Z" />
+
+    <path
+        android:strokeColor="#0B5CD8"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M43,55 L51,63 L66,48" />
+</vector>

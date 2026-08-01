@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template.gerege.mn — edge nginx vhost суулгах.
+# public.template.gerege.mn — edge nginx vhost суулгах.
 #
 # Энэ скрипт ХОСТ ДЭЭР ажиллана (deploy/deploy.sh дуудна, эсвэл гараар):
 #

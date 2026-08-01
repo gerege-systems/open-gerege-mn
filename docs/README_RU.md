@@ -10,7 +10,7 @@
 безопасности и готовые к расширению в любую систему. Вы создаёте ценность, а не
 инфраструктуру — идентификация, безопасность, AI и каркас сервисов уже решены с
 первого дня. Эталонное развёртывание работает как **Gerege Template Platform** на
-[template.gerege.mn](https://template.gerege.mn) и показывает единый вход через
+[public.template.gerege.mn](https://public.template.gerege.mn) и показывает единый вход через
 eID в продакшене.
 
 Платформа — это код-выражение заявленной миссии **Gerege Systems ХХК**:
@@ -52,12 +52,16 @@ gerege-template-platform/
 ├── backend/           # Go · chi (net/http) · pgx (pgxpool) · PostgreSQL · Redis · аутентификация eID/Google/SSO
 │   └── docs/          # ARCHITECTURE · DEVELOPMENT · API_CONTRACT · SECURITY (EN/MN/ZH/RU)
 ├── frontend/          # Next.js BFF (серверный прокси к бэкенду; сессии в куках)
-└── desktop/           # Electron-оболочка, загружающая веб-приложение 1:1 (macOS · Windows · Linux)
+├── mobile/            # Нативные мобильные клиенты — ios/TemplateApp (SwiftUI) · android/TemplateApp (Kotlin · Compose)
+└── desktop/           # Нативные десктоп-клиенты — macos-app (SwiftUI) · windows-app (WinUI 3)
 ```
 
 - **[backend/README_RU.md](../backend/README_RU.md)** — Go API на Clean Architecture.
 - **[frontend/README_RU.md](../frontend/README_RU.md)** — Next.js Backend-for-Frontend.
-- **[desktop/TemplateDesktop/README_RU.md](../desktop/TemplateDesktop/README_RU.md)** — кроссплатформенный десктоп-клиент.
+- **[mobile/ios/TemplateApp/README_RU.md](../mobile/ios/TemplateApp/README_RU.md)** — нативный iOS-клиент (SwiftUI).
+- **[mobile/android/TemplateApp/README_RU.md](../mobile/android/TemplateApp/README_RU.md)** — нативный Android-клиент (Kotlin · Compose).
+- **[desktop/macos-app/README_RU.md](../desktop/macos-app/README_RU.md)** — нативный macOS-клиент (SwiftUI).
+- **[desktop/windows-app/README_RU.md](../desktop/windows-app/README_RU.md)** — нативный Windows-клиент (WinUI 3).
 
 ## Возможности
 

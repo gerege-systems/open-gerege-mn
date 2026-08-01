@@ -48,9 +48,9 @@ La plataforma se compone de varios servicios independientes:
 | Dominio | Función |
 |---|---|
 | **sso.gerege.mn** | Gerege SSO — proveedor OIDC + parte confiante de eID (custodia las credenciales eID) |
-| **template.gerege.mn** | Aplicación de ejemplo: parte confiante de Gerege SSO (accede a través del SSO) |
+| **public.template.gerege.mn** | Aplicación de ejemplo: parte confiante de Gerege SSO (accede a través del SSO) |
 
-Las aplicaciones (como `template.gerege.mn`) acceden a través de
+Las aplicaciones (como `public.template.gerege.mn`) acceden a través de
 **sso.gerege.mn** y llaman a los servicios eID autorizados mediante un proxy.
 Solo el SSO custodia las credenciales de parte confiante que dialogan con eID
 Mongolia, de modo que las aplicaciones quedan libres de esa carga de seguridad.

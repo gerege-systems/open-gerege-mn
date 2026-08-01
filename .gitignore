@@ -17,9 +17,12 @@ backend.env
 /frontend/node_modules/
 /frontend/.next/
 /frontend/out/
-/desktop/TemplateDesktop/node_modules/
-/desktop/TemplateDesktop/dist/
-/desktop/TemplateDesktop/release/
+/desktop/windows-app/**/bin/
+/desktop/windows-app/**/obj/
+/desktop/windows-app/**/AppPackages/
+/mobile/android/**/.gradle/
+/mobile/android/**/build/
+/mobile/android/**/local.properties
 
 # MkDocs build output + local venv (docs-site)
 docs-site/site/

@@ -46,9 +46,9 @@ The platform is composed of several independent services:
 | Domain | Role |
 |---|---|
 | **sso.gerege.mn** | Gerege SSO — OIDC provider + eID Relying Party (holds the eID credentials) |
-| **template.gerege.mn** | Example app — a relying party of Gerege SSO (signs in via SSO) |
+| **public.template.gerege.mn** | Example app — a relying party of Gerege SSO (signs in via SSO) |
 
-Apps (such as `template.gerege.mn`) sign in through **sso.gerege.mn** and call the
+Apps (such as `public.template.gerege.mn`) sign in through **sso.gerege.mn** and call the
 authorized eID services via a proxy. Only the SSO holds the RP credentials that
 talk to eID Mongolia, so apps are freed from that security burden.
 

@@ -1,0 +1,125 @@
+<!--
+  Gerege Template Platform V3.0
+  Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
+
+  Хяналтын самбар. Бүтэц нь eid-platform-mn-ийн DashboardPage-ээс: дээд эгнээ
+  (гарчиг + хэрэглэгч), статистикийн хайрцгууд, дараа нь дэлгэрэнгүй картууд.
+  Өгөгдөл нь платформын BFF-ээс — /api/me ба /api/me/eid/summary.
+-->
+<UserControl
+    x:Class="GeregeDesktop.Client.Features.Dashboard.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer Background="{ThemeResource BgBrush}">
+        <StackPanel Padding="32" Spacing="24" MaxWidth="980" HorizontalAlignment="Center">
+
+            <!-- ========== Толгой ========== -->
+            <Grid>
+                <StackPanel Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="Хяналтын самбар" Style="{StaticResource HeroText}" />
+                    <TextBlock Text="Gerege Template Platform V3.0" Style="{StaticResource BodyText}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <StackPanel Spacing="2" HorizontalAlignment="Right">
+                        <TextBlock x:Name="UserNameText" FontSize="14" FontWeight="SemiBold"
+                                   Foreground="{ThemeResource FgBrush}" HorizontalAlignment="Right" />
+                        <Border Background="{ThemeResource BrandSoftBrush}"
+                                CornerRadius="6"
+                                Padding="8,4" HorizontalAlignment="Right">
+                            <TextBlock x:Name="RoleText" FontSize="12" Foreground="{ThemeResource BrandTextBrush}" />
+                        </Border>
+                    </StackPanel>
+
+                    <Border Width="44" Height="44" CornerRadius="22" Background="{ThemeResource BrandSoftBrush}">
+                        <TextBlock x:Name="InitialsText" FontSize="15" FontWeight="SemiBold"
+                                   Foreground="{ThemeResource BrandTextBrush}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <Button Content="Гарах" Style="{StaticResource SecondaryButton}" Click="OnSignOut" />
+                </StackPanel>
+            </Grid>
+
+            <!-- ========== Статистик ========== -->
+            <Grid x:Name="StatRow" ColumnSpacing="16" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource AppCard}" Padding="16">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="ГЭРЧИЛГЭЭ" Style="{StaticResource EyebrowText}" />
+                        <TextBlock x:Name="CertValue" FontSize="28" FontWeight="SemiBold" Foreground="{ThemeResource FgBrush}" />
+                        <TextBlock x:Name="CertNote" Style="{StaticResource LabelText}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource AppCard}" Padding="16">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="БАТАЛГААЖУУЛАЛТ" Style="{StaticResource EyebrowText}" />
+                        <TextBlock x:Name="AuthValue" FontSize="28" FontWeight="SemiBold" Foreground="{ThemeResource FgBrush}" />
+                        <TextBlock Text="гүйлгээ" Style="{StaticResource LabelText}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource AppCard}" Padding="16">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="ГАРЫН ҮСЭГ" Style="{StaticResource EyebrowText}" />
+                        <TextBlock x:Name="SignValue" FontSize="28" FontWeight="SemiBold" Foreground="{ThemeResource FgBrush}" />
+                        <TextBlock Text="гүйлгээ" Style="{StaticResource LabelText}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="3" Style="{StaticResource AppCard}" Padding="16">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="ТӨХӨӨРӨМЖ" Style="{StaticResource EyebrowText}" />
+                        <TextBlock x:Name="DeviceValue" FontSize="28" FontWeight="SemiBold" Foreground="{ThemeResource FgBrush}" />
+                        <TextBlock x:Name="DeviceNote" Style="{StaticResource LabelText}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ========== Дэлгэрэнгүй картууд ========== -->
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource AppCard}" VerticalAlignment="Top">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Профайл" Style="{StaticResource TitleText}" />
+                        <StackPanel x:Name="ProfileRows" Spacing="8" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource AppCard}" VerticalAlignment="Top">
+                    <StackPanel Spacing="12">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Иргэний танилт" Style="{StaticResource TitleText}" />
+                            <Border x:Name="EidChip"
+                                    Background="{ThemeResource GoldBrush}"
+                                    CornerRadius="6"
+                                    Padding="8,2"
+                                    Visibility="Collapsed"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="eID" FontSize="12" Foreground="White" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel x:Name="IdentityRows" Spacing="8" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

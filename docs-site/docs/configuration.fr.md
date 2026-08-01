@@ -15,7 +15,7 @@
 | `PORT` | `8080` | Port d'écoute de l'API |
 | `ENVIRONMENT` | `production` | Active les garde-fous stricts de production |
 | `DEBUG` | `false` | Journalisation détaillée |
-| `ALLOWED_ORIGINS` | `https://template.gerege.mn` | Liste d'origines CORS (séparées par des virgules ; `*` interdit) |
+| `ALLOWED_ORIGINS` | `https://public.template.gerege.mn` | Liste d'origines CORS (séparées par des virgules ; `*` interdit) |
 | `TRUSTED_PROXIES` | — | Adresses des reverse proxies |
 
 ## Base de données et Redis
@@ -58,7 +58,7 @@
 |---|---|---|
 | `SSO_ISSUER` | `https://sso.gerege.mn` | Valeur par défaut si non défini |
 | `SSO_CLIENT_ID` / `SSO_CLIENT_SECRET` | — | Vide : le flux SSO reste inerte |
-| `SSO_REDIRECT_URI` | `https://template.gerege.mn/sso/callback` | Doit être enregistré **à l'identique** sur le client SSO |
+| `SSO_REDIRECT_URI` | `https://public.template.gerege.mn/sso/callback` | Doit être enregistré **à l'identique** sur le client SSO |
 | `SSO_SCOPE` | `openid profile email nationalid` | `nationalid` ajoute le numéro de registre |
 | `SSO_NATIVE_CLIENT_ID` | — | Client du flux mobile (PKCE, public) |
 | `SSO_EID_PROXY_BASE_URL` | — | Si défini, la surface ICP eID passe par le proxy du SSO |
@@ -72,7 +72,7 @@
 
 | Variable | Rôle |
 |---|---|
-| `OAUTH_ISSUER` | Par exemple `https://template.gerege.mn`. Le fournisseur n'est activé **que** si elle est définie |
+| `OAUTH_ISSUER` | Par exemple `https://public.template.gerege.mn`. Le fournisseur n'est activé **que** si elle est définie |
 | `SSO_STATE_KEY` | Clé HMAC de l'état transitoire de connexion/consentement (**≥32 octets**) |
 | `SSO_FIRSTPARTY_CLIENTS` | Clients de première partie qui sautent l'écran de consentement |
 | `SSO_ADMIN_API_KEYS`, `SSO_ADMIN_SUBS` | Accès à l'API d'administration |

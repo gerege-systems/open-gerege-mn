@@ -2513,3 +2513,80 @@ html[lang="en"] .i18n-banner { display: block; }
   color: var(--fg); cursor: pointer;
 }
 .cfield__more:hover { border-color: var(--border-strong); }
+
+/* ============================================================================
+   Desktop бүрхүүл (Electron) — html[data-desktop="darwin|win32|linux"]
+
+   Тэмдэглэгээг `public/theme-bootstrap.js` нь preload-ийн тавьсан
+   `window.geregeDesktop`-оос уншиж, хуудас зурагдахаас ӨМНӨ <html>-д тавина
+   (desktop/TemplateDesktop/src/preload.ts).
+
+   Хоёр түвшин:
+     [data-desktop]                    — хөтөч биш гэдгээс үүдэх ерөнхий засвар
+     [data-titlebar="overlay"]         — цонх гарчгийн мөргүй (macOS hiddenInset):
+                                         аппын дээд эгнээ нь гарчгийн мөр болно
+   ============================================================================ */
+
+html[data-desktop] {
+  /* Гэрлэн товчнуудад (traffic lights) зүүн дээд буланд нөөцлөх өргөн.
+     Бодит утгыг бүрхүүл өгнө; хүрээтэй цонхонд 0 хэвээр. */
+  --titlebar-inset: 0px;
+}
+
+/* Хөтчийн бичвэр сонгох зан төлөв нь native цонхонд эвгүй — цэс, самбарын
+   шошго чирэхэд сонгогдож "тодорч" эхэлдэг. Агуулгад хамаарахгүй. */
+html[data-desktop] :is(.iconrail, .sidepanel, .topbar2, .topbar, .rail, .lp-nav, .signin-shell__nav, .bottombar) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Хөтчийн "уян" гүйлгэлт (rubber-band) — цонхон дотор гажиг харагдана. */
+html[data-desktop] body { overscroll-behavior: none; }
+
+/* Нимгэн, өнгөнд нийцсэн гүйлгүүр — macOS-ийн native overlay гүйлгүүртэй ойр. */
+html[data-desktop] * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+/* ---------- Гарчгийн мөр шингэсэн цонх (macOS) ---------- */
+
+/* Аппын дээд эгнээ бүхэлдээ цонх чирэх бүс. Гурван баганын (icon rail ·
+   sidepanel · maincol) толгой нь ижил өндөртэй тул нэг тасралтгүй зурвас
+   болно. Landing / нэвтрэх хуудсууд өөрсдийн nav-аараа мөн адил. */
+html[data-desktop][data-titlebar="overlay"]
+  :is(.iconrail__brand, .sidepanel__head, .topbar2, .topbar, .lp-nav__inner, .signin-shell__nav) {
+  -webkit-app-region: drag;
+}
+
+/* Чирэх бүс дэх дарагдах зүйлс. `-webkit-app-region` нь Chromium дээр
+   УДАМШДАГ тул сав бүрд no-drag тавихад дотоод элементүүд нь дагана —
+   эс бөгөөс товч, хайлт, цэс дарагдахаа болино. */
+html[data-desktop][data-titlebar="overlay"]
+  :is(.iconrail__brand, .sidepanel__head, .topbar2, .topbar, .lp-nav__inner, .signin-shell__nav)
+  :is(a, button, input, select, textarea, label, [role='button'], [tabindex],
+      .topbar2__search, .topbar2__actions, .segmented, .user-menu, .navsearch, .lp-nav__actions, .lp-nav__links) {
+  -webkit-app-region: no-drag;
+}
+
+/* Гэрлэн товчнууд icon rail-ийн толгойд суудаг тул тэнд байсан жижиг брэнд
+   тэмдгийг нуулаа (брэнд нэр нь sidepanel-ийн толгойд хэвээр). Өндрийг нь
+   хэвээр үлдээж эгнээний зэрэгцээг хадгална. */
+html[data-desktop][data-titlebar="overlay"] .iconrail__brand img { visibility: hidden; }
+
+/* Бүтэн өргөнтэй nav-ууд — эхний агуулга товчнуудын доор дарагдахгүй байх зай. */
+html[data-desktop][data-titlebar="overlay"] .lp-nav__inner { padding-left: calc(var(--lp-pad) + var(--titlebar-inset)); }
+html[data-desktop][data-titlebar="overlay"] .signin-shell__nav { padding-left: calc(32px + var(--titlebar-inset)); }
+html[data-desktop][data-titlebar="overlay"] .topbar { padding-left: calc(24px + var(--titlebar-inset)); }
+
+/* ≤900px үед icon rail алга болж (`display: none`) `topbar2` зүүн ирмэгээс
+   эхэлдэг — ☰ товч гэрлэн товчнуудын доор дарагдахаас сэргийлж зай гаргана.
+   Өргөн цонхонд icon rail өөрөө тэр зайг эзэлдэг тул шаардлагагүй. */
+@media (max-width: 900px) {
+  html[data-desktop][data-titlebar="overlay"] .topbar2 { padding-left: calc(20px + var(--titlebar-inset)); }
+}
+
+/* Бүтэн дэлгэц (macOS ⌃⌘F) үед гэрлэн товчнууд алга болдог тул нөөцөлсөн зай
+   илүүц. Үүнийг DOM-оос мэдэх аргагүй (native fullscreen нь Fullscreen API-г
+   өдөөдөггүй) — бүрхүүл өөрөө `webContents.insertCSS`-ээр дарж бичнэ
+   (desktop/TemplateDesktop/src/windows.ts → FULLSCREEN_CSS). */

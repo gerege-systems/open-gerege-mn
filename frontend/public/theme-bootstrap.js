@@ -21,6 +21,22 @@
     if (lang !== 'mn' && lang !== 'en' && lang !== 'zh' && lang !== 'ru') lang = 'mn';
     root.setAttribute('lang', lang);
 
+    // Desktop бүрхүүл (Electron). preload нь хуудасны script-үүдээс ӨМНӨ
+    // `window.geregeDesktop`-ыг тавьдаг тул энд аль хэдийн бэлэн — ингэснээр
+    // desktop харагдац эхний зурагдалтаас тогтож, хөтчийн layout анивчихгүй.
+    // `overlayTitleBar` = цонх гарчгийн мөргүй (macOS hiddenInset): аппын дээд
+    // эгнээ өөрөө гарчгийн мөрийн үүрэг гүйцэтгэх тул зүүн дээд буланд
+    // цонхны удирдлагад зай нөөцөлнө.
+    var desk = window.geregeDesktop;
+    if (desk && desk.isDesktop) {
+      root.setAttribute('data-desktop', typeof desk.platform === 'string' ? desk.platform : 'unknown');
+      if (desk.overlayTitleBar) {
+        root.setAttribute('data-titlebar', 'overlay');
+        var inset = Number(desk.titleBarInset);
+        root.style.setProperty('--titlebar-inset', (inset > 0 && inset < 200 ? inset : 78) + 'px');
+      }
+    }
+
     var authed = /^\/(me|admin|manager|profile|settings)(\/|$)/.test(location.pathname);
 
     if (authed) {

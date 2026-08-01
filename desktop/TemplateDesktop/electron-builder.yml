@@ -1,8 +1,12 @@
 # Gerege Template Platform V3.0
 # Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
 #
-# Багцлалтын тохиргоо. Одоогийн дэмжигдсэн target нь macOS —
-# win/linux хэсэг нь дараагийн платформд бэлтгэсэн суурь (туршигдаагүй).
+# Багцлалтын тохиргоо — macOS · Windows · Linux.
+#
+# Багц бүрийг ӨӨРИЙНХ НЬ үйлдлийн систем дээр (эсвэл CI-ийн тухайн runner дээр)
+# бүтээнэ: mac багцад codesign, Windows-ийн NSIS-д wine шаардлагатай тул нэг
+# хостоос гурвуулангийг найдвартай гаргах боломжгүй. CI матриц —
+# .github/workflows/ci.yml (desktop job).
 
 appId: mn.gerege.temp.desktop
 productName: Gerege Template
@@ -66,12 +70,68 @@ dmg:
       type: link
       path: /Applications
 
-# --- Дараагийн платформууд (одоогоор туршигдаагүй) ---
 win:
-  target: [nsis]
-  icon: resources/icon.icns
+  # .ico-г electron-builder энэ 1024px PNG-ээс автоматаар хөрвүүлнэ.
+  icon: resources/icon.png
+  # os + arch нэр дээр — гурван OS-ийн гаралт release/-д холилдохгүй. mac-ийн
+  # нэршлийг ЗОРИУД хөндөөгүй: түүний авто-шинэчлэлтийн feed аль хэдийн
+  # тодорхойлогдсон тул нэр солих нь шаардлагагүй эрсдэл.
+  artifactName: ${productName}-${version}-win-${arch}.${ext}
+  target:
+    - target: nsis
+      arch: [x64, arm64]
+    # Суулгацгүй хувилбар — суулгах эрхгүй орчинд (жишээ нь байгууллагын
+    # түгжээтэй компьютер) шууд ажиллуулах боломж.
+    #
+    # Анхаар: portable нь ӨӨРИЙГӨӨ ШИНЭЧЛЭХГҮЙ — electron-updater зөвхөн NSIS-ээр
+    # суулгасан аппыг шинэчилдэг. Portable хэрэглэгч гараар татаж солино.
+    - target: portable
+      arch: [x64]
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Gerege Template
 
 linux:
-  target: [AppImage, deb]
+  icon: resources/icon.png
   category: Office
-  icon: resources/icon.icns
+  artifactName: ${productName}-${version}-linux-${arch}.${ext}
+  # productName-д зай байгаа тул хоёртын нэрийг тодорхой тогтооно —
+  # доорх StartupWMClass яг үүнтэй таарах ёстой.
+  executableName: gerege-template
+  synopsis: Gerege Template Platform desktop клиент
+  description: >-
+    Gerege Template Platform V3.0-ийн desktop клиент — платформын web
+    интерфейсийг 1:1 ачаалж, native цонх, цэс, эрхийн бодлого нэмнэ.
+  maintainer: Gerege Systems <info@gerege.mn>
+  vendor: Gerege Systems
+  desktop:
+    entry:
+      # Цонхыг .desktop бичлэгтэй холбоно — эс бөгөөс Wayland/GNOME дээр
+      # таскбарт дүрсгүй, "Unknown" нэртэй харагдана.
+      StartupWMClass: gerege-template
+  target:
+    # AppImage нь Linux дээрх ЦОРЫН ГАНЦ авто-шинэчлэгддэг хэлбэр
+    # (electron-updater). deb/rpm-ыг дистрогийн пакет менежер шинэчилнэ.
+    - target: AppImage
+      arch: [x64, arm64]
+    - target: deb
+      arch: [x64, arm64]
+    - target: rpm
+      arch: [x64]
+
+deb:
+  # Electron-ы Chromium давхаргад шаардагдах системийн сангууд.
+  depends:
+    - libgtk-3-0
+    - libnotify4
+    - libnss3
+    - libxss1
+    - libxtst6
+    - xdg-utils
+    - libatspi2.0-0
+    - libsecret-1-0

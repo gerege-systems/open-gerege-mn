@@ -12,8 +12,19 @@
 > `frontend/`-ийн яг тэр код. Desktop тал нь өөрийн UI-гүй тул web дээр гарсан
 > шинэчлэлт **дахин build хийхгүйгээр** аппад шууд тусна.
 
-Одоогийн дэмжигдсэн платформ нь **macOS 12+**. Windows/Linux-ийн суурь тохиргоо
-`electron-builder.yml`-д бэлдсэн боловч туршигдаагүй.
+Дэмжигдсэн платформууд: **macOS 12+**, **Windows 10/11**, **Linux**
+(AppImage · deb · rpm).
+
+| Платформ | Багц | Архитектур | Авто-шинэчлэлт |
+|---|---|---|---|
+| macOS 12+ | `dmg`, `zip` | arm64 · x64 | ✅ (zip-ээр) |
+| Windows 10/11 | `nsis` суулгагч, `portable` | x64 (nsis: + arm64) | ✅ зөвхөн NSIS — portable шинэчлэгдэхгүй |
+| Linux | `AppImage`, `deb`, `rpm` | x64 (AppImage/deb: + arm64) | ✅ зөвхөн AppImage — deb/rpm-ыг пакет менежер шинэчилнэ |
+
+> **Багц бүрийг өөрийнх нь OS дээр бүтээнэ.** macOS багцад `codesign`,
+> Windows-ийн NSIS-д wine шаардлагатай тул нэг хостоос гурвуулангийн багцыг
+> найдвартай гаргах боломжгүй — CI-ийн тухайн runner дээр (эсвэл зорилтот OS
+> дээр) build хийнэ.
 
 ## Архитектур
 
@@ -93,8 +104,10 @@ frontend/src/app/globals.css → html[data-desktop] { … }
 `webContents.insertCSS`-ээр нөөцөлсөн зайг тэглэнэ (`src/windows.ts`).
 
 Windows/Linux дээр цонх **стандарт хүрээтэй** хэвээр (`data-titlebar` тавигдахгүй)
-— тэдгээр платформ энэ репод туршигдаагүй тул цонхны удирдлагыг өөрсдөө зурах
-эрсдэлийг аваагүй. `data-desktop` тэмдэглэгээ бүх платформд тавигдана.
+— энэ нь **зориудын шийдвэр**: тэдгээр платформ дээр цонхны удирдлагын байрлал,
+дараалал нь орчны сэдэвээс (Windows 11 snap, GNOME/KDE) хамаардаг тул өөрсдөө
+зурвал жижиг зөрүү бүр эвдрэл шиг харагдана. `data-desktop` тэмдэглэгээ бүх
+платформд тавигдана.
 
 ## Авто-шинэчлэлт
 
@@ -169,6 +182,17 @@ npm run typecheck
 
 `npm run dev`-ийг ажиллуулахын өмнө өөр терминалд `cd frontend && npm run dev`.
 
+Эдгээр script нь **гурван OS дээр, Node-ийн аль ч хувилбар дээр** адилхан
+ажиллана — хоёулаа жижиг оболочкоор дамжина:
+
+- `scripts/dev.mjs` — орчны хувьсагчийг энд тогтооно. POSIX-ийн
+  `VAR=утга команд` бичлэг Windows дээр «команд олдсонгүй» гэж унадаг.
+- `scripts/test.mjs` — тестийн файлуудыг олж `node --test`-д **тодорхой замаар**
+  дамжуулна. `dist/*.test.js` бол `cmd.exe` глоб задалдаггүй тул Windows дээр
+  унана; `"dist/**/*.test.js"` бол глоб дэмжлэг зөвхөн Node 22+; `dist` лавлах
+  нь Node 20 дээр ажиллавч шинэ хувилбарууд түүнийг файл гэж үздэг. Тодорхой
+  жагсаалт нь аль ч хослол дээр ажиллана.
+
 ### Серверийг сонгох
 
 Эрэмбэ: `GEREGE_APP_URL` орчны хувьсагч → аппад хадгалсан сонголт → `template.gerege.mn`.
@@ -180,9 +204,25 @@ npm run typecheck
 ## Багцлах
 
 ```bash
-npm run icon           # frontend/public/brand.webp → resources/icon.icns
+npm run icon           # brand.webp → resources/icon.png (+ macOS дээр icon.icns)
+npm run pack           # release/*-unpacked/ — багцлалгүй, тохиргоо шалгах хурдан арга
+
 npm run dist:mac       # release/*.dmg + *.zip (arm64 · x64), гарын үсэггүй
+npm run dist:win       # release/*.exe — NSIS суулгагч + portable
+npm run dist:linux     # release/*.AppImage + *.deb + *.rpm
 ```
+
+Windows/Linux-ийн гаралт нь `Gerege Template-<хувилбар>-<os>-<arch>.<өргөтгөл>`
+нэртэй. macOS-ийн нэршлийг **зориуд хөндөөгүй** — түүний авто-шинэчлэлтийн суваг
+аль хэдийн тодорхойлогдсон тул нэр солих нь шаардлагагүй эрсдэл.
+
+**Дүрс.** `npm run icon` нь 1024px `resources/icon.png` үүсгэнэ — Linux шууд
+хэрэглэнэ, Windows-ийн `.ico`-г electron-builder эндээс автоматаар хөрвүүлнэ.
+macOS-ийн `icon.icns` нь зөвхөн macOS дээр (`iconutil`) үүснэ; script нь macOS
+дээр суурин `sips`-ийг, бусад OS дээр ImageMagick-ийг ашиглана. Хоёр дүрс хоёулаа
+репод tracked тул энгийн build-д дахин үүсгэх шаардлагагүй.
+
+### macOS
 
 Гарын үсэггүй build нь **зөвхөн локал турших** зориулалттай — macOS Gatekeeper
 "эвдэрсэн" гэж анхааруулна (`xattr -dr com.apple.quarantine "/Applications/Gerege Template.app"`
@@ -203,6 +243,32 @@ Hardened runtime, entitlements (`build/entitlements.mac.plist`) болон
 байршуулалт нь тусдаа алхам ([Шинэ хувилбар тараах](#шинэ-хувилбар-тараах)).
 Build бүрд `release/latest-mac.yml` (сувгийн заагч) давхар үүснэ.
 
+### Windows
+
+`npm run dist:win` нь хоёр гаралт өгнө: **NSIS суулгагч** (хэрэглэгч суулгах
+хавтсаа сонгоно, desktop + Start menu товчлол үүснэ, админ эрх шаардахгүй —
+`perMachine: false`) болон **portable** `.exe` (суулгахгүй шууд ажиллана —
+түгжээтэй байгууллагын компьютерт хэрэгтэй).
+
+> Авто-шинэчлэлт нь **зөвхөн NSIS-ээр суулгасан** аппад ажиллана. Portable
+> хувилбарыг хэрэглэгч гараар татаж солино — electron-updater түүнийг
+> шинэчилдэггүй.
+
+Гарын үсэг зурахад гэрчилгээгээ `CSC_LINK` / `CSC_KEY_PASSWORD`-оор өгнө. Үгүй
+бол SmartScreen "тодорхойгүй нийтлэгч" гэж анхааруулна. Build-д `latest.yml`
+давхар үүснэ.
+
+### Linux
+
+`npm run dist:linux` нь `AppImage` (ямар ч дистрод шууд ажиллана), `deb`
+(Debian/Ubuntu) болон `rpm` (Fedora/RHEL) гаргана. `deb`-ийн хамаарлууд
+(`libgtk-3-0`, `libnss3`, `libsecret-1-0` г.м) `electron-builder.yml`-д
+жагсаагдсан. Цонхыг `.desktop` бичлэгтэй холбохын тулд `StartupWMClass`
+тогтоосон — эс бөгөөс Wayland/GNOME дээр taskbar-т дүрсгүй харагдана.
+
+> Linux дээр авто-шинэчлэлт нь **зөвхөн AppImage**-д ажиллана (`latest-linux.yml`).
+> `deb`/`rpm`-ыг дистрогийн пакет менежерээр шинэчилнэ.
+
 ## Файлын бүтэц
 
 ```
@@ -220,22 +286,32 @@ src/
   update.test.ts шинэчлэлтийн шийдвэрүүдийн тест
 static/          дотоод хуудсууд — offline.html, server.html, shell.css
 build/           entitlements
-resources/       icon.icns
-scripts/         make-icon.sh
+resources/       icon.png (Linux · Windows), icon.icns (macOS)
+scripts/         make-icon.sh, dev.mjs, test.mjs
 ```
 
 ## Товчлолууд
 
-| Товчлол | Үйлдэл |
-|---|---|
-| `⌘R` / `⌘⇧R` | дахин ачаалах / хүчээр |
-| `⌘[` / `⌘]` | буцах / урагш (хоёр хуруутай зөөлт бас) |
-| `⌘+` / `⌘-` / `⌘0` | томсгох / жижигрүүлэх / бодит хэмжээ |
-| `⌘N` | шинэ цонх |
-| `⌘P` | хэвлэх |
-| `⌘,` | тохиргоо (`/me/settings`) |
-| `⌘⇧S` | сервер солих |
-| `⌘⇧H` | нүүр хуудас |
+macOS дээр `⌘`, Windows/Linux дээр `Ctrl`.
+
+| macOS | Windows / Linux | Үйлдэл |
+|---|---|---|
+| `⌘R` / `⌘⇧R` | `Ctrl+R` / `Ctrl+⇧R` | дахин ачаалах / хүчээр |
+| `⌘[` / `⌘]` | `Alt+←` / `Alt+→` | буцах / урагш |
+| `⌘+` / `⌘-` / `⌘0` | `Ctrl+…` | томсгох / жижигрүүлэх / бодит хэмжээ |
+| `⌘N` | `Ctrl+N` | шинэ цонх |
+| `⌘P` | `Ctrl+P` | хэвлэх |
+| `⌘,` | `Ctrl+,` | тохиргоо (`/me/settings`) |
+| `⌘⇧S` | `Ctrl+⇧S` | сервер солих |
+| `⌘⇧H` | `Ctrl+⇧H` | нүүр хуудас |
+
+Хуудас ухрах/урагшлах нь хулганаар ч ажиллана: macOS дээр **хоёр хуруутай
+зөөлт**, Windows/Linux дээр хулганы **4/5-р товч** (`app-command`).
+
+Цэс нь платформын жишгээр өөр байна: macOS дээр аппын нэрээр эхэлсэн цэс
+(Тохиргоо · Үйлчилгээ · Нуух), Windows/Linux дээр эдгээр нь **Файл** цэсэнд
+шилжинэ. Зөвхөн macOS-д байдаг role-ууд (`zoom`, `front`, `services`) бусад OS
+дээр огт нэмэгдэхгүй.
 
 ## Хязгаарлалт ба анхаарах зүйл
 

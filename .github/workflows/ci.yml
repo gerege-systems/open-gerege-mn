@@ -150,7 +150,7 @@ jobs:
         run: dotnet restore GeregeDesktop.sln
 
       - name: Build
-        run: dotnet build GeregeDesktop.sln --configuration Release --no-restore -p:Platform=x64
+        run: dotnet build GeregeDesktop.sln --configuration Release --no-restore -p:Platform=x64 -v:detailed
 
   # Mobile — Android клиент (Kotlin · Compose). Unit тест + debug APK.
   # ubuntu runner дээр Android SDK урьдчилан суусан байдаг тул нэмэлт татах

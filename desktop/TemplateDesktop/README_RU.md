@@ -31,7 +31,7 @@ Electron: она загружает веб-интерфейс платформы
 ┌────────────────────────────┐
 │  TemplateDesktop (Electron)│  окно · меню · политика навигации · разрешения
 │  ┌──────────────────────┐  │
-│  │ Chromium BrowserWindow│ │  →  https://template.gerege.mn  (Next.js BFF)
+│  │ Chromium BrowserWindow│ │  →  https://public.template.gerege.mn  (Next.js BFF)
 │  └──────────────────────┘  │           │
 └────────────────────────────┘           └→  Go API (/api/v1/*) — напрямую не вызывается
 ```
@@ -163,7 +163,7 @@ bootstrap-скрипта, ставящего `html[data-theme]`, ни выбор
 
 | Настройка | Значение |
 |---|---|
-| Канал | `https://template.gerege.mn/desktop/updates/` (`src/config.ts` и `electron-builder.yml` — **должны совпадать**) |
+| Канал | `https://public.template.gerege.mn/desktop/updates/` (`src/config.ts` и `electron-builder.yml` — **должны совпадать**) |
 | `GEREGE_UPDATE_URL` | временно сменить канал (проверка staging). Только **https** (на loopback допустим http); при неверном значении — возврат к каналу по умолчанию |
 | `GEREGE_UPDATE_DEV=1` | принудительная проверка в неупакованном режиме (нужен `dev-app-update.yml`) |
 
@@ -202,7 +202,7 @@ npm run dist:mac:signed
 cd desktop/TemplateDesktop
 npm install
 
-npm start        # рабочий сервер (template.gerege.mn)
+npm start        # рабочий сервер (public.template.gerege.mn)
 npm run dev      # локальный frontend (localhost:3000) + DevTools
 npm test         # тесты политики навигации и разрешений (node --test)
 npm run typecheck
@@ -224,7 +224,7 @@ npm run typecheck
 ### Выбор сервера
 
 Приоритет: переменная окружения `GEREGE_APP_URL` → сохранённый выбор →
-`template.gerege.mn`.
+`public.template.gerege.mn`.
 
 Пункт меню **Сменить сервер…** (`⌘⇧S`) — готовые варианты или свой адрес.
 Выбор сохраняется в `userData/state.json`. Если задан `GEREGE_APP_URL`, при

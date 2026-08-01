@@ -17,7 +17,7 @@
     <ScrollViewer Background="{ThemeResource BgBrush}">
         <StackPanel Padding="32" Spacing="24" MaxWidth="980" HorizontalAlignment="Center">
 
-            <!-- ---------- Толгой ---------- -->
+            <!-- ========== Толгой ========== -->
             <Grid>
                 <StackPanel Spacing="4" VerticalAlignment="Center">
                     <TextBlock Text="Хяналтын самбар" Style="{StaticResource HeroText}" />
@@ -29,7 +29,7 @@
                         <TextBlock x:Name="UserNameText" FontSize="14" FontWeight="SemiBold"
                                    Foreground="{ThemeResource FgBrush}" HorizontalAlignment="Right" />
                         <Border Background="{ThemeResource BrandSoftBrush}"
-                                CornerRadius="{StaticResource ChipRadius}"
+                                CornerRadius="6"
                                 Padding="8,4" HorizontalAlignment="Right">
                             <TextBlock x:Name="RoleText" FontSize="12" Foreground="{ThemeResource BrandTextBrush}" />
                         </Border>
@@ -45,7 +45,7 @@
                 </StackPanel>
             </Grid>
 
-            <!-- ---------- Статистик ---------- -->
+            <!-- ========== Статистик ========== -->
             <Grid x:Name="StatRow" ColumnSpacing="16" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -87,7 +87,7 @@
                 </Border>
             </Grid>
 
-            <!-- ---------- Дэлгэрэнгүй картууд ---------- -->
+            <!-- ========== Дэлгэрэнгүй картууд ========== -->
             <Grid ColumnSpacing="16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -107,7 +107,7 @@
                             <TextBlock Text="Иргэний танилт" Style="{StaticResource TitleText}" />
                             <Border x:Name="EidChip"
                                     Background="{ThemeResource GoldBrush}"
-                                    CornerRadius="{StaticResource ChipRadius}"
+                                    CornerRadius="6"
                                     Padding="8,2"
                                     Visibility="Collapsed"
                                     VerticalAlignment="Center">

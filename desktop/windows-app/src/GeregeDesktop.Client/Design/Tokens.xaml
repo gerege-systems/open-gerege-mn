@@ -42,7 +42,9 @@
             <Color x:Key="GoldColor">#C9922E</Color>
         </ResourceDictionary>
 
-        <ResourceDictionary x:Key="Dark">
+        <!-- WinUI нь харанхуй загварыг "Default" түлхүүрээр хайдаг —
+             "Dark" гэж нэрлэвэл ХЭЗЭЭ Ч хэрэглэгдэхгүй (чимээгүй алдаа). -->
+        <ResourceDictionary x:Key="Default">
             <Color x:Key="BrandColor">#6D9BFF</Color>
             <Color x:Key="BrandHoverColor">#8DB2FF</Color>
             <Color x:Key="BrandActiveColor">#A8C4FF</Color>
@@ -83,7 +85,7 @@
     <SolidColorBrush x:Key="DangerBrush" Color="{ThemeResource DangerColor}" />
     <SolidColorBrush x:Key="GoldBrush" Color="{ThemeResource GoldColor}" />
 
-    <!-- Нэвтрэх дэлгэцийн зүүн самбарын навй (`--lp-navy`) — загвараас хамаарахгүй. -->
+    <!-- Нэвтрэх дэлгэцийн зүүн самбарын навй (`==lp-navy`) — загвараас хамаарахгүй. -->
     <Color x:Key="NavyColor">#10358F</Color>
     <Color x:Key="NavyDeepColor">#081F5E</Color>
 
@@ -95,12 +97,13 @@
     <x:Double x:Key="SpaceXl">24</x:Double>
     <x:Double x:Key="SpaceXxl">32</x:Double>
     <x:Double x:Key="SpaceXxxl">48</x:Double>
-    <Thickness x:Key="CardPadding">24</Thickness>
 
-    <!-- Радиус (`globals.css` → --radius-*) -->
-    <CornerRadius x:Key="ChipRadius">6</CornerRadius>
-    <CornerRadius x:Key="InputRadius">8</CornerRadius>
-    <CornerRadius x:Key="CardRadius">10</CornerRadius>
+    <!-- Радиус ба зайг ЛИТЕРАЛААР бичнэ.
+         WinUI/UWP XAML дээр `Thickness`, `CornerRadius` зэрэг struct-ыг
+         `<Thickness x:Key="…">24</Thickness>` гэж object element болгон үүсгэж
+         БОЛДОГГҮЙ — тэр нь WPF-ийн бичлэг бөгөөд XAML компиляторыг унагаана
+         (мессежгүй exit 1). Утгууд нь `globals.css`-ийн ==radius-*:
+             chip 6 · input 8 · card 10 · картын дотоод зай 24 -->
 
     <!-- Типографи (`globals.css` → h1/h2/h3 + body) -->
     <x:Double x:Key="HeroSize">28</x:Double>
@@ -111,24 +114,24 @@
     <x:Double x:Key="LabelSize">12</x:Double>
     <x:Double x:Key="EyebrowSize">11</x:Double>
 
-    <!-- ---------- Примитивүүд ---------- -->
+    <!-- ========== Примитивүүд ========== -->
 
     <!-- Карт (`globals.css` → .card) -->
     <Style x:Key="AppCard" TargetType="Border">
         <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
         <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush2}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="{StaticResource CardRadius}" />
-        <Setter Property="Padding" Value="{StaticResource CardPadding}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="24" />
     </Style>
 
-    <!-- Товч (`globals.css` → .btn--primary / .btn--secondary).
+    <!-- Товч (`globals.css` → .btn==primary / .btn==secondary).
          Өндөр нь вэбийн min-height: 44px-тэй тэнцүү. -->
     <Style x:Key="PrimaryButton" TargetType="Button">
         <Setter Property="Background" Value="{ThemeResource BrandBrush}" />
         <Setter Property="Foreground" Value="{ThemeResource OnBrandBrush}" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="CornerRadius" Value="{StaticResource InputRadius}" />
+        <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="16,0" />
         <Setter Property="MinHeight" Value="44" />
         <Setter Property="FontSize" Value="14" />
@@ -141,7 +144,7 @@
         <Setter Property="Foreground" Value="{ThemeResource FgBrush}" />
         <Setter Property="BorderBrush" Value="{ThemeResource BorderStrongBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="{StaticResource InputRadius}" />
+        <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="16,0" />
         <Setter Property="MinHeight" Value="44" />
         <Setter Property="FontSize" Value="14" />

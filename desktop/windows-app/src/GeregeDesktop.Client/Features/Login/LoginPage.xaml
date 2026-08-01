@@ -45,7 +45,7 @@
             <ColumnDefinition Width="6*" />
         </Grid.ColumnDefinitions>
 
-        <!-- ---------- Зүүн: брэнд самбар ---------- -->
+        <!-- ========== Зүүн: брэнд самбар ========== -->
         <Grid x:Name="BrandPanel" Grid.Column="0">
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -90,7 +90,7 @@
             </StackPanel>
         </Grid>
 
-        <!-- ---------- Баруун: нэвтрэх карт ---------- -->
+        <!-- ========== Баруун: нэвтрэх карт ========== -->
         <Grid Grid.Column="1" Padding="24">
             <Border Style="{StaticResource AppCard}"
                     Padding="32"
@@ -136,7 +136,7 @@
             </Border>
         </Grid>
 
-        <!-- ---------- SSO давхарга (WebView2) ---------- -->
+        <!-- ========== SSO давхарга (WebView2) ========== -->
         <Grid x:Name="SsoOverlay"
               Grid.ColumnSpan="2"
               Visibility="Collapsed"

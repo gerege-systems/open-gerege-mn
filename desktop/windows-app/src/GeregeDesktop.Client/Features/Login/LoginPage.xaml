@@ -1,0 +1,162 @@
+<!--
+  Gerege Template Platform V3.0
+  Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
+
+  Нэвтрэх дэлгэц. Layout нь eid-platform-mn-ийн desktop клиентээс: өргөн цонхонд
+  split — зүүн талд гүн navy брэнд самбар, баруун талд нэвтрэх карт. Нарийсахад
+  (< 820px) зөвхөн карт үлдэнэ (VisualStateManager).
+
+  Урсгал нь энэ платформынх: ганц товч → Gerege SSO (BFF-ээр) → cookie → native
+  дашбоард. Нууц үг, OTP, өөр нэвтрэх арга БАЙХГҮЙ.
+-->
+<UserControl
+    x:Class="GeregeDesktop.Client.Features.Login.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d">
+
+    <Grid x:Name="Root" Background="{ThemeResource BgBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="820" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BrandPanel.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BrandPanel.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="6*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- ---------- Зүүн: брэнд самбар ---------- -->
+        <Grid x:Name="BrandPanel" Grid.Column="0">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="{StaticResource NavyDeepColor}" Offset="0" />
+                    <GradientStop Color="{StaticResource NavyColor}" Offset="1" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <StackPanel VerticalAlignment="Center" Margin="48" Spacing="24">
+                <TextBlock
+                    Text="GEREGE TEMPLATE PLATFORM V3.0"
+                    FontSize="11"
+                    FontWeight="SemiBold"
+                    CharacterSpacing="120"
+                    Foreground="#B8C6E8" />
+
+                <TextBlock
+                    Text="Цахим үйлчилгээг&#x0a;бүтээх суурь"
+                    FontSize="34"
+                    FontWeight="SemiBold"
+                    Foreground="White"
+                    TextWrapping="Wrap" />
+
+                <TextBlock
+                    Text="eID-д суурилсан, AI-аар хүчирхэгжсэн — төр, хувийн хэвшлийн аливаа цахим үйлчилгээг дээр нь босгох бэлэн суурь."
+                    FontSize="14"
+                    Foreground="#C6D2EE"
+                    TextWrapping="Wrap"
+                    MaxWidth="380"
+                    HorizontalAlignment="Left" />
+
+                <StackPanel Orientation="Horizontal" Spacing="32" Margin="0,24,0,0">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Clean Arch" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                        <TextBlock Text="Цэгцтэй, өргөтгөхөд бэлэн" FontSize="12" Foreground="#9FB2DA" />
+                    </StackPanel>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="eID · OIDC" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                        <TextBlock Text="Цахим үнэмлэх + стандарт" FontSize="12" Foreground="#9FB2DA" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- ---------- Баруун: нэвтрэх карт ---------- -->
+        <Grid Grid.Column="1" Padding="24">
+            <Border Style="{StaticResource AppCard}"
+                    Padding="32"
+                    Width="420"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel Spacing="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Нэвтрэх" Style="{StaticResource HeroText}" />
+                        <TextBlock
+                            Text="Gerege SSO-оор нэвтэрч, хяналтын самбартаа орно уу."
+                            Style="{StaticResource BodyText}" />
+                    </StackPanel>
+
+                    <Button
+                        x:Name="SsoButton"
+                        Style="{StaticResource PrimaryButton}"
+                        HorizontalAlignment="Stretch"
+                        Click="OnSsoClick">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE72E;" FontSize="14" />
+                            <TextBlock Text="Gerege SSO-оор нэвтрэх" />
+                        </StackPanel>
+                    </Button>
+
+                    <TextBlock
+                        x:Name="ErrorText"
+                        Style="{StaticResource BodyText}"
+                        Foreground="{ThemeResource DangerBrush}"
+                        Visibility="Collapsed" />
+
+                    <Border Height="1" Background="{ThemeResource BorderBrush2}" />
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="НЭВТРЭЛТИЙН ТУХАЙ" Style="{StaticResource EyebrowText}" />
+                        <TextBlock
+                            Text="Нэвтрэлт нь платформын BFF-ээр явж, session нь httpOnly cookie-д хадгалагдана. Аппад токен хадгалагдахгүй."
+                            Style="{StaticResource LabelText}"
+                            TextWrapping="Wrap" />
+                        <TextBlock x:Name="HostText" Style="{StaticResource MonoText}" Foreground="{ThemeResource FaintBrush}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ---------- SSO давхарга (WebView2) ---------- -->
+        <Grid x:Name="SsoOverlay"
+              Grid.ColumnSpan="2"
+              Visibility="Collapsed"
+              Background="{ThemeResource BgBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Background="{ThemeResource SurfaceBrush}" Padding="16,12">
+                <TextBlock Text="Gerege SSO" Style="{StaticResource TitleText}" FontSize="15" />
+                <HyperlinkButton
+                    Content="Болих"
+                    HorizontalAlignment="Right"
+                    Click="OnCancelSso" />
+            </Grid>
+
+            <controls:WebView2 x:Name="SsoWebView" Grid.Row="1" />
+        </Grid>
+
+    </Grid>
+
+</UserControl>

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>GeregeDesktop.Client</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x86;x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <!-- Суулгацгүй (unpackaged) горим — MSIX-гүйгээр .exe шууд ажиллана.
+         Template-ийг туршихад хамгийн энгийн зам; MSIX багц шаардвал
+         WindowsPackageType-ыг арилгаад Package.appxmanifest нэмнэ. -->
+    <WindowsPackageType>None</WindowsPackageType>
+    <EnableMsixTooling>true</EnableMsixTooling>
+
+    <!-- ЗОРИУД framework-dependent: `SelfContained` / `WindowsAppSDKSelfContained`
+         нь RuntimeIdentifier заавал шаарддаг тул энгийн `dotnet build` унадаг.
+         Ингэснээр ажиллуулах машинд Windows App SDK Runtime суусан байх ёстой
+         (README-г хар). Тараахдаа self-contained болгох бол RID-тай нийтэлнэ:
+             dotnet publish -r win-x64 -p:WindowsAppSDKSelfContained=true -->
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+
+</Project>

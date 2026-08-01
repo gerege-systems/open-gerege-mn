@@ -52,12 +52,13 @@ gerege-template-platform/
 ├── backend/           # Go · chi (net/http) · pgx (pgxpool) · PostgreSQL · Redis · аутентификация eID/Google/SSO
 │   └── docs/          # ARCHITECTURE · DEVELOPMENT · API_CONTRACT · SECURITY (EN/MN/ZH/RU)
 ├── frontend/          # Next.js BFF (серверный прокси к бэкенду; сессии в куках)
-└── desktop/           # Electron-оболочка, загружающая веб-приложение 1:1 (macOS · Windows · Linux)
+└── desktop/           # Нативные десктоп-клиенты — macos-app (SwiftUI) · windows-app (WinUI 3)
 ```
 
 - **[backend/README_RU.md](../backend/README_RU.md)** — Go API на Clean Architecture.
 - **[frontend/README_RU.md](../frontend/README_RU.md)** — Next.js Backend-for-Frontend.
-- **[desktop/TemplateDesktop/README_RU.md](../desktop/TemplateDesktop/README_RU.md)** — кроссплатформенный десктоп-клиент.
+- **[desktop/macos-app/README_RU.md](../desktop/macos-app/README_RU.md)** — нативный macOS-клиент (SwiftUI).
+- **[desktop/windows-app/README_RU.md](../desktop/windows-app/README_RU.md)** — нативный Windows-клиент (WinUI 3).
 
 ## Возможности
 

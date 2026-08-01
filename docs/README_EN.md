@@ -50,12 +50,13 @@ gerege-template-platform/
 ├── backend/           # Go · chi (net/http) · pgx (pgxpool) · PostgreSQL · Redis · eID/Google/SSO auth
 │   └── docs/          # ARCHITECTURE · DEVELOPMENT · API_CONTRACT · SECURITY (EN/MN)
 ├── frontend/          # Next.js BFF (server-side proxy to the backend; cookie sessions)
-└── desktop/           # Electron shell loading the web app 1:1 (macOS · Windows · Linux)
+└── desktop/           # Native desktop clients — macos-app (SwiftUI) · windows-app (WinUI 3)
 ```
 
 - **[backend/README.md](../backend/README.md)** — Clean Architecture Go API.
 - **[frontend/README.md](../frontend/README.md)** — Next.js Backend-for-Frontend.
-- **[desktop/TemplateDesktop/README.md](../desktop/TemplateDesktop/README.md)** — cross-platform desktop client.
+- **[desktop/macos-app/README.md](../desktop/macos-app/README.md)** — native macOS client (SwiftUI).
+- **[desktop/windows-app/README.md](../desktop/windows-app/README.md)** — native Windows client (WinUI 3).
 
 ## Features
 

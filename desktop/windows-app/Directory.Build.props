@@ -1,0 +1,21 @@
+<Project>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <NeutralLanguage>mn-MN</NeutralLanguage>
+
+    <!-- TreatWarningsAsErrors нь ЗОРИУД унтраалттай. Энэ project-ийг зөвхөн
+         Windows дээр (эсвэл CI-ийн windows runner дээр) компиляц хийж болдог тул
+         бусад хостоос анализаторын анхааруулгыг урьдчилан арилгах боломжгүй.
+         Windows дээр нэг удаа цэвэр build хийсний дараа `true` болгоно. -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+</Project>

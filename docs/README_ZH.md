@@ -45,12 +45,13 @@ gerege-template-platform/
 ├── backend/           # Go · chi (net/http) · pgx (pgxpool) · PostgreSQL · Redis · eID/Google/SSO 认证
 │   └── docs/          # ARCHITECTURE · DEVELOPMENT · API_CONTRACT · SECURITY（EN/MN/ZH）
 ├── frontend/          # Next.js BFF（服务端代理到后端；cookie 会话）
-└── desktop/           # Electron 外壳，1:1 加载 Web 应用（macOS · Windows · Linux）
+└── desktop/           # 原生桌面客户端 —— macos-app（SwiftUI）· windows-app（WinUI 3）
 ```
 
 - **[backend/README_ZH.md](../backend/README_ZH.md)** — 整洁架构的 Go API。
 - **[frontend/README_ZH.md](../frontend/README_ZH.md)** — Next.js Backend-for-Frontend。
-- **[desktop/TemplateDesktop/README_ZH.md](../desktop/TemplateDesktop/README_ZH.md)** — 跨平台桌面客户端。
+- **[desktop/macos-app/README_ZH.md](../desktop/macos-app/README_ZH.md)** — 原生 macOS 客户端（SwiftUI）。
+- **[desktop/windows-app/README_ZH.md](../desktop/windows-app/README_ZH.md)** — 原生 Windows 客户端（WinUI 3）。
 
 ## 功能特性
 

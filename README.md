@@ -6,7 +6,8 @@
 > **Энэ репогийн тухай.** `template-gerege-mn`-ий нээлттэй залгамжлагч —
 > бүх түүх (245 commit) хадгалагдсан. Суурь нь
 > [`public-gerege-core`](https://github.com/gerege-systems/public-gerege-core)
-> модуль. Вэб, PWA, iOS болон **macOS Electron клиент** (`desktop/`) багтана.
+> модуль. Вэб, PWA, iOS болон **native desktop клиентүүд** (`desktop/` — macOS
+> SwiftUI, Windows WinUI 3) багтана.
 
 **Gerege Template Platform V3.0** нь *цахим үйлчилгээг бүтээх суурь*: Clean-
 Architecture Go backend + Next.js BFF frontend + Gemini AI pipeline-ийг хооронд нь
@@ -78,13 +79,14 @@ gerege-template-platform/
 │   └── docs/          # ARCHITECTURE · DEVELOPMENT · API_CONTRACT · SECURITY (EN/MN)
 ├── frontend/          # Next.js BFF (backend руу server талаас прокси; cookie session)
 ├── ios/               # iOS клиент (native SwiftUI, платформын BFF-ээр)
-└── desktop/           # Desktop клиент — Electron бүрхүүл, web аппыг 1:1 ачаална (macOS · Windows · Linux)
+└── desktop/           # Native desktop клиентүүд — macos-app (SwiftUI) · windows-app (WinUI 3)
 ```
 
 - **[backend/README_MN.md](backend/README_MN.md)** — Clean Architecture Go API.
 - **[frontend/README.md](frontend/README.md)** — Next.js Backend-for-Frontend.
 - **[ios/TemplateApp/README.md](ios/TemplateApp/README.md)** — iOS апп.
-- **[desktop/TemplateDesktop/README.md](desktop/TemplateDesktop/README.md)** — cross-platform desktop апп.
+- **[desktop/macos-app/README.md](desktop/macos-app/README.md)** — native macOS апп (SwiftUI).
+- **[desktop/windows-app/README.md](desktop/windows-app/README.md)** — native Windows апп (WinUI 3).
 
 ## Онцлог
 
@@ -105,7 +107,7 @@ gerege-template-platform/
 - **Observability** — OpenTelemetry trace + Prometheus metrics + Zap structured log; production-д `/metrics` ба `/swagger` bearer token-оор хаагдана.
 - **Frontend BFF** — браузер зөвхөн ижил-origin Next.js route рүү залгаж, тэр нь server талаас backend руу проксиолдог (токен client JS-д хүрэхгүй); давхар CSRF хамгаалалт (custom header + origin), TanStack Query өгөгдлийн давхарга.
 - **Динамик хэл** — super admin нь интерфейсийн хэлийг ажиллаж байхад нэмж/хасч, орчуулгыг Gemini-ээр бөглөнө (`/admin/languages`); багцлагдсан dictionary нь түлхүүрийн эх сурвалж ба DB унасан үеийн суурь. public-gerege-core v0.5.0+.
-- **Cross-platform desktop клиент** — Electron бүрхүүл нь вэб аппыг **1:1** ачаалж, native цонх, цэс, товчлол, шилжилтийн бодлого нэмнэ (өөрийн UI бичдэггүй тул вэб дээрх шинэчлэлт шууд тусна). **macOS · Windows · Linux** — dmg/zip, NSIS суулгагч + portable, AppImage/deb/rpm. Гарчгийн мөр цонхонд шингэсэн desktop харагдац (`html[data-desktop]`) ба **авто-шинэчлэлт** (өөрөө таниад татаж, дахин эхэлнэ) багтсан. [desktop/TemplateDesktop/README.md](desktop/TemplateDesktop/README.md)
+- **Native desktop клиентүүд** — **macOS** (SwiftUI) ба **Windows** (WinUI 3 · .NET 9) хоёр бие даасан апп. Вэбийг ачаалдаггүй, өөрсдийн native дэлгэцтэй: **Gerege SSO-оор нэвтрэх → хяналтын самбар**. Нэвтрэлт нь платформын BFF-ээр (`/api/auth/sso/start`) явж, session нь httpOnly cookie-д үлдэнэ — токен клиент код руу хэзээ ч гарахгүй. [desktop/macos-app/README.md](desktop/macos-app/README.md) · [desktop/windows-app/README.md](desktop/windows-app/README.md)
 - **PWA (суулгаж болно)** — manifest + дүрс + Serwist service worker; кэш нь ЗӨВХӨН статик хөрөнгөд, `/api/*` ба нэвтрэлт/eID-ийн бүх зам NetworkOnly, HTML огт кэшлэгдэхгүй. Тохиргоо: [frontend/README.md](frontend/README.md#pwa--апп-болгож-суулгах).
 - **Тесттэй** — unit + testcontainers integration тест.
 

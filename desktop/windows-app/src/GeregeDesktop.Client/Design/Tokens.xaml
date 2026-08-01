@@ -1,0 +1,188 @@
+<!--
+  Gerege Template Platform V3.0
+  Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
+
+  Дизайны токенууд.
+
+  ЭХ СУРВАЛЖ: frontend/src/app/globals.css. Өнгө, радиус, зайн утга бүр тэндээс
+  хуулбарлагдсан бөгөөд түүнтэй LOCKSTEP-д байна — энэ файлаас гадуур шинэ өнгө
+  бүү нэмэгтүн. macOS клиентийн Design/Tokens.swift-тэй мөн ижил утгатай.
+
+  Бүтэц (Colors → Spacing → Radius → Typography → component style) нь
+  eid-platform-mn-ийн Windows клиентийн Design давхаргын дэг журам.
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.ThemeDictionaries>
+
+        <ResourceDictionary x:Key="Light">
+            <!-- Брэнд -->
+            <Color x:Key="BrandColor">#0B5CD8</Color>
+            <Color x:Key="BrandHoverColor">#0A52C2</Color>
+            <Color x:Key="BrandActiveColor">#0847A8</Color>
+            <Color x:Key="BrandSoftColor">#E8F0FE</Color>
+            <Color x:Key="BrandTextColor">#0A56CC</Color>
+            <Color x:Key="OnBrandColor">#FCFCFD</Color>
+            <!-- Гадаргуу -->
+            <Color x:Key="BgColor">#FAFAFB</Color>
+            <Color x:Key="SurfaceColor">#FFFFFF</Color>
+            <Color x:Key="Surface2Color">#F1F2F5</Color>
+            <!-- Текст -->
+            <Color x:Key="FgColor">#24262C</Color>
+            <Color x:Key="MutedColor">#6C707A</Color>
+            <Color x:Key="FaintColor">#A9ADB6</Color>
+            <!-- Зураас -->
+            <Color x:Key="BorderColor">#E4E6EA</Color>
+            <Color x:Key="BorderStrongColor">#C6CAD1</Color>
+            <!-- Төлөв -->
+            <Color x:Key="SuccessColor">#1F9254</Color>
+            <Color x:Key="DangerColor">#C4321F</Color>
+            <Color x:Key="GoldColor">#C9922E</Color>
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Dark">
+            <Color x:Key="BrandColor">#6D9BFF</Color>
+            <Color x:Key="BrandHoverColor">#8DB2FF</Color>
+            <Color x:Key="BrandActiveColor">#A8C4FF</Color>
+            <Color x:Key="BrandSoftColor">#13294F</Color>
+            <Color x:Key="BrandTextColor">#9CBCFF</Color>
+            <Color x:Key="OnBrandColor">#0B1220</Color>
+            <Color x:Key="BgColor">#12151B</Color>
+            <Color x:Key="SurfaceColor">#1A1E26</Color>
+            <Color x:Key="Surface2Color">#222732</Color>
+            <Color x:Key="FgColor">#F2F3F6</Color>
+            <Color x:Key="MutedColor">#9AA0AC</Color>
+            <Color x:Key="FaintColor">#6A707C</Color>
+            <Color x:Key="BorderColor">#313743</Color>
+            <Color x:Key="BorderStrongColor">#444B59</Color>
+            <Color x:Key="SuccessColor">#4ECB84</Color>
+            <Color x:Key="DangerColor">#FF8A76</Color>
+            <Color x:Key="GoldColor">#E6B458</Color>
+        </ResourceDictionary>
+
+    </ResourceDictionary.ThemeDictionaries>
+
+    <!-- Brush-ууд (загвараас хамаарч дээрх Color-ыг дагана) -->
+    <SolidColorBrush x:Key="BrandBrush" Color="{ThemeResource BrandColor}" />
+    <SolidColorBrush x:Key="BrandHoverBrush" Color="{ThemeResource BrandHoverColor}" />
+    <SolidColorBrush x:Key="BrandActiveBrush" Color="{ThemeResource BrandActiveColor}" />
+    <SolidColorBrush x:Key="BrandSoftBrush" Color="{ThemeResource BrandSoftColor}" />
+    <SolidColorBrush x:Key="BrandTextBrush" Color="{ThemeResource BrandTextColor}" />
+    <SolidColorBrush x:Key="OnBrandBrush" Color="{ThemeResource OnBrandColor}" />
+    <SolidColorBrush x:Key="BgBrush" Color="{ThemeResource BgColor}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{ThemeResource SurfaceColor}" />
+    <SolidColorBrush x:Key="Surface2Brush" Color="{ThemeResource Surface2Color}" />
+    <SolidColorBrush x:Key="FgBrush" Color="{ThemeResource FgColor}" />
+    <SolidColorBrush x:Key="MutedBrush" Color="{ThemeResource MutedColor}" />
+    <SolidColorBrush x:Key="FaintBrush" Color="{ThemeResource FaintColor}" />
+    <SolidColorBrush x:Key="BorderBrush2" Color="{ThemeResource BorderColor}" />
+    <SolidColorBrush x:Key="BorderStrongBrush" Color="{ThemeResource BorderStrongColor}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{ThemeResource SuccessColor}" />
+    <SolidColorBrush x:Key="DangerBrush" Color="{ThemeResource DangerColor}" />
+    <SolidColorBrush x:Key="GoldBrush" Color="{ThemeResource GoldColor}" />
+
+    <!-- Нэвтрэх дэлгэцийн зүүн самбарын навй (`--lp-navy`) — загвараас хамаарахгүй. -->
+    <Color x:Key="NavyColor">#10358F</Color>
+    <Color x:Key="NavyDeepColor">#081F5E</Color>
+
+    <!-- Зай (eid-platform-mn → Spacing.xaml) -->
+    <x:Double x:Key="SpaceXs">4</x:Double>
+    <x:Double x:Key="SpaceSm">8</x:Double>
+    <x:Double x:Key="SpaceMd">12</x:Double>
+    <x:Double x:Key="SpaceLg">16</x:Double>
+    <x:Double x:Key="SpaceXl">24</x:Double>
+    <x:Double x:Key="SpaceXxl">32</x:Double>
+    <x:Double x:Key="SpaceXxxl">48</x:Double>
+    <Thickness x:Key="CardPadding">24</Thickness>
+
+    <!-- Радиус (`globals.css` → --radius-*) -->
+    <CornerRadius x:Key="ChipRadius">6</CornerRadius>
+    <CornerRadius x:Key="InputRadius">8</CornerRadius>
+    <CornerRadius x:Key="CardRadius">10</CornerRadius>
+
+    <!-- Типографи (`globals.css` → h1/h2/h3 + body) -->
+    <x:Double x:Key="HeroSize">28</x:Double>
+    <x:Double x:Key="TitleSize">18</x:Double>
+    <x:Double x:Key="SectionSize">15</x:Double>
+    <x:Double x:Key="BodySize">15</x:Double>
+    <x:Double x:Key="SmallSize">14</x:Double>
+    <x:Double x:Key="LabelSize">12</x:Double>
+    <x:Double x:Key="EyebrowSize">11</x:Double>
+
+    <!-- ---------- Примитивүүд ---------- -->
+
+    <!-- Карт (`globals.css` → .card) -->
+    <Style x:Key="AppCard" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush2}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource CardRadius}" />
+        <Setter Property="Padding" Value="{StaticResource CardPadding}" />
+    </Style>
+
+    <!-- Товч (`globals.css` → .btn--primary / .btn--secondary).
+         Өндөр нь вэбийн min-height: 44px-тэй тэнцүү. -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource BrandBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource OnBrandBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource InputRadius}" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="SecondaryButton" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource FgBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderStrongBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource InputRadius}" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <!-- Текстийн шатлал -->
+    <Style x:Key="HeroText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource HeroSize}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource FgBrush}" />
+    </Style>
+
+    <Style x:Key="TitleText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource TitleSize}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource FgBrush}" />
+    </Style>
+
+    <Style x:Key="BodyText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource SmallSize}" />
+        <Setter Property="Foreground" Value="{ThemeResource MutedBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="LabelText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource LabelSize}" />
+        <Setter Property="Foreground" Value="{ThemeResource MutedBrush}" />
+    </Style>
+
+    <Style x:Key="EyebrowText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource EyebrowSize}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="CharacterSpacing" Value="80" />
+        <Setter Property="Foreground" Value="{ThemeResource FaintBrush}" />
+    </Style>
+
+    <Style x:Key="MonoText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Cascadia Mono, Consolas, monospace" />
+        <Setter Property="FontSize" Value="{StaticResource LabelSize}" />
+        <Setter Property="Foreground" Value="{ThemeResource FgBrush}" />
+    </Style>
+
+</ResourceDictionary>

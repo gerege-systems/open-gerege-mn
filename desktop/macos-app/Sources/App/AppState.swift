@@ -24,6 +24,9 @@ final class AppState: ObservableObject {
     /// SSO цонх нээлттэй эсэх (нэвтрэх дэлгэц үүгээр sheet харуулна).
     @Published var isPresentingSSO = false
 
+    /// Гарах ажиллагаа явагдаж байгаа эсэх — товчийг давхар дарахаас сэргийлнэ.
+    @Published private(set) var isSigningOut = false
+
     private let api = APIClient.shared
 
     /// Апп нээгдэхэд хадгалагдсан cookie-гоор session амьд эсэхийг шалгана.
@@ -57,11 +60,23 @@ final class AppState: ObservableObject {
         }
     }
 
+    /// Гарах. Session нь ХОЁР газар байдаг тул хоёуланг нь цэвэрлэнэ:
+    ///   1. BFF дээрх session — `/api/auth/logout` (refresh + access хүчингүй).
+    ///   2. Локал cookie — URLSession-ийн сан БА SSO WebView-ийн сан.
+    /// Хоёр дахийг нь алгасвал дараагийн нэвтрэлт хуучин session-ээр чимээгүй
+    /// сэргэж, гараагүй мэт харагдана.
     func signOut() async {
+        guard !isSigningOut else { return }
+        isSigningOut = true
+        defer { isSigningOut = false }
+
         await api.logout()
+        await SSOWebView.clearSession()
+
         user = nil
         eid = nil
         errorMessage = nil
+        isPresentingSSO = false
         phase = .signedOut
     }
 }

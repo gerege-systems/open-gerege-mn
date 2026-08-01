@@ -31,6 +31,19 @@ cookie → HTTPCookieStorage → native Хяналтын самбар (/api/me, 
 - Вэб дашбоардыг апп дотор **рендэрлэхгүй** — WebView зөвхөн нэвтрэлтийн үед
   амьдарна.
 
+### Гарах
+
+Session нь **хоёр өөр санд** байдаг тул гарахад хоёуланг нь цэвэрлэнэ:
+
+1. **BFF дээрх session** — `POST /api/auth/logout` (refresh + access хүчингүй).
+2. **Локал cookie** — `HTTPCookieStorage` (URLSession уншдаг) **ба**
+   `WKWebsiteDataStore` (SSO WebView-ийнх).
+
+> Хоёр дахийг нь алгасвал жинхэнэ алдаа гарна: URLSession-ий cookie арилсан ч
+> WebView-ийн сан хэвээр үлдэж, дараагийн удаа «нэвтрэх» дарахад IdP хуучин
+> session-ээ таниад **чимээгүй буцаан нэвтрүүлнэ** — хэрэглэгчид гараагүй мэт
+> харагдана. `SSOWebView.clearSession()` энэ учраас байдаг.
+
 ## Бүтэц
 
 ```

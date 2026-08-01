@@ -182,8 +182,10 @@ struct AppShellView: View {
             Divider().background(Token.sidebarMuted.opacity(0.2))
 
             footerButton(icon: "gearshape", label: "Тохиргоо", collapsed: collapsed, enabled: false) {}
-            footerButton(icon: "rectangle.portrait.and.arrow.right",
-                         label: "Гарах", collapsed: collapsed, enabled: true) {
+            footerButton(icon: appState.isSigningOut ? "hourglass" : "rectangle.portrait.and.arrow.right",
+                         label: appState.isSigningOut ? "Гарч байна…" : "Гарах",
+                         collapsed: collapsed,
+                         enabled: !appState.isSigningOut) {
                 Task { await appState.signOut() }
             }
         }

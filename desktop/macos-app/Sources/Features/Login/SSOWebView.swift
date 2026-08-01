@@ -24,6 +24,25 @@ struct SSOWebView: NSViewRepresentable {
     let onDone: () -> Void
     let onCancel: () -> Void
 
+    /// Нэвтрэлтийн WebView-ийн БҮХ өгөгдлийг (cookie, кэш, localStorage)
+    /// цэвэрлэнэ. Гарах үед ЗААВАЛ дуудна.
+    ///
+    /// Шалтгаан: `APIClient.logout()` нь зөвхөн `HTTPCookieStorage`-ийг цэвэрлэдэг
+    /// — тэр нь URLSession-ийх. SSO-гийн WKWebView өөрийн тусдаа сантай
+    /// (`WKWebsiteDataStore.default()`), түүнийг цэвэрлэхгүй бол дараагийн удаа
+    /// «нэвтрэх» дарахад IdP хуучин session-ээ таниад ЧИМЭЭГҮЙ буцаан
+    /// нэвтрүүлнэ — хэрэглэгчид гараагүй мэт харагдана.
+    @MainActor
+    static func clearSession() async {
+        let store = WKWebsiteDataStore.default()
+        let types = WKWebsiteDataStore.allWebsiteDataTypes()
+        await withCheckedContinuation { cont in
+            store.removeData(ofTypes: types, modifiedSince: .distantPast) {
+                cont.resume()
+            }
+        }
+    }
+
     func makeCoordinator() -> Coordinator {
         Coordinator(onDone: onDone, onCancel: onCancel)
     }
@@ -87,7 +106,7 @@ struct SSOWebView: NSViewRepresentable {
 
         /// WKWebView-ийн cookie сан → HTTPCookieStorage.shared (URLSession уншина).
         @MainActor
-        private static func syncCookies(from webView: WKWebView) async {
+        static func syncCookies(from webView: WKWebView) async {
             let store = webView.configuration.websiteDataStore.httpCookieStore
             let cookies: [HTTPCookie] = await withCheckedContinuation { cont in
                 store.getAllCookies { cont.resume(returning: $0) }

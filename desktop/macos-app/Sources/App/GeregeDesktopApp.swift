@@ -83,15 +83,24 @@ struct RootView: View {
     var body: some View {
         #if DEBUG
         if isPreviewingDashboard {
-            return AnyView(AppShellView().environmentObject(previewState))
+            // Preview ч гэсэн ИЖИЛ төлвийн шилжилтээр явна — эс бөгөөс «Гарах»
+            // дарахад юу ч болохгүй мэт харагдана.
+            return AnyView(PhaseView(state: previewState))
         }
         #endif
-        return AnyView(content)
+        return AnyView(PhaseView(state: appState))
     }
 
-    private var content: some View {
+}
+
+/// Нэвтрэлтийн төлвөөс хамаарсан үндсэн шилжилт. Төлвийг ГАДНААС авдаг тул
+/// жинхэнэ session ба DEBUG preview хоёр ЯГ ижил замаар явна.
+private struct PhaseView: View {
+    @ObservedObject var state: AppState
+
+    var body: some View {
         Group {
-            switch appState.phase {
+            switch state.phase {
             case .checking:
                 splash
             case .signedOut:
@@ -100,6 +109,7 @@ struct RootView: View {
                 AppShellView()
             }
         }
+        .environmentObject(state)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Token.bg)
     }
@@ -113,6 +123,5 @@ struct RootView: View {
                 .foregroundStyle(Token.muted)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Token.bg)
     }
 }

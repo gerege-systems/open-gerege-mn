@@ -32,7 +32,7 @@
 ┌────────────────────────────┐
 │  TemplateDesktop (Electron)│  цонх · цэс · шилжилтийн бодлого · эрх
 │  ┌──────────────────────┐  │
-│  │ Chromium BrowserWindow│ │  →  https://template.gerege.mn  (Next.js BFF)
+│  │ Chromium BrowserWindow│ │  →  https://public.template.gerege.mn  (Next.js BFF)
 │  └──────────────────────┘  │           │
 └────────────────────────────┘           └→  Go API (/api/v1/*) — апп шууд хандахгүй
 ```
@@ -157,7 +157,7 @@ Windows/Linux дээр цонх **стандарт хүрээтэй** хэвээ
 
 | Тохиргоо | Утга |
 |---|---|
-| Суваг | `https://template.gerege.mn/desktop/updates/` (`src/config.ts` · `electron-builder.yml` — **хоёулаа ижил байх ёстой**) |
+| Суваг | `https://public.template.gerege.mn/desktop/updates/` (`src/config.ts` · `electron-builder.yml` — **хоёулаа ижил байх ёстой**) |
 | `GEREGE_UPDATE_URL` | сувгийг түр солих (staging турших). Зөвхөн **https** (loopback дээр http) — хүчингүй бол үндсэн суваг руу буцна |
 | `GEREGE_UPDATE_DEV=1` | багцлаагүй горимд шалгалтыг албадах (`dev-app-update.yml` шаардана) |
 
@@ -195,7 +195,7 @@ npm run dist:mac:signed
 cd desktop/TemplateDesktop
 npm install
 
-npm start        # үйлдвэрлэлийн сервер рүү (template.gerege.mn)
+npm start        # үйлдвэрлэлийн сервер рүү (public.template.gerege.mn)
 npm run dev      # локал frontend руу (localhost:3000) + DevTools
 npm test         # шилжилт · эрх · шинэчлэлтийн бодлогын тест (node --test)
 npm run typecheck
@@ -216,7 +216,7 @@ npm run typecheck
 
 ### Серверийг сонгох
 
-Эрэмбэ: `GEREGE_APP_URL` орчны хувьсагч → аппад хадгалсан сонголт → `template.gerege.mn`.
+Эрэмбэ: `GEREGE_APP_URL` орчны хувьсагч → аппад хадгалсан сонголт → `public.template.gerege.mn`.
 
 Цэсээс **Сервер солих…** (`⌘⇧S`) — бэлэн сонголт эсвэл өөрийн хаяг. Сонголт
 `userData/state.json`-д хадгалагдана. `GEREGE_APP_URL` тогтоогдсон бол дараагийн

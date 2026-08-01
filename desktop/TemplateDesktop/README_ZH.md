@@ -30,7 +30,7 @@
 ┌────────────────────────────┐
 │  TemplateDesktop (Electron)│  窗口 · 菜单 · 导航策略 · 权限
 │  ┌──────────────────────┐  │
-│  │ Chromium BrowserWindow│ │  →  https://template.gerege.mn  (Next.js BFF)
+│  │ Chromium BrowserWindow│ │  →  https://public.template.gerege.mn  (Next.js BFF)
 │  └──────────────────────┘  │           │
 └────────────────────────────┘           └→  Go API (/api/v1/*) — 应用不直接访问
 ```
@@ -145,7 +145,7 @@ Windows/Linux 仍使用**标准窗口边框**（不写入 `data-titlebar`）—�
 
 | 配置 | 值 |
 |---|---|
-| 更新源 | `https://template.gerege.mn/desktop/updates/`（`src/config.ts` 与 `electron-builder.yml` **必须一致**） |
+| 更新源 | `https://public.template.gerege.mn/desktop/updates/`（`src/config.ts` 与 `electron-builder.yml` **必须一致**） |
 | `GEREGE_UPDATE_URL` | 临时切换更新源（测试 staging）。仅限 **https**（loopback 可用 http），非法值回退到默认源 |
 | `GEREGE_UPDATE_DEV=1` | 在未打包模式下强制检查（需要 `dev-app-update.yml`） |
 
@@ -181,7 +181,7 @@ npm run dist:mac:signed
 cd desktop/TemplateDesktop
 npm install
 
-npm start        # 连接生产服务器（template.gerege.mn）
+npm start        # 连接生产服务器（public.template.gerege.mn）
 npm run dev      # 连接本地 frontend（localhost:3000）并打开 DevTools
 npm test         # 导航 / 权限策略测试（node --test）
 npm run typecheck
@@ -200,7 +200,7 @@ npm run typecheck
 
 ### 选择服务器
 
-优先级：`GEREGE_APP_URL` 环境变量 → 应用内保存的选择 → `template.gerege.mn`。
+优先级：`GEREGE_APP_URL` 环境变量 → 应用内保存的选择 → `public.template.gerege.mn`。
 
 菜单中的**切换服务器…**（`⌘⇧S`）支持预设或自定义地址，选择保存在
 `userData/state.json`。若设置了 `GEREGE_APP_URL`，下次启动仍以其为准

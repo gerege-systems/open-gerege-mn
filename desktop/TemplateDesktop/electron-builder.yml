@@ -34,7 +34,7 @@ files:
 # руу байршуулна (README.md → «Шинэ хувилбар тараах»).
 publish:
   - provider: generic
-    url: https://template.gerege.mn/desktop/updates/
+    url: https://public.template.gerege.mn/desktop/updates/
     channel: latest
 
 mac:

@@ -4,15 +4,22 @@
 // Аппын тохиргоо. Энэ файл electron-оос хамаарахгүй — цэвэр функцууд тул
 // `node --test`-ээр шууд шалгагдана.
 
-/** Үйлдвэрлэлийн жишиг deployment. */
-export const DEFAULT_APP_URL = 'https://template.gerege.mn';
+/**
+ * Үйлдвэрлэлийн жишиг deployment — ЭНЭ репогийнх.
+ *
+ * `template.gerege.mn` (public бус) руу заавал болохгүй: тэр нь өөр репогийн
+ * (`template-gerege-mn`) deployment бөгөөд desktop давхаргыг (preload →
+ * theme-bootstrap → `html[data-desktop]`) агуулаагүй тул апп нь хөтөч дээрхтэй
+ * ялгаагүй харагдана.
+ */
+export const DEFAULT_APP_URL = 'https://public.template.gerege.mn';
 
 /** Локал хөгжүүлэлт — `npm run dev` (frontend/) 3000 порт дээр өргөнө. */
 export const DEV_APP_URL = 'http://localhost:3000';
 
 /** "Сервер солих" цонхонд харагдах бэлэн сонголтууд. */
 export const SERVER_PRESETS: ReadonlyArray<{ label: string; url: string }> = [
-  { label: 'Үйлдвэрлэл — template.gerege.mn', url: DEFAULT_APP_URL },
+  { label: 'Үйлдвэрлэл — public.template.gerege.mn', url: DEFAULT_APP_URL },
   { label: 'Локал хөгжүүлэлт — localhost:3000', url: DEV_APP_URL },
 ];
 
@@ -51,7 +58,7 @@ export const ALLOWED_PERMISSIONS: readonly string[] = [
  * Авто-шинэчлэлтийн суваг. `electron-builder.yml` дахь `publish.url`-тэй ЯГ ижил
  * байх ёстой — тэндээс `latest-mac.yml` / `latest.yml` болон багцууд татагдана.
  */
-export const DEFAULT_UPDATE_FEED = 'https://template.gerege.mn/desktop/updates/';
+export const DEFAULT_UPDATE_FEED = 'https://public.template.gerege.mn/desktop/updates/';
 
 /** Авто шалгалтын давтамж — 6 цаг (апп нээлттэй үед давтагдана). */
 export const UPDATE_CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;

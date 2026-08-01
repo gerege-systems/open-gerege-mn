@@ -85,7 +85,8 @@
     <SolidColorBrush x:Key="DangerBrush" Color="{ThemeResource DangerColor}" />
     <SolidColorBrush x:Key="GoldBrush" Color="{ThemeResource GoldColor}" />
 
-    <!-- Нэвтрэх дэлгэцийн зүүн самбарын навй (`==lp-navy`) — загвараас хамаарахгүй. -->
+    <!-- Нэвтрэх дэлгэцийн зүүн самбарын navy (globals.css → lp-navy токен).
+         Загвараас хамаарахгүй — үргэлж гүн navy. -->
     <Color x:Key="NavyColor">#10358F</Color>
     <Color x:Key="NavyDeepColor">#081F5E</Color>
 
@@ -102,7 +103,7 @@
          WinUI/UWP XAML дээр `Thickness`, `CornerRadius` зэрэг struct-ыг
          `<Thickness x:Key="…">24</Thickness>` гэж object element болгон үүсгэж
          БОЛДОГГҮЙ — тэр нь WPF-ийн бичлэг бөгөөд XAML компиляторыг унагаана
-         (мессежгүй exit 1). Утгууд нь `globals.css`-ийн ==radius-*:
+         (мессежгүй exit 1). Утгууд нь `globals.css`-ийн radius токенууд:
              chip 6 · input 8 · card 10 · картын дотоод зай 24 -->
 
     <!-- Типографи (`globals.css` → h1/h2/h3 + body) -->
@@ -125,7 +126,7 @@
         <Setter Property="Padding" Value="24" />
     </Style>
 
-    <!-- Товч (`globals.css` → .btn==primary / .btn==secondary).
+    <!-- Товч (`globals.css` → .btn primary ба secondary хувилбар).
          Өндөр нь вэбийн min-height: 44px-тэй тэнцүү. -->
     <Style x:Key="PrimaryButton" TargetType="Button">
         <Setter Property="Background" Value="{ThemeResource BrandBrush}" />

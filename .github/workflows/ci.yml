@@ -146,11 +146,25 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      # XAML нь зөв XML эсэхийг ЭХЛЭЭД шалгана. XamlCompiler.exe нь буруу XML
+      # дээр ямар ч мессежгүйгээр exit 1 өгдөг тул алдааг олоход маш их цаг
+      # алддаг (жишээ нь XML тайлбар дотор `--` байж болдоггүй). Энэ алхам
+      # тэр ангиллын алдааг шууд, ойлгомжтой барина.
+      - name: Validate XAML is well-formed XML
+        shell: pwsh
+        run: |
+          $bad = $false
+          Get-ChildItem -Recurse -Filter *.xaml | ForEach-Object {
+            try { [xml](Get-Content $_.FullName -Raw) | Out-Null }
+            catch { Write-Host "::error file=$($_.FullName)::$($_.Exception.Message)"; $bad = $true }
+          }
+          if ($bad) { exit 1 }
+
       - name: Restore
         run: dotnet restore GeregeDesktop.sln
 
       - name: Build
-        run: dotnet build GeregeDesktop.sln --configuration Release --no-restore -p:Platform=x64 -v:detailed
+        run: dotnet build GeregeDesktop.sln --configuration Release --no-restore -p:Platform=x64
 
   # Mobile — Android клиент (Kotlin · Compose). Unit тест + debug APK.
   # ubuntu runner дээр Android SDK урьдчилан суусан байдаг тул нэмэлт татах

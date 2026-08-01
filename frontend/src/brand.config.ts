@@ -19,7 +19,7 @@ export const brand = {
   short: 'Gerege',
 
   /** Үндсэн домэйн (схемгүй). */
-  domain: 'template.gerege.mn',
+  domain: 'public.template.gerege.mn',
 
   /**
    * Нийтийн баримтын сайт — хэлний угтвар нэмэхэд бэлэн, ард нь `/`-тай.

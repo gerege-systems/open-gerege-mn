@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Gerege Template Platform V3.0
+  Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
+
+  Апп нь бүхэлдээ Compose тул XML theme нь зөвхөн цонх нээгдэх агшны дэвсгэр,
+  системийн мөрүүдийг л хариуцна (AppCompat/Material XML хамаарал нэмэхгүй).
+-->
+<resources>
+    <style name="Theme.TemplateApp" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

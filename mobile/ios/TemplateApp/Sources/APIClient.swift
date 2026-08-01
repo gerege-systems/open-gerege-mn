@@ -3,7 +3,7 @@
 
 import Foundation
 
-// APIClient нь Gerege Template Platform-ийн BFF (https://template.gerege.mn/api/*)-тай
+// APIClient нь Gerege Template Platform-ийн BFF (https://public.template.gerege.mn/api/*)-тай
 // харьцана — backend-тэй шууд БИШ. SSO нэвтрэлт ч мөн энэ BFF-ээр (SSOWebView).
 // Нэвтрэлт нь httpOnly cookie (dgov_access/refresh)-д хадгалагдана; URLSession
 // нь HTTPCookieStorage.shared-д cookie-г автоматаар хадгалж, дараагийн хүсэлтэд
@@ -27,7 +27,7 @@ final class APIClient {
     static let shared = APIClient()
 
     // Production BFF. Локал туршилтад http://localhost:3000 болгож болно.
-    static let baseURL = URL(string: "https://template.gerege.mn")!
+    static let baseURL = URL(string: "https://public.template.gerege.mn")!
 
     private let session: URLSession
 

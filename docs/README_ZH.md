@@ -8,7 +8,7 @@
 可随时扩展到任何系统。您只需创造价值，而不必搭建底层管道 —
 身份认证、安全、AI 与服务骨架从第一天起就已备好。参考部署以
 **Gerege Template Platform** 的名义运行在
-[template.gerege.mn](https://template.gerege.mn)，在生产环境中展示平台的 eID 单点登录。
+[public.template.gerege.mn](https://public.template.gerege.mn)，在生产环境中展示平台的 eID 单点登录。
 
 本平台是 **Gerege Systems 有限公司**既定使命的代码化表达 —
 *「以简便的方式把政府与私营部门的服务送达公民」*。同一套基础既承载政府机构的服务，
@@ -45,11 +45,14 @@ gerege-template-platform/
 ├── backend/           # Go · chi (net/http) · pgx (pgxpool) · PostgreSQL · Redis · eID/Google/SSO 认证
 │   └── docs/          # ARCHITECTURE · DEVELOPMENT · API_CONTRACT · SECURITY（EN/MN/ZH）
 ├── frontend/          # Next.js BFF（服务端代理到后端；cookie 会话）
+├── mobile/            # 原生移动客户端 —— ios/TemplateApp（SwiftUI）· android/TemplateApp（Kotlin · Compose）
 └── desktop/           # 原生桌面客户端 —— macos-app（SwiftUI）· windows-app（WinUI 3）
 ```
 
 - **[backend/README_ZH.md](../backend/README_ZH.md)** — 整洁架构的 Go API。
 - **[frontend/README_ZH.md](../frontend/README_ZH.md)** — Next.js Backend-for-Frontend。
+- **[mobile/ios/TemplateApp/README_ZH.md](../mobile/ios/TemplateApp/README_ZH.md)** — 原生 iOS 客户端（SwiftUI）。
+- **[mobile/android/TemplateApp/README_ZH.md](../mobile/android/TemplateApp/README_ZH.md)** — 原生 Android 客户端（Kotlin · Compose）。
 - **[desktop/macos-app/README_ZH.md](../desktop/macos-app/README_ZH.md)** — 原生 macOS 客户端（SwiftUI）。
 - **[desktop/windows-app/README_ZH.md](../desktop/windows-app/README_ZH.md)** — 原生 Windows 客户端（WinUI 3）。
 

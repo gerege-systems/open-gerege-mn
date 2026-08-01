@@ -15,7 +15,7 @@
 | `PORT` | `8080` | API listen port |
 | `ENVIRONMENT` | `production` | Turns on strict production guards |
 | `DEBUG` | `false` | Verbose logging |
-| `ALLOWED_ORIGINS` | `https://template.gerege.mn` | CORS allow-list (comma-separated; `*` forbidden) |
+| `ALLOWED_ORIGINS` | `https://public.template.gerege.mn` | CORS allow-list (comma-separated; `*` forbidden) |
 | `TRUSTED_PROXIES` | — | Reverse-proxy addresses |
 
 ## Database and Redis
@@ -56,7 +56,7 @@
 |---|---|---|
 | `SSO_ISSUER` | `https://sso.gerege.mn` | Defaults to this when unset |
 | `SSO_CLIENT_ID` / `SSO_CLIENT_SECRET` | — | Empty leaves the SSO flow inert |
-| `SSO_REDIRECT_URI` | `https://template.gerege.mn/sso/callback` | Must be registered **exactly** on the SSO client |
+| `SSO_REDIRECT_URI` | `https://public.template.gerege.mn/sso/callback` | Must be registered **exactly** on the SSO client |
 | `SSO_SCOPE` | `openid profile email nationalid` | `nationalid` adds the citizen ID number |
 | `SSO_NATIVE_CLIENT_ID` | — | Client for the mobile (PKCE, public) flow |
 | `SSO_EID_PROXY_BASE_URL` | — | When set, the eID PKI surface goes through the SSO proxy |
@@ -69,7 +69,7 @@
 
 | Variable | Purpose |
 |---|---|
-| `OAUTH_ISSUER` | e.g. `https://template.gerege.mn`. The provider is enabled **only** when this is set |
+| `OAUTH_ISSUER` | e.g. `https://public.template.gerege.mn`. The provider is enabled **only** when this is set |
 | `SSO_STATE_KEY` | HMAC key for transient login/consent state (**≥32 bytes**) |
 | `SSO_FIRSTPARTY_CLIENTS` | First-party clients that skip the consent screen |
 | `SSO_ADMIN_API_KEYS`, `SSO_ADMIN_SUBS` | Admin API access |

@@ -112,5 +112,6 @@ dotnet run --project src\GeregeDesktop.Client -p:Platform=x64
 ## Холбоотой
 
 - [desktop/macos-app/README.md](../macos-app/README.md) — macOS клиент
-- [ios/TemplateApp/README.md](../../ios/TemplateApp/README.md) — iOS клиент
+- [mobile/ios/TemplateApp/README.md](../../mobile/ios/TemplateApp/README.md) — iOS клиент
+- [mobile/android/TemplateApp/README.md](../../mobile/android/TemplateApp/README.md) — Android клиент
 - [frontend/README.md](../../frontend/README.md) — вэб апп ба BFF

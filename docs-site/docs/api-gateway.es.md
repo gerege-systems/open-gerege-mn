@@ -39,7 +39,7 @@ permitidos del cliente OAuth2 de la aplicación; revocarla los quita. El efecto
 es **inmediato**: el proxy comprueba la concesión actual del cliente.
 
 ```text
-Aplicación «template.gerege.mn»
+Aplicación «public.template.gerege.mn»
   ├─ Acceso SSO ............. automático (integrado)
   ├─ [x] eid-sign ........... svc:eid-sign
   ├─ [ ] eid-proxy .......... sin conceder → /rp/eid → 403

@@ -2,7 +2,7 @@
 // Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
 
 // BFF-ийн хариунуудын модель. Талбарын нэр, дугтуйны бүтэц нь macOS клиентийн
-// Domain/Models.swift болон ios/TemplateApp-тай ЯГ ижил — гурван native клиент
+// Domain/Models.swift болон mobile/ios/TemplateApp-тай ЯГ ижил — гурван native клиент
 // нэг backend гэрээтэй.
 
 using System.Text.Json.Serialization;

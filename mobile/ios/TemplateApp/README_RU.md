@@ -9,9 +9,12 @@
 eID PKI — пример того, как построить нативную мобильную услугу на базовой
 платформе. Нативный SwiftUI, без сторонних зависимостей (пакеты SPM не используются).
 
+Экраны, потоки и модели построчно совпадают с
+[клиентом для Android](../../android/TemplateApp/README_RU.md).
+
 > Пояснение: это приложение-**потребитель (доверяющая сторона)** — а не гражданское
 > **приложение** eID (это другой проект).
-> Эталонное развёртывание — [template.gerege.mn](https://template.gerege.mn); Gerege SSO
+> Эталонное развёртывание — [public.template.gerege.mn](https://public.template.gerege.mn); Gerege SSO
 > ([sso.gerege.mn](https://sso.gerege.mn)) — отдельная система идентификации.
 >
 > Вход ПОЛНОСТЬЮ идёт через BFF платформы — приложение не регистрирует собственный
@@ -19,7 +22,7 @@ eID PKI — пример того, как построить нативную м
 
 ## Архитектура
 
-- Приложение → `https://template.gerege.mn/api/*` (BFF) — с бэкендом напрямую не общается.
+- Приложение → `https://public.template.gerege.mn/api/*` (BFF) — с бэкендом напрямую не общается.
 - Сессия хранится в httpOnly-куках (`dgov_access`/`refresh`). `URLSession` +
   `HTTPCookieStorage.shared` автоматически сохраняют и отправляют куки.
 - Изменяющие маршруты BFF требуют заголовок `x-dgov-csrf: 1` (заголовка `Origin`
@@ -35,7 +38,7 @@ eID PKI — пример того, как построить нативную м
 ## Структура
 
 ```
-ios/TemplateApp/
+mobile/ios/TemplateApp/
   project.yml              # xcodegen (bundle id: mn.gerege.temp)
   Sources/
     TemplateAppApp.swift   # @main + AppState + RootView
@@ -52,7 +55,7 @@ ios/TemplateApp/
 (`brew install xcodegen`).
 
 ```bash
-cd ios/TemplateApp
+cd mobile/ios/TemplateApp
 xcodegen generate          # project.yml → TemplateApp.xcodeproj
 open TemplateApp.xcodeproj
 ```
@@ -68,5 +71,5 @@ open TemplateApp.xcodeproj
 
 ## Настройка
 
-- Адрес бэкенда: `APIClient.baseURL` (по умолчанию `https://template.gerege.mn`).
+- Адрес бэкенда: `APIClient.baseURL` (по умолчанию `https://public.template.gerege.mn`).
   Для проверки с локальным BFF смените на `http://localhost:3000` и добавьте исключение ATS.

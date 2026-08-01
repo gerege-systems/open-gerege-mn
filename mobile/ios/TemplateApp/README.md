@@ -9,8 +9,11 @@
 бүтээгдсэн native мобайл үйлчилгээг хэрхэн босгохын үлгэр жишээ. Native SwiftUI,
 гуравдагч хамааралгүй (SPM пакеж ашигладаггүй).
 
+Ижил төстэй [Android клиент](../../android/TemplateApp/README.md)-тэй дэлгэц, урсгал,
+моделиороо мөр мөрөөрөө тохирно.
+
 > Тайлбар: энэ бол **Relying-Party консюмер** апп — иргэний eID **апп** (өөр төсөл)
-> биш. Жишиг deployment нь [template.gerege.mn](https://template.gerege.mn);
+> биш. Жишиг deployment нь [public.template.gerege.mn](https://public.template.gerege.mn);
 > Gerege SSO ([sso.gerege.mn](https://sso.gerege.mn)) нь тусдаа таних систем.
 >
 > Нэвтрэлт БҮХЭЛДЭЭ платформын BFF-ээр явна — апп нь SSO ч, eID платформ ч дээр
@@ -18,7 +21,7 @@
 
 ## Архитектур
 
-- Апп → `https://template.gerege.mn/api/*` (BFF) — backend-тэй шууд харьцахгүй.
+- Апп → `https://public.template.gerege.mn/api/*` (BFF) — backend-тэй шууд харьцахгүй.
 - Session нь httpOnly cookie (`dgov_access`/`refresh`)-д. `URLSession` +
   `HTTPCookieStorage.shared` нь cookie-г автоматаар хадгалж/илгээнэ.
 - BFF-ийн mutating route `x-dgov-csrf: 1` header шаарддаг (Origin header
@@ -33,7 +36,7 @@
 ## Бүтэц
 
 ```
-ios/TemplateApp/
+mobile/ios/TemplateApp/
   project.yml              # xcodegen (bundle id: mn.gerege.temp)
   Sources/
     TemplateAppApp.swift   # @main + AppState + RootView
@@ -50,7 +53,7 @@ ios/TemplateApp/
 (`brew install xcodegen`).
 
 ```bash
-cd ios/TemplateApp
+cd mobile/ios/TemplateApp
 xcodegen generate          # project.yml → TemplateApp.xcodeproj
 open TemplateApp.xcodeproj
 ```
@@ -65,5 +68,5 @@ Xcode дотор:
 
 ## Тохиргоо
 
-- Backend хаяг: `APIClient.baseURL` (default `https://template.gerege.mn`).
+- Backend хаяг: `APIClient.baseURL` (default `https://public.template.gerege.mn`).
   Локал BFF-д туршихад `http://localhost:3000` болгож, ATS exception нэмнэ.

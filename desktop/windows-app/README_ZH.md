@@ -97,4 +97,5 @@ dotnet run --project src\GeregeDesktop.Client -p:Platform=x64
 ## 相关文档
 
 - [desktop/macos-app/README_ZH.md](../macos-app/README_ZH.md) —— macOS 客户端
-- [ios/TemplateApp/README_ZH.md](../../ios/TemplateApp/README_ZH.md) —— iOS 客户端
+- [mobile/ios/TemplateApp/README_ZH.md](../../mobile/ios/TemplateApp/README_ZH.md) —— iOS 客户端
+- [mobile/android/TemplateApp/README_ZH.md](../../mobile/android/TemplateApp/README_ZH.md) —— Android 客户端

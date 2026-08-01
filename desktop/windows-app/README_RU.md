@@ -106,4 +106,5 @@ dotnet run --project src\GeregeDesktop.Client -p:Platform=x64
 ## Связанные документы
 
 - [desktop/macos-app/README_RU.md](../macos-app/README_RU.md) — macOS-клиент
-- [ios/TemplateApp/README_RU.md](../../ios/TemplateApp/README_RU.md) — iOS-клиент
+- [mobile/ios/TemplateApp/README_RU.md](../../mobile/ios/TemplateApp/README_RU.md) — iOS-клиент
+- [mobile/android/TemplateApp/README_RU.md](../../mobile/android/TemplateApp/README_RU.md) — Android-клиент

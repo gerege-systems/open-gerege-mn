@@ -30,7 +30,7 @@ API 网关是一套由管理系统统一管理的**服务目录 + 遥测**。每
 此操作**即刻生效** — 代理检查的是客户端当前的授权状态。
 
 ```text
-应用 "template.gerege.mn"
+应用 "public.template.gerege.mn"
   ├─ SSO 登录 ............... 自动（内置）
   ├─ [x] eid-sign ........... svc:eid-sign
   ├─ [ ] eid-proxy .......... 未授予 → /rp/eid → 403

@@ -117,4 +117,5 @@ GEREGE_APP_URL=http://localhost:3000 open -a build/Build/Products/Debug/GeregeDe
 ## Связанные документы
 
 - [desktop/windows-app/README_RU.md](../windows-app/README_RU.md) — Windows-клиент
-- [ios/TemplateApp/README_RU.md](../../ios/TemplateApp/README_RU.md) — iOS-клиент
+- [mobile/ios/TemplateApp/README_RU.md](../../mobile/ios/TemplateApp/README_RU.md) — iOS-клиент
+- [mobile/android/TemplateApp/README_RU.md](../../mobile/android/TemplateApp/README_RU.md) — Android-клиент

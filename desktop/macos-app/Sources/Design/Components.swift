@@ -100,6 +100,93 @@ struct Chip: View {
     }
 }
 
+// MARK: - Төлөвийн тэмдэг (eid-platform-mn → StatusDot / StatusPill)
+
+struct StatusDot: View {
+    let color: Color
+    var size: CGFloat = 8
+
+    var body: some View {
+        Circle().fill(color).frame(width: size, height: size)
+    }
+}
+
+struct StatusPill: View {
+    enum Variant { case ok, warn, bad, neutral, accent }
+
+    let text: String
+    let variant: Variant
+
+    init(_ text: String, variant: Variant = .ok) {
+        self.text = text
+        self.variant = variant
+    }
+
+    var body: some View {
+        Text(text)
+            .font(.system(size: 12, weight: .semibold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(background)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    private var background: Color {
+        switch variant {
+        case .ok:      return Token.success
+        case .warn:    return Token.gold
+        case .bad:     return Token.danger
+        case .accent:  return Token.brand
+        case .neutral: return Token.muted
+        }
+    }
+}
+
+// MARK: - Хэрэглэгчийн дүрс
+
+/// Зурагтай бол зураг, эс бөгөөс эхний үсэг. Хэлбэр нь eid-platform-mn-ийхтэй
+/// ижил — дугуй биш, зөөлөн булантай квадрат (радиус = хэмжээний 0.28).
+///
+/// Тэдний хувилбар base64 зураг задалдаг (DAN-аас ирдэг); энэ платформ дээр
+/// хэрэглэгчийн зураг нь Google профайлын URL тул `AsyncImage`-аар ачаална.
+struct UserAvatar: View {
+    let photoURL: String?
+    let initials: String
+    var size: CGFloat = 64
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
+                .fill(Token.brand.opacity(0.10))
+                .frame(width: size, height: size)
+
+            if let raw = photoURL, let url = URL(string: raw), !raw.isEmpty {
+                AsyncImage(url: url) { phase in
+                    if case .success(let image) = phase {
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: size, height: size)
+                            .clipShape(RoundedRectangle(cornerRadius: size * 0.28, style: .continuous))
+                    } else {
+                        initialsText
+                    }
+                }
+            } else {
+                initialsText
+            }
+        }
+        .frame(width: size, height: size)
+    }
+
+    private var initialsText: some View {
+        Text(initials.isEmpty ? "?" : initials)
+            .font(.system(size: size * 0.36, weight: .bold))
+            .foregroundStyle(Token.brandText)
+    }
+}
+
 // MARK: - Бүлгийн толгой
 
 struct SectionLabel: View {

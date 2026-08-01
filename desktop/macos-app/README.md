@@ -96,6 +96,35 @@ GEREGE_APP_URL=http://localhost:3000 open -a build/Build/Products/Debug/GeregeDe
 > `GEREGE_APP_URL` нь зөвхөн `http`/`https` хаягийг хүлээж авна; бусад тохиолдолд
 > үндсэн утга руу буцна.
 
+### Дашбоардыг нэвтрэхгүйгээр харах (DEBUG)
+
+Дэлгэцийн загвар дээр ажиллахад SSO-гоор нэвтрэх шаардлагагүй:
+
+```bash
+GEREGE_PREVIEW_DASHBOARD=1 build/Build/Products/Debug/GeregeDesktop.app/Contents/MacOS/GeregeDesktop
+```
+
+Апп жишиг өгөгдлөөр (`AppState.previewSignedIn()`) шууд хяналтын самбарыг
+харуулна. Энэ бүхэн `#if DEBUG` дотор тул **Release багцад огт орохгүй**.
+
+## Дашбоардын бүтэц
+
+`Features/Dashboard/DashboardView.swift` нь eid-platform-mn-ийн
+`DashboardPageView`-ийн **порт**:
+
+```
+hero карт      дүрс (64) + wordmark + төлөвийн тэмдэг + мэндчилгээ + Сэргээх
+4-статистик    LazyVGrid, 4 багана — сүүлийнх нь accent өнгөтэй
+жагсаалт 1     Иргэний танилт — мөр бүр дүрсний хайрцаг (38) + текст + StatusPill
+жагсаалт 2     Профайл — мөр хооронд Divider
+```
+
+Зай (20 / 16), радиус, фонтын шатлал, мөрийн бүтэц бүгд тэднийхтэй ижил.
+**Ялгаа нь зөвхөн өгөгдлийн эх сурвалж**: тэд өөрийн `/dashboard` endpoint-оос
+төхөөрөмж, session-ий жагсаалт авдаг; энэ платформ дээр тийм endpoint байхгүй
+тул `/api/me` (профайл, eID, Google) ба `/api/me/eid/summary` (тоо) хоёрыг ижил
+бүтэцтэйгээр байрлуулав.
+
 ## Шаардлага
 
 - macOS 13+
@@ -120,5 +149,6 @@ GEREGE_APP_URL=http://localhost:3000 open -a build/Build/Products/Debug/GeregeDe
 ## Холбоотой
 
 - [desktop/windows-app/README.md](../windows-app/README.md) — Windows клиент
-- [ios/TemplateApp/README.md](../../ios/TemplateApp/README.md) — iOS клиент
+- [mobile/ios/TemplateApp/README.md](../../mobile/ios/TemplateApp/README.md) — iOS клиент
+- [mobile/android/TemplateApp/README.md](../../mobile/android/TemplateApp/README.md) — Android клиент
 - [frontend/README.md](../../frontend/README.md) — вэб апп ба BFF

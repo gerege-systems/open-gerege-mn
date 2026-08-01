@@ -72,6 +72,11 @@ enum Token {
     // Landing панелийн гүн navy (`--lp-navy`) — нэвтрэх дэлгэцийн зүүн тал.
     static let navy     = Color(hex: "10358F")
     static let navyDeep = Color(hex: "081F5E")
+
+    // Зүүн цэсний самбар (eid-platform-mn → sidebarBackground / sidebarMutedText).
+    // Загвараас хамаарахгүй — үргэлж гүн navy, вэбийн icon rail-тай нийцнэ.
+    static let sidebarBg    = Color(hex: "0F172A")
+    static let sidebarMuted = Color(hex: "94A3B8")
 }
 
 // MARK: - Зай (eid-platform-mn → Spacing)
@@ -87,6 +92,11 @@ enum Space {
 
     /// Картын дотоод зай — `globals.css` → `.card { padding: 24px }`.
     static let card: CGFloat = 24
+
+    /// Хуудасны зах (eid-platform-mn → `Space.page*`).
+    static let pageTop: CGFloat = 24
+    static let pageHoriz: CGFloat = 32
+    static let pageBottom: CGFloat = 32
 }
 
 // MARK: - Радиус (`globals.css` → --radius-*)

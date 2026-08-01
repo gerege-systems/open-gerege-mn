@@ -14,7 +14,7 @@
 // `HTTPCookieStorage.shared` руу хуулна: цаашид APIClient тэр session-оор
 // ажиллана. Вэб дашбоардыг апп дотор РЕНДЭРЛЭХГҮЙ — native дэлгэц рүү шилжинэ.
 //
-// Энэ нь `ios/TemplateApp/Sources/SSOWebView.swift`-ийн macOS хувилбар:
+// Энэ нь `mobile/ios/TemplateApp/Sources/SSOWebView.swift`-ийн macOS хувилбар:
 // UIViewRepresentable → NSViewRepresentable, бусад логик ижил.
 
 import SwiftUI

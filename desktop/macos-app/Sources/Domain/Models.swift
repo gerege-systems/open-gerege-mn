@@ -2,7 +2,7 @@
 // Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
 
 // BFF-ийн хариунуудын модель. Талбарын нэр, дугтуйны бүтэц нь
-// `ios/TemplateApp/Sources/Models.swift`-тэй ЯГ ижил — хоёр native клиент нэг
+// `mobile/ios/TemplateApp/Sources/Models.swift`-тэй ЯГ ижил — хоёр native клиент нэг
 // backend гэрээтэй тул зөрүүлэх шалтгаангүй.
 
 import Foundation

@@ -111,4 +111,5 @@ GEREGE_APP_URL=http://localhost:3000 open -a build/Build/Products/Debug/GeregeDe
 ## 相关文档
 
 - [desktop/windows-app/README_ZH.md](../windows-app/README_ZH.md) —— Windows 客户端
-- [ios/TemplateApp/README_ZH.md](../../ios/TemplateApp/README_ZH.md) —— iOS 客户端
+- [mobile/ios/TemplateApp/README_ZH.md](../../mobile/ios/TemplateApp/README_ZH.md) —— iOS 客户端
+- [mobile/android/TemplateApp/README_ZH.md](../../mobile/android/TemplateApp/README_ZH.md) —— Android 客户端

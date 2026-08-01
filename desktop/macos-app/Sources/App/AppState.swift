@@ -65,3 +65,48 @@ final class AppState: ObservableObject {
         phase = .signedOut
     }
 }
+
+#if DEBUG
+extension AppState {
+    /// Жишиг өгөгдөлтэй төлөв — дэлгэцийн загварыг НЭВТРЭХГҮЙГЭЭР шалгахад.
+    ///
+    /// `GEREGE_PREVIEW_DASHBOARD=1` орчны хувьсагчтай ажиллуулбал апп шууд
+    /// хяналтын самбарыг энэ өгөгдлөөр харуулна (`RootView`-г хар).
+    /// `#if DEBUG` дотор тул Release багцад ОГТ ОРОХГҮЙ.
+    static func previewSignedIn() -> AppState {
+        let state = AppState()
+        state.user = MeUser.preview
+        state.eid = EidSummary.preview
+        state.phase = .signedIn
+        return state
+    }
+}
+
+extension MeUser {
+    static let preview = MeUser(
+        id: "6f1c0f2e-0000-4a00-9000-000000000001",
+        username: "citizen",
+        firstName: "Дорж",
+        lastName: "Бат",
+        fullName: "Бат Дорж",
+        fullNameEn: "Bat Dorj",
+        email: "bat.dorj@example.mn",
+        roleId: 4,
+        createdAt: "2026-01-14T09:12:00Z",
+        eid: EidBlock(civilId: "УБ98042512", nationalId: "1234567890",
+                      kycLevel: "HIGH", documentNumber: "AA1234567"),
+        google: GoogleBlock(email: "bat.dorj@gmail.com", name: "Bat Dorj",
+                            picture: nil, emailVerified: true)
+    )
+}
+
+extension EidSummary {
+    static let preview = EidSummary(
+        certificates: CertCounts(valid: 3, total: 4),
+        activity: ActivityCounts(authentication: 128, signature: 27),
+        devicesActive: 2,
+        devicesTotal: 3,
+        representationCount: 1
+    )
+}
+#endif

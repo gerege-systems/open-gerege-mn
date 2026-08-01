@@ -12,8 +12,17 @@
 > 的同一份代码。桌面层没有自己的 UI，因此 Web 端的更新**无需重新打包**即可
 > 直接出现在应用中。
 
-当前支持的平台为 **macOS 12+**。`electron-builder.yml` 中已准备好 Windows/Linux
-的基础配置，但尚未验证。
+支持的平台：**macOS 12+**、**Windows 10/11**、**Linux**（AppImage · deb · rpm）。
+
+| 平台 | 安装包 | 架构 | 自动更新 |
+|---|---|---|---|
+| macOS 12+ | `dmg`、`zip` | arm64 · x64 | ✅（通过 zip） |
+| Windows 10/11 | `nsis` 安装程序、`portable` | x64（nsis 另含 arm64） | ✅ 仅 NSIS —— portable 不自更新 |
+| Linux | `AppImage`、`deb`、`rpm` | x64（AppImage/deb 另含 arm64） | ✅ 仅 AppImage —— deb/rpm 由包管理器更新 |
+
+> **每种安装包都要在对应的操作系统上构建。** macOS 包需要 `codesign`，
+> Windows 的 NSIS 需要 wine，因此无法从单一主机可靠地产出全部三种包 ——
+> 请在 CI 对应的 runner（或目标操作系统）上构建。
 
 ## 架构
 
@@ -88,8 +97,9 @@ frontend/src/app/globals.css → html[data-desktop] { … }
 sidepanel 头部）。全屏时按钮会消失，而 DOM 无法感知——由外壳自己通过
 `webContents.insertCSS` 把预留间距归零（`src/windows.ts`）。
 
-Windows/Linux 仍使用**标准窗口边框**（不写入 `data-titlebar`）——这两个平台在本仓库
-尚未验证，因此不冒险自绘窗口控件。`data-desktop` 标记在所有平台都会写入。
+Windows/Linux 仍使用**标准窗口边框**（不写入 `data-titlebar`）——这是**有意的选择**：
+这两个平台上窗口控件的位置与顺序取决于桌面环境主题（Windows 11 snap、GNOME/KDE），
+自绘的话任何细微差异都会显得像故障。`data-desktop` 标记在所有平台都会写入。
 
 ## 自动更新
 
@@ -160,6 +170,15 @@ npm run typecheck
 
 运行 `npm run dev` 前，请先在另一个终端执行 `cd frontend && npm run dev`。
 
+这些脚本在**三种操作系统、任意 Node 版本上行为一致** —— 两者都经由一层薄封装：
+
+- `scripts/dev.mjs` —— 在此设置环境变量。POSIX 的 `VAR=值 命令` 写法在 Windows
+  上会报"找不到命令"。
+- `scripts/test.mjs` —— 找出测试文件并以**显式路径**传给 `node --test`。
+  `dist/*.test.js` 在 `cmd.exe` 下不展开通配符，Windows 会失败；
+  `"dist/**/*.test.js"` 的通配符支持仅限 Node 22+；传目录 `dist` 在 Node 20 上
+  可用，但新版本会把它当作文件。显式列表在任意组合下都能工作。
+
 ### 选择服务器
 
 优先级：`GEREGE_APP_URL` 环境变量 → 应用内保存的选择 → `template.gerege.mn`。
@@ -171,9 +190,23 @@ npm run typecheck
 ## 打包
 
 ```bash
-npm run icon           # frontend/public/brand.webp → resources/icon.icns
+npm run icon           # brand.webp → resources/icon.png（macOS 上另生成 icon.icns）
+npm run pack           # release/*-unpacked/ —— 不打包，快速验证配置
+
 npm run dist:mac       # release/*.dmg + *.zip（arm64 · x64），未签名
+npm run dist:win       # release/*.exe —— NSIS 安装程序 + portable
+npm run dist:linux     # release/*.AppImage + *.deb + *.rpm
 ```
+
+Windows/Linux 的产物命名为 `Gerege Template-<版本>-<os>-<arch>.<扩展名>`。
+macOS 的命名**有意未改动** —— 其自动更新通道已经确定，改名属于不必要的风险。
+
+**图标。** `npm run icon` 生成 1024px 的 `resources/icon.png` —— Linux 直接使用，
+Windows 的 `.ico` 由 electron-builder 自动转换。macOS 的 `icon.icns` 仅在 macOS
+上（通过 `iconutil`）生成；脚本在 macOS 上使用自带的 `sips`，在其他系统上使用
+ImageMagick。两个图标都已纳入版本控制，常规构建无需重新生成。
+
+### macOS
 
 未签名的构建**仅供本地测试**——macOS Gatekeeper 会提示应用"已损坏"
 （`xattr -dr com.apple.quarantine "/Applications/Gerege Template.app"`
@@ -189,6 +222,29 @@ npm run dist:mac:signed                            # 签名 + 公证
 
 Hardened runtime、entitlements（`build/entitlements.mac.plist`）与
 `NSMicrophoneUsageDescription` 均已预先配置。
+
+### Windows
+
+`npm run dist:win` 产出两种结果：**NSIS 安装程序**（用户可选择安装目录，创建桌面
+与开始菜单快捷方式，不需要管理员权限 —— `perMachine: false`）以及 **portable**
+`.exe`（免安装直接运行 —— 适用于受管控的企业/机关电脑）。
+
+> 自动更新**仅对通过 NSIS 安装**的应用有效。portable 版本需用户手动下载替换 ——
+> electron-updater 不会更新它。
+
+如需签名，请通过 `CSC_LINK` / `CSC_KEY_PASSWORD` 提供证书；否则 SmartScreen 会
+提示"未知发布者"。构建时会一并生成 `latest.yml`。
+
+### Linux
+
+`npm run dist:linux` 产出 `AppImage`（任意发行版直接运行）、`deb`
+（Debian/Ubuntu）与 `rpm`（Fedora/RHEL）。`deb` 的依赖（`libgtk-3-0`、
+`libnss3`、`libsecret-1-0` 等）已在 `electron-builder.yml` 中列出。为把窗口与
+`.desktop` 条目关联，设置了 `StartupWMClass` —— 否则在 Wayland/GNOME 的任务栏中
+会没有图标。
+
+> Linux 上自动更新**仅适用于 AppImage**（`latest-linux.yml`）。`deb`/`rpm` 由
+> 发行版的包管理器更新。
 
 ## 文件结构
 
@@ -207,22 +263,31 @@ src/
   update.test.ts 更新决策测试
 static/          内部页面——offline.html、server.html、shell.css
 build/           entitlements
-resources/       icon.icns
-scripts/         make-icon.sh
+resources/       icon.png（Linux · Windows）、icon.icns（macOS）
+scripts/         make-icon.sh、dev.mjs、test.mjs
 ```
 
 ## 快捷键
 
-| 快捷键 | 操作 |
-|---|---|
-| `⌘R` / `⌘⇧R` | 重新加载 / 强制重新加载 |
-| `⌘[` / `⌘]` | 后退 / 前进（也支持双指滑动） |
-| `⌘+` / `⌘-` / `⌘0` | 放大 / 缩小 / 实际大小 |
-| `⌘N` | 新建窗口 |
-| `⌘P` | 打印 |
-| `⌘,` | 设置（`/me/settings`） |
-| `⌘⇧S` | 切换服务器 |
-| `⌘⇧H` | 首页 |
+macOS 上为 `⌘`，Windows/Linux 上为 `Ctrl`。
+
+| macOS | Windows / Linux | 操作 |
+|---|---|---|
+| `⌘R` / `⌘⇧R` | `Ctrl+R` / `Ctrl+⇧R` | 重新加载 / 强制重新加载 |
+| `⌘[` / `⌘]` | `Alt+←` / `Alt+→` | 后退 / 前进 |
+| `⌘+` / `⌘-` / `⌘0` | `Ctrl+…` | 放大 / 缩小 / 实际大小 |
+| `⌘N` | `Ctrl+N` | 新建窗口 |
+| `⌘P` | `Ctrl+P` | 打印 |
+| `⌘,` | `Ctrl+,` | 设置（`/me/settings`） |
+| `⌘⇧S` | `Ctrl+⇧S` | 切换服务器 |
+| `⌘⇧H` | `Ctrl+⇧H` | 首页 |
+
+鼠标同样可以前进/后退：macOS 上使用**双指滑动**，Windows/Linux 上使用鼠标的
+**第 4/5 键**（`app-command`）。
+
+菜单遵循各平台惯例：macOS 上有以应用名开头的菜单（设置 · 服务 · 隐藏），
+Windows/Linux 上这些项移入**文件**菜单。仅 macOS 才有的 role（`zoom`、`front`、
+`services`）在其他系统上完全不会添加。
 
 ## 限制与注意事项
 

@@ -21,10 +21,18 @@ const PRELOAD = path.join(__dirname, 'preload.js');
 const isMac = process.platform === 'darwin';
 
 /**
+ * Цонхны дүрс. macOS дээр дүрс нь багцаас (.icns) ирдэг тул тогтоох
+ * шаардлагагүй — харин Windows/Linux дээр тогтоохгүй бол taskbar-т Electron-ы
+ * үндсэн дүрс харагдана (ялангуяа багцлаагүй, хөгжүүлэлтийн горимд).
+ */
+const WINDOW_ICON = isMac ? undefined : path.join(__dirname, '..', 'resources', 'icon.png');
+
+/**
  * Гарчгийн мөрийг цонхны хүрээнд шингээх (macOS `hiddenInset`) — аппын өөрийн
  * topbar нь гарчгийн мөрийн үүргийг гүйцэтгэнэ. Windows/Linux дээр стандарт
- * хүрээ хэвээр: тэдгээр платформ энэ репод туршигдаагүй тул цонхны удирдлагыг
- * өөрсдөө зурах эрсдэлийг авахгүй.
+ * хүрээ ЗОРИУД хэвээр: тэдгээр платформ дээр цонхны удирдлагын байрлал,
+ * дараалал нь орчны сэдэвээс (Windows 11 snap, GNOME/KDE) хамаардаг тул
+ * өөрсдөө зурвал жижиг зөрүү бүр эвдрэл шиг харагдана.
  */
 export function usesOverlayTitleBar(): boolean {
   return isMac;
@@ -75,6 +83,16 @@ export function activeAppWindow(): BrowserWindow | null {
   if (focused && !helperContents.has(focused.webContents.id)) return focused;
   const windows = appWindows();
   return windows[windows.length - 1] ?? null;
+}
+
+/** Хуудсын түүхээр ухрах (боломжтой бол). */
+export function goBack(win: BrowserWindow): void {
+  if (win.webContents.navigationHistory.canGoBack()) win.webContents.navigationHistory.goBack();
+}
+
+/** Хуудсын түүхээр урагшлах (боломжтой бол). */
+export function goForward(win: BrowserWindow): void {
+  if (win.webContents.navigationHistory.canGoForward()) win.webContents.navigationHistory.goForward();
 }
 
 /**
@@ -168,6 +186,7 @@ export function createMainWindow(url: string): BrowserWindow {
     minHeight: MIN_HEIGHT,
     show: false,
     title: 'Gerege Template',
+    icon: WINDOW_ICON,
     // Хуудасны өнгө ачаалагдах хүртэл цагаан анивчихаас сэргийлнэ.
     backgroundColor: '#0b1220',
     // macOS: гарчгийн мөргүй, гэрлэн товчнууд аппын topbar дотор суух —
@@ -185,14 +204,20 @@ export function createMainWindow(url: string): BrowserWindow {
 
   if (isMac) attachFullScreenStyle(win);
 
-  // macOS-ийн хоёр хуруутай зөөлт — хуудас ухрах / урагшлах.
-  win.on('swipe', (_event, direction) => {
-    if (direction === 'left' && win.webContents.navigationHistory.canGoBack()) {
-      win.webContents.navigationHistory.goBack();
-    } else if (direction === 'right' && win.webContents.navigationHistory.canGoForward()) {
-      win.webContents.navigationHistory.goForward();
-    }
-  });
+  // Хоёр хуруутай зөөлт — хуудас ухрах / урагшлах. `swipe` бол зөвхөн macOS-ийн
+  // үйл явдал; Windows/Linux дээр хулганы 4/5-р товч энэ үүргийг гүйцэтгэдэг тул
+  // тэдгээрийг `app-command`-аар тусад нь холбоно.
+  if (isMac) {
+    win.on('swipe', (_event, direction) => {
+      if (direction === 'left') goBack(win);
+      else if (direction === 'right') goForward(win);
+    });
+  } else {
+    win.on('app-command', (_event, command) => {
+      if (command === 'browser-backward') goBack(win);
+      else if (command === 'browser-forward') goForward(win);
+    });
+  }
 
   const persistBounds = () => {
     if (win.isDestroyed() || win.isMinimized() || win.isFullScreen()) return;

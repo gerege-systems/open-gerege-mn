@@ -100,6 +100,47 @@ jobs:
       - name: Build
         run: npm run build
 
+  # Desktop (Electron бүрхүүл). Гурван OS дээр давхар ажиллана — учир нь энэ
+  # давхаргын алдаанууд платформ хамааралтай байдаг: cmd.exe глоб задалдаггүй,
+  # POSIX-ийн `VAR=утга команд` бичлэг Windows дээр ажилладаггүй, зарим Electron
+  # role/event зөвхөн macOS дээр байдаг. Ubuntu дээр ганцаархан шалгавал
+  # эдгээрийн аль нь ч илрэхгүй.
+  desktop:
+    name: Desktop (typecheck · test) — ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop/TemplateDesktop
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: desktop/TemplateDesktop/package-lock.json
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests (node --test)
+        run: npm test
+
+      # Багцлалт нь платформ бүрийн Electron хоёртыг (~100 МБ) татдаг тул
+      # энгийн push/PR бүрд ажиллуулахгүй — гараар ажиллуулах үед л
+      # electron-builder-ийн тохиргоог тухайн OS дээр шалгана.
+      - name: Package smoke test (--dir)
+        if: github.event_name == 'workflow_dispatch'
+        run: npm run pack
+
   secrets-scan:
     name: Secrets scan (gitleaks)
     runs-on: ubuntu-latest

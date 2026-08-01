@@ -6,7 +6,15 @@
 
 import { app, Menu, shell, type MenuItemConstructorOptions } from 'electron';
 import { checkForUpdates, updateMenuEnabled, updateMenuLabel } from './updater';
-import { activeAppWindow, createMainWindow, getAppOrigin, navigateTo, openServerWindow } from './windows';
+import {
+  activeAppWindow,
+  createMainWindow,
+  getAppOrigin,
+  goBack,
+  goForward,
+  navigateTo,
+  openServerWindow,
+} from './windows';
 
 // Баримтын сайт нь web аппын «Баримт бичиг» холбоостой ижил байх ёстой
 // (`frontend/src/brand.config.ts` → docsUrl) — эс бөгөөс хоёр газраас өөр
@@ -141,18 +149,15 @@ export function buildMenu(): void {
     label: 'Шилжих',
     submenu: [
       {
+        // macOS дээр ⌘[ / ⌘] нь хөтчийн жишиг; Windows/Linux дээр Alt+←/→.
         label: 'Буцах',
-        accelerator: 'CmdOrCtrl+[',
-        click: withActiveWindow((win) => {
-          if (win.webContents.navigationHistory.canGoBack()) win.webContents.navigationHistory.goBack();
-        }),
+        accelerator: isMac ? 'Cmd+[' : 'Alt+Left',
+        click: withActiveWindow(goBack),
       },
       {
         label: 'Урагш',
-        accelerator: 'CmdOrCtrl+]',
-        click: withActiveWindow((win) => {
-          if (win.webContents.navigationHistory.canGoForward()) win.webContents.navigationHistory.goForward();
-        }),
+        accelerator: isMac ? 'Cmd+]' : 'Alt+Right',
+        click: withActiveWindow(goForward),
       },
       { type: 'separator' },
       { label: 'Нүүр хуудас', accelerator: 'CmdOrCtrl+Shift+H', click: () => navigateTo('/') },
@@ -169,9 +174,11 @@ export function buildMenu(): void {
     label: 'Цонх',
     submenu: [
       { role: 'minimize', label: 'Багасгах' },
-      { role: 'zoom', label: 'Дэлгэцэд тааруулах' },
+      // `zoom`, `front` нь зөвхөн macOS-ийн role — бусад OS дээр цэсэнд
+      // үйлдэлгүй мөр болж үлдэнэ.
       ...(isMac
         ? ([
+            { role: 'zoom', label: 'Дэлгэцэд тааруулах' },
             { type: 'separator' },
             { role: 'front', label: 'Бүгдийг урагш авчрах' },
           ] as MenuItemConstructorOptions[])

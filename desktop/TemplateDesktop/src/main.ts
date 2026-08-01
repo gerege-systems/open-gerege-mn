@@ -47,6 +47,11 @@ if (!app.requestSingleInstanceLock()) {
 function start(): void {
   // preload-д хүрэх цорын ганц зам (sandbox-д app модуль байхгүй).
   process.env.GEREGE_APP_VERSION = app.getVersion();
+
+  // Windows: энэ ID-г тогтоохгүй бол мэдэгдэл аппын нэр, дүрсгүйгээр (эсвэл
+  // "electron.app.…" гэж) гарч, taskbar-т багцалсан апп өөр бичлэг болж сална.
+  // electron-builder.yml-ийн appId-тай ЯГ таарах ёстой.
+  if (process.platform === 'win32') app.setAppUserModelId('mn.gerege.temp.desktop');
   // Web талын desktop харагдац эдгээрээс шалтгаална: гарчгийн мөр цонхны
   // хүрээнд шингэсэн эсэх, зүүн дээд буланд хэдэн px чөлөөлөх ёстой вэ.
   process.env.GEREGE_TITLEBAR_OVERLAY = usesOverlayTitleBar() ? '1' : '0';

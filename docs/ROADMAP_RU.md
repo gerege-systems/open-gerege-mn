@@ -7,7 +7,7 @@
 > цифровую услугу как государственного органа, так и частной компании.
 > Одна основа — все государственные и частные услуги. Её ключевая возможность —
 > единый вход (Single Sign-On) на базе eID, а готовое эталонное развёртывание —
-> **Gerege Template Platform** ([public.template.gerege.mn](https://public.template.gerege.mn)).
+> **Gerege Template Platform** ([open.gerege.mn](https://open.gerege.mn)).
 > Этот файл показывает, что сделано и что планируется дальше.
 > Подробная документация: [README.md](../README.md#documentation).
 
@@ -15,7 +15,7 @@
 вход через eID, привязка Google, потребитель dgov SSO, собственный провайдер OIDC
 (Hydra), организации и членство, государственные услуги, API-шлюз, подпись PAdES,
 интеграции, аудит, RBAC/суперадмин, оформление сайта — всё надёжно работает в
-эталонном развёртывании ([public.template.gerege.mn](https://public.template.gerege.mn)) при зелёном CI.
+эталонном развёртывании ([open.gerege.mn](https://open.gerege.mn)) при зелёном CI.
 
 ---
 
@@ -104,7 +104,7 @@
 
 ### Развёртывание
 
-- Продакшен-развёртывание на [public.template.gerege.mn](https://public.template.gerege.mn)
+- Продакшен-развёртывание на [open.gerege.mn](https://open.gerege.mn)
   (docker compose: db + redis + migrate + api + web)
 - Вся документация обновлена парами EN/MN; DEPLOYMENT(_MN).md, AI_PIPELINE(_MN).md, CLAUDE.md
 

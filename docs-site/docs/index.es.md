@@ -11,7 +11,7 @@ seguridad, IA y andamiaje de servicio vienen resueltos desde el primer día.
 !!! tip "Código abierto"
     Esta plataforma es un proyecto de **código abierto**: lee el código completo,
     haz un fork y ejecútalo en tu propia organización.
-    :material-github: [Ver en GitHub](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [Ver en GitHub](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 
@@ -48,9 +48,9 @@ La plataforma se compone de varios servicios independientes:
 | Dominio | Función |
 |---|---|
 | **sso.gerege.mn** | Gerege SSO — proveedor OIDC + parte confiante de eID (custodia las credenciales eID) |
-| **public.template.gerege.mn** | Aplicación de ejemplo: parte confiante de Gerege SSO (accede a través del SSO) |
+| **open.gerege.mn** | Aplicación de ejemplo: parte confiante de Gerege SSO (accede a través del SSO) |
 
-Las aplicaciones (como `public.template.gerege.mn`) acceden a través de
+Las aplicaciones (como `open.gerege.mn`) acceden a través de
 **sso.gerege.mn** y llaman a los servicios eID autorizados mediante un proxy.
 Solo el SSO custodia las credenciales de parte confiante que dialogan con eID
 Mongolia, de modo que las aplicaciones quedan libres de esa carga de seguridad.

@@ -163,4 +163,4 @@ en direct diffuse près de 8 fragments par minute : abaissez cette limite avec
 précaution.
 
 Le détail complet vit dans le dépôt :
-[`backend/docs/AI_PIPELINE.md`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/docs/AI_PIPELINE.md).
+[`backend/docs/AI_PIPELINE.md`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/docs/AI_PIPELINE.md).

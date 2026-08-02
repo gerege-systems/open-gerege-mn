@@ -40,7 +40,7 @@ Internet ──► nginx (TLS)
 ## 后端目录结构 —— 来自内核
 
 上述所有能力（认证、RBAC、网关、审计、OIDC 提供方、eID/SSO、AI）**都没有写在
-本仓库里** —— 它们通过 `go.mod` 来自 `public-gerege-core` 这个 Go 模块。因此
+本仓库里** —— 它们通过 `go.mod` 来自 `open-gerege-core` 这个 Go 模块。因此
 `backend/` 中**只有一个 Go 文件**：
 
 ```
@@ -60,7 +60,7 @@ func main() {
 }
 ```
 
-内核分为两层：**`public-gerege-core`**（开放基座，政务线直接使用）与通过
+内核分为两层：**`open-gerege-core`**（开放基座，政务线直接使用）与通过
 `go.mod` 继承它的 **`private-gerege-core`**（封闭，供 Gerege 线使用）。
 
 ## 前端目录结构 — `@gerege/ui-core`

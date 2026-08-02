@@ -7,7 +7,7 @@
 > хэвшлийн ч аль ч цахим үйлчилгээг итгэлтэйгээр босгоно. Нэг суурь — төр,
 > хувийн хэвшлийн бүх үйлчилгээ. Гол онцлог чадвар нь
 > eID-д суурилсан нэгдсэн нэвтрэлт (Single Sign-On) бөгөөд түүний бэлэн
-> эталон deployment нь **Gerege Template Platform** ([public.template.gerege.mn](https://public.template.gerege.mn)).
+> эталон deployment нь **Gerege Template Platform** ([open.gerege.mn](https://open.gerege.mn)).
 > Энэ файл нь хийгдсэн ажил ба урагшлах төлөвлөгөөг харуулна.
 > Дэлгэрэнгүй баримт: [README.md](README.md#documentation).
 
@@ -15,7 +15,7 @@
 нэвтрэлт, Google холболт, dgov SSO consumer, өөрийн OIDC provider (Hydra),
 байгууллага/гишүүнчлэл, төрийн үйлчилгээ, API gateway, PAdES гарын үсэг,
 интеграци, audit, RBAC/superadmin, сайтын харагдац — бүгд эталон deployment-д
-([public.template.gerege.mn](https://public.template.gerege.mn)) найдвартай ажиллаж байгаа (CI ногоон).
+([open.gerege.mn](https://open.gerege.mn)) найдвартай ажиллаж байгаа (CI ногоон).
 
 ---
 
@@ -84,7 +84,7 @@
 - Admin (нийтийн хуудас) ба per-user (апп) scope-ыг тусгаарласан
 
 ### Deploy
-- [public.template.gerege.mn](https://public.template.gerege.mn) дээр production deploy (docker compose: db + redis + migrate + api + web)
+- [open.gerege.mn](https://open.gerege.mn) дээр production deploy (docker compose: db + redis + migrate + api + web)
 - Бүх док EN/MN хосоор шинэчлэгдсэн; DEPLOYMENT(_MN).md, AI_PIPELINE(_MN).md, CLAUDE.md
 
 ---

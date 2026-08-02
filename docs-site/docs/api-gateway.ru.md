@@ -35,7 +35,7 @@ scope `svc:<name>`, чтобы его можно было выдавать пр�
 текущую выдачу у клиента.
 
 ```text
-Приложение "public.template.gerege.mn"
+Приложение "open.gerege.mn"
   ├─ Вход через SSO ......... автоматически (встроено)
   ├─ [x] eid-sign ........... svc:eid-sign
   ├─ [ ] eid-proxy .......... не выдан → /rp/eid → 403

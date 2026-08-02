@@ -5,9 +5,9 @@
 # Build the MkDocs documentation site and deploy it to the server (one command).
 #
 # Нийтийн хувилбар нь GitHub Pages дээр АВТОМАТААР шинэчлэгддэг
-# (`.github/workflows/docs.yml` → https://gerege-systems.github.io/public-gerege-template/).
+# (`.github/workflows/docs.yml` → https://gerege-systems.github.io/open-gerege-mn/).
 # Энэ скрипт нь СОНГОЛТ — сайтыг өөрийн сервер дээр нэмж хостлох үед л хэрэгтэй.
-# Хостлогддог: https://public.template.gerege.mn/docs/  (nginx → /var/www/template-docs)
+# Хостлогддог: https://open.gerege.mn/docs/  (nginx → /var/www/template-docs)
 #
 # Ашиглах:
 #   ./docs-site/deploy-docs.sh
@@ -58,4 +58,4 @@ tar czf "$TGZ" -C site .
   "rm -rf '$DOCS_TARGET' && mkdir -p '$DOCS_TARGET' && tar xzf /tmp/template-docs.tgz -C '$DOCS_TARGET' && rm -f /tmp/template-docs.tgz"
 rm -f "$TGZ"
 
-echo "✅ Docs deployed → https://public.template.gerege.mn/docs/"
+echo "✅ Docs deployed → https://open.gerege.mn/docs/"

@@ -33,8 +33,8 @@ Internet ──► nginx (80/443, Let's Encrypt)
 
 ```bash
 # 1) код авах
-git clone git@github.com:gerege-systems/public-gerege-template.git /srv/public-gerege-template
-cd /srv/public-gerege-template
+git clone git@github.com:gerege-systems/open-gerege-mn.git /srv/open-gerege-mn
+cd /srv/open-gerege-mn
 
 # 2) env файлуудыг бэлдэх (.env + backend.env)
 
@@ -76,7 +76,7 @@ tag / volume мөргөлдөнө.
 |---|---|---|
 | `sso-dgov-mn` | sso.gerege.mn | web 3008 |
 | `template-dgov-mn` | template.gerege.mn | web 3009 |
-| `public-template` | public.template.gerege.mn | web 3010, api relay 8094 |
+| `public-template` | open.gerege.mn | web 3010, api relay 8094 |
 
 Энэ репогийн амьд жишиг байршуулалт нь `public-template` — хостын түвшний
 тэмдэглэл (edge nginx, SSO client, анхны суулгалтын алхмууд) `deploy/HOST.md`
@@ -87,7 +87,7 @@ tag / volume мөргөлдөнө.
 Энэ сайтыг [MkDocs Material](https://squidfunk.github.io/mkdocs-material/)-ээр
 `docs-site/`-аас бүтээнэ. Нийтлэгдэх хаяг:
 
-<https://gerege-systems.github.io/public-gerege-template/>
+<https://gerege-systems.github.io/open-gerege-mn/>
 
 - `docs-site/**` өөрчлөгдөж `main` руу орох бүрд `.github/workflows/docs.yml`
   build хийж **GitHub Pages** руу тавина (Pages-ийн эх сурвалж = GitHub Actions).

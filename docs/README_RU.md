@@ -10,7 +10,7 @@
 безопасности и готовые к расширению в любую систему. Вы создаёте ценность, а не
 инфраструктуру — идентификация, безопасность, AI и каркас сервисов уже решены с
 первого дня. Эталонное развёртывание работает как **Gerege Template Platform** на
-[public.template.gerege.mn](https://public.template.gerege.mn) и показывает единый вход через
+[open.gerege.mn](https://open.gerege.mn) и показывает единый вход через
 eID в продакшене.
 
 Платформа — это код-выражение заявленной миссии **Gerege Systems ХХК**:
@@ -117,7 +117,7 @@ gerege-template-platform/
 - **Динамические языки** — суперадмин добавляет и удаляет языки интерфейса во
   время работы и заполняет переводы через Gemini (`/admin/languages`);
   встроенный словарь остаётся источником ключей и запасным вариантом при
-  недоступной БД. Требуется public-gerege-core v0.5.0+.
+  недоступной БД. Требуется open-gerege-core v0.5.0+.
 - **Устанавливаемое PWA** — manifest + иконки + service worker на Serwist;
   кешируется ТОЛЬКО статика — все пути `/api/*`, аутентификации и eID работают
   как NetworkOnly, HTML не кешируется вовсе. Настройка:
@@ -153,10 +153,10 @@ docker compose up -d --build
 
 ## Документация
 
-📖 **Сайт документации:** <https://gerege-systems.github.io/public-gerege-template/ru/>
-([Монгол](https://gerege-systems.github.io/public-gerege-template/)
-· [English](https://gerege-systems.github.io/public-gerege-template/en/)
-· [中文](https://gerege-systems.github.io/public-gerege-template/zh/)) — исходники в
+📖 **Сайт документации:** <https://gerege-systems.github.io/open-gerege-mn/ru/>
+([Монгол](https://gerege-systems.github.io/open-gerege-mn/)
+· [English](https://gerege-systems.github.io/open-gerege-mn/en/)
+· [中文](https://gerege-systems.github.io/open-gerege-mn/zh/)) — исходники в
 `docs-site/`, публикуются на GitHub Pages при каждом слиянии в `main`.
 
 | Документ | О чём |

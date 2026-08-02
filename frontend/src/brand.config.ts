@@ -19,7 +19,7 @@ export const brand = {
   short: 'Gerege',
 
   /** Үндсэн домэйн (схемгүй). */
-  domain: 'public.template.gerege.mn',
+  domain: 'open.gerege.mn',
 
   /**
    * Нийтийн баримтын сайт — хэлний угтвар нэмэхэд бэлэн, ард нь `/`-тай.
@@ -28,7 +28,7 @@ export const brand = {
    * (`.github/workflows/docs.yml`). Экосистемийн нэгдсэн `docs.gerege.mn` биш
    * — толгой мөрний «Баримт бичиг» цэс template-ийн өөрийн баримт руу очно.
    */
-  docsUrl: 'https://gerege-systems.github.io/public-gerege-template/',
+  docsUrl: 'https://gerege-systems.github.io/open-gerege-mn/',
 
   /**
    * Баримтын сайт БОДИТООР ямар хэлтэй вэ — `docs-site/mkdocs.yml`-ийн

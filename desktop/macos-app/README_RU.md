@@ -86,7 +86,7 @@ open build/Build/Products/Debug/GeregeDesktop.app
 
 ### Выбор сервера
 
-Адрес по умолчанию — `https://public.template.gerege.mn`. Указать локальный
+Адрес по умолчанию — `https://open.gerege.mn`. Указать локальный
 frontend:
 
 ```bash

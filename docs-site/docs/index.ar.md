@@ -10,7 +10,7 @@
 !!! tip "مفتوحة المصدر"
     هذه المنصّة مشروع **مفتوح المصدر** — اطّلع على الشيفرة كاملةً، وانسخها
     (fork)، وشغّلها في مؤسّستك.
-    :material-github: [عرضها على GitHub](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [عرضها على GitHub](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 
@@ -46,9 +46,9 @@
 | النطاق | الدور |
 |---|---|
 | **sso.gerege.mn** | Gerege SSO — مزوّد OIDC + طرف معتمِد لدى eID (يحوز بيانات اعتماد eID) |
-| **public.template.gerege.mn** | تطبيق مثال — طرف معتمِد لدى Gerege SSO (يدخل عبر نظام الدخول الموحّد) |
+| **open.gerege.mn** | تطبيق مثال — طرف معتمِد لدى Gerege SSO (يدخل عبر نظام الدخول الموحّد) |
 
-تدخل التطبيقات (مثل `public.template.gerege.mn`) عبر **sso.gerege.mn**، وتستدعي خدمات
+تدخل التطبيقات (مثل `open.gerege.mn`) عبر **sso.gerege.mn**، وتستدعي خدمات
 eID المخوَّلة من خلال وكيل. ولا يحوز بيانات اعتماد الطرف المعتمِد التي تخاطب eID
 Mongolia سوى نظام الدخول الموحّد، فتتحرّر التطبيقات من هذا العبء الأمني.
 

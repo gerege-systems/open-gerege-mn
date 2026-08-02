@@ -8,7 +8,7 @@
 
 !!! tip "开源项目"
     本平台是**开源**项目 — 您可以完整阅读源码、fork 它，并为自己的机构部署运行。
-    :material-github: [在 GitHub 上查看](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [在 GitHub 上查看](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 
@@ -42,9 +42,9 @@
 | 域名 | 角色 |
 |---|---|
 | **sso.gerege.mn** | Gerege SSO — OIDC 提供方 + eID 依赖方（持有 eID 凭据） |
-| **public.template.gerege.mn** | 示例应用 — Gerege SSO 的依赖方（通过 SSO 登录） |
+| **open.gerege.mn** | 示例应用 — Gerege SSO 的依赖方（通过 SSO 登录） |
 
-诸如 `public.template.gerege.mn` 之类的应用通过 **sso.gerege.mn** 登录，并经由代理调用已授权的
+诸如 `open.gerege.mn` 之类的应用通过 **sso.gerege.mn** 登录，并经由代理调用已授权的
 eID 服务。只有 SSO 持有与 eID Mongolia 通信的 RP 凭据，因此各应用无需承担这份安全负担。
 
 ## 核心能力

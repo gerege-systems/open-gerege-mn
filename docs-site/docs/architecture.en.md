@@ -40,7 +40,7 @@ Internet ──► nginx (TLS)
 ## Backend layout — it comes from the core
 
 Every capability above (auth, RBAC, gateway, audit, OIDC provider, eID/SSO, AI)
-is **not written in this repository** — it arrives from the `public-gerege-core`
+is **not written in this repository** — it arrives from the `open-gerege-core`
 Go module via `go.mod`. As a result `backend/` holds **exactly one Go file**:
 
 ```
@@ -60,7 +60,7 @@ func main() {
 }
 ```
 
-The core comes in two layers: **`public-gerege-core`** (the open foundation,
+The core comes in two layers: **`open-gerege-core`** (the open foundation,
 consumed directly by the government line) and **`private-gerege-core`**, which
 inherits from it via `go.mod` (closed, used by the Gerege line).
 

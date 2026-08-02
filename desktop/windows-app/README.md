@@ -72,7 +72,7 @@ Visual Studio 2022 (17.11+) дээр `GeregeDesktop.sln`-ийг нээж бол�
 
 ### Серверийг сонгох
 
-Үндсэн хаяг нь `https://public.template.gerege.mn`. Локал frontend рүү заах бол:
+Үндсэн хаяг нь `https://open.gerege.mn`. Локал frontend рүү заах бол:
 
 ```powershell
 $env:GEREGE_APP_URL = "http://localhost:3000"

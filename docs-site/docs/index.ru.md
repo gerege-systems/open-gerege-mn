@@ -11,7 +11,7 @@
 !!! tip "Open Source"
     Эта платформа — **открытый** проект: читайте исходный код целиком, форкайте
     и запускайте для своей организации.
-    :material-github: [Посмотреть на GitHub](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [Посмотреть на GitHub](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 
@@ -47,9 +47,9 @@
 | Домен | Роль |
 |---|---|
 | **sso.gerege.mn** | Gerege SSO — провайдер OIDC + доверяющая сторона eID (хранит учётные данные eID) |
-| **public.template.gerege.mn** | Пример приложения — доверяющая сторона Gerege SSO (вход через SSO) |
+| **open.gerege.mn** | Пример приложения — доверяющая сторона Gerege SSO (вход через SSO) |
 
-Приложения (например, `public.template.gerege.mn`) входят через **sso.gerege.mn** и
+Приложения (например, `open.gerege.mn`) входят через **sso.gerege.mn** и
 вызывают разрешённые сервисы eID через прокси. Учётные данные RP для обращения к
 eID Mongolia есть только у SSO, поэтому приложения избавлены от этой нагрузки по безопасности.
 

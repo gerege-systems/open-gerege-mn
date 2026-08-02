@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# public.template.gerege.mn — edge nginx vhost суулгах.
+# open.gerege.mn — edge nginx vhost суулгах.
 #
 # Энэ скрипт ХОСТ ДЭЭР ажиллана (deploy/deploy.sh дуудна, эсвэл гараар):
 #
@@ -22,7 +22,7 @@ set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 EDGE_CONTAINER="${EDGE_CONTAINER:-gerege-nginx}"
-VHOST="public.template.gerege.mn.conf"
+VHOST="open.gerege.mn.conf"
 SRC="$HERE/$VHOST"
 
 [[ -f "$SRC" ]] || { echo "✖ $SRC олдсонгүй"; exit 1; }
@@ -70,4 +70,4 @@ fi
 
 docker exec "$EDGE_CONTAINER" nginx -s reload
 sudo rm -f "$BACKUP"
-echo "✅ Edge vhost суулгагдаж, nginx reload хийгдлээ → https://public.template.gerege.mn/"
+echo "✅ Edge vhost суулгагдаж, nginx reload хийгдлээ → https://open.gerege.mn/"

@@ -10,7 +10,7 @@ identity, security, AI and service scaffolding come solved from day one.
 !!! tip "Open Source"
     This platform is an **open-source** project — read the full source, fork it,
     and run it for your own organization.
-    :material-github: [View on GitHub](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [View on GitHub](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 
@@ -46,9 +46,9 @@ The platform is composed of several independent services:
 | Domain | Role |
 |---|---|
 | **sso.gerege.mn** | Gerege SSO — OIDC provider + eID Relying Party (holds the eID credentials) |
-| **public.template.gerege.mn** | Example app — a relying party of Gerege SSO (signs in via SSO) |
+| **open.gerege.mn** | Example app — a relying party of Gerege SSO (signs in via SSO) |
 
-Apps (such as `public.template.gerege.mn`) sign in through **sso.gerege.mn** and call the
+Apps (such as `open.gerege.mn`) sign in through **sso.gerege.mn** and call the
 authorized eID services via a proxy. Only the SSO holds the RP credentials that
 talk to eID Mongolia, so apps are freed from that security burden.
 

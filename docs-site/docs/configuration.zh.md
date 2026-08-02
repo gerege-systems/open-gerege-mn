@@ -1,7 +1,7 @@
 # 配置（环境变量）
 
 > 所有配置都通过环境变量完成。权威示例见
-> [`backend/.env.example`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/.env.example)。
+> [`backend/.env.example`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/.env.example)。
 
 !!! danger "切勿提交密钥"
     `backend/.env`、根目录的 `.env` 和 `backend.env` 全部已
@@ -14,7 +14,7 @@
 | `PORT` | `8080` | API 监听端口 |
 | `ENVIRONMENT` | `production` | 开启严格的生产守卫 |
 | `DEBUG` | `false` | 详细日志 |
-| `ALLOWED_ORIGINS` | `https://public.template.gerege.mn` | CORS 白名单（逗号分隔；禁止 `*`） |
+| `ALLOWED_ORIGINS` | `https://open.gerege.mn` | CORS 白名单（逗号分隔；禁止 `*`） |
 | `TRUSTED_PROXIES` | — | 反向代理地址 |
 
 ## 数据库与 Redis
@@ -55,7 +55,7 @@
 |---|---|---|
 | `SSO_ISSUER` | `https://sso.gerege.mn` | 未设置时默认为此值 |
 | `SSO_CLIENT_ID` / `SSO_CLIENT_SECRET` | — | 留空则 SSO 流程不会启用 |
-| `SSO_REDIRECT_URI` | `https://public.template.gerege.mn/sso/callback` | 必须在 SSO 客户端上**完全一致**地注册 |
+| `SSO_REDIRECT_URI` | `https://open.gerege.mn/sso/callback` | 必须在 SSO 客户端上**完全一致**地注册 |
 | `SSO_SCOPE` | `openid profile email nationalid` | `nationalid` 会附带公民登记号 |
 | `SSO_NATIVE_CLIENT_ID` | — | 移动端（PKCE，公开客户端）流程使用的客户端 |
 | `SSO_EID_PROXY_BASE_URL` | — | 设置后，eID PKI 相关接口将经由 SSO 代理 |
@@ -68,7 +68,7 @@
 
 | 变量 | 用途 |
 |---|---|
-| `OAUTH_ISSUER` | 例如 `https://public.template.gerege.mn`。**只有**设置该变量时提供方才会启用 |
+| `OAUTH_ISSUER` | 例如 `https://open.gerege.mn`。**只有**设置该变量时提供方才会启用 |
 | `SSO_STATE_KEY` | 登录/授权临时 state 的 HMAC 密钥（**≥32 字节**） |
 | `SSO_FIRSTPARTY_CLIENTS` | 跳过授权确认页的第一方客户端 |
 | `SSO_ADMIN_API_KEYS`、`SSO_ADMIN_SUBS` | 管理 API 访问权限 |

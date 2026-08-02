@@ -100,7 +100,7 @@ open build/Build/Products/Debug/GeregeDesktop.app
 
 ### Серверийг сонгох
 
-Үндсэн хаяг нь `https://public.template.gerege.mn`. Локал frontend рүү заах бол:
+Үндсэн хаяг нь `https://open.gerege.mn`. Локал frontend рүү заах бол:
 
 ```bash
 GEREGE_APP_URL=http://localhost:3000 open -a build/Build/Products/Debug/GeregeDesktop.app

@@ -41,7 +41,7 @@ final class APIClient {
            url.scheme == "http" || url.scheme == "https" {
             return url
         }
-        return URL(string: "https://public.template.gerege.mn")!
+        return URL(string: "https://open.gerege.mn")!
     }()
 
     private let session: URLSession

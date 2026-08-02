@@ -150,4 +150,4 @@ base64 (~30 ثانية من opus) في طبقة BFF وفي DTO الواجهة ا
 الفورية قرابة 8 مقاطع في الدقيقة، فاخفض ذلك الحدّ بحذر.
 
 التفصيل الكامل في المستودع:
-[`backend/docs/AI_PIPELINE.md`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/docs/AI_PIPELINE.md).
+[`backend/docs/AI_PIPELINE.md`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/docs/AI_PIPELINE.md).

@@ -33,8 +33,8 @@ Internet ──► nginx (80/443, Let's Encrypt)
 
 ```bash
 # 1) получить код
-git clone git@github.com:gerege-systems/public-gerege-template.git /srv/public-gerege-template
-cd /srv/public-gerege-template
+git clone git@github.com:gerege-systems/open-gerege-mn.git /srv/open-gerege-mn
+cd /srv/open-gerege-mn
 
 # 2) создать файлы окружения (.env + backend.env)
 
@@ -76,7 +76,7 @@ server {
 |---|---|---|
 | `sso-dgov-mn` | sso.gerege.mn | web 3008 |
 | `template-dgov-mn` | template.gerege.mn | web 3009 |
-| `public-template` | public.template.gerege.mn | web 3010, api relay 8094 |
+| `public-template` | open.gerege.mn | web 3010, api relay 8094 |
 
 Эталонное развёртывание этого репозитория — `public-template`; заметки уровня
 хоста (edge nginx, SSO-клиент, шаги первой установки) лежат в `deploy/HOST.md`.
@@ -87,7 +87,7 @@ server {
 [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) и публикуется по
 адресу:
 
-<https://gerege-systems.github.io/public-gerege-template/>
+<https://gerege-systems.github.io/open-gerege-mn/>
 
 - Каждый push в `main`, затрагивающий `docs-site/**`, запускает
   `.github/workflows/docs.yml`: сборка и публикация в **GitHub Pages**

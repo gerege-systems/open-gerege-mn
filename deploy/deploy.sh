@@ -89,7 +89,7 @@ done
 echo "▶ Pruning dangling images…"
 docker image prune -f >/dev/null
 
-# public.template.gerege.mn-ий edge nginx vhost-ыг ЭНЭ РЕПО эзэмшинэ. Deploy бүрд
+# open.gerege.mn-ий edge nginx vhost-ыг ЭНЭ РЕПО эзэмшинэ. Deploy бүрд
 # дахин суулгана — ингэснээр конфиг ямар нэг шалтгаанаар алдагдвал өөрөө
 # сэргэнэ. Дэлгэрэнгүй: deploy/edge/README.md. Алгасах: SKIP_EDGE=1
 if [ "${SKIP_EDGE:-0}" != "1" ]; then

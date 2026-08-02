@@ -12,7 +12,7 @@ plugins {
 // (10.0.2.2 = эмулятороос харагдах хостын localhost). http хаягийг зөвхөн
 // debug build зөвшөөрнө — src/debug/res/xml/network_security_config.xml-ийг хар.
 val geregeAppUrl: String =
-    (project.findProperty("geregeAppUrl") as String? ?: "https://public.template.gerege.mn")
+    (project.findProperty("geregeAppUrl") as String? ?: "https://open.gerege.mn")
         .trim()
         .trimEnd('/')
 

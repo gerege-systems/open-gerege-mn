@@ -115,8 +115,8 @@ structurés (Zap) avec un identifiant de requête, et aucun secret n'est journal
 - **Interface Swagger interactive** — seule la spécification brute est servie sur
   `/swagger/doc.json` (chargez-la dans Swagger Editor ou Postman).
 - La matrice complète des contrôles se trouve dans
-  [`backend/docs/SECURITY.md`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/docs/SECURITY.md).
+  [`backend/docs/SECURITY.md`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/docs/SECURITY.md).
 
 !!! tip "Signaler une vulnérabilité"
     N'ouvrez pas de ticket public. Suivez la procédure décrite dans
-    [SECURITY.md](https://github.com/gerege-systems/public-gerege-template/blob/main/SECURITY.md).
+    [SECURITY.md](https://github.com/gerege-systems/open-gerege-mn/blob/main/SECURITY.md).

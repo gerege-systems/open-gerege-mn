@@ -14,7 +14,7 @@ Jetpack Compose; сүлжээ/JSON-ий гуравдагч сан ашиглах
 моделиороо мөр мөрөөрөө тохирно.
 
 > Тайлбар: энэ бол **Relying-Party консюмер** апп — иргэний eID **апп** (өөр төсөл)
-> биш. Жишиг deployment нь [public.template.gerege.mn](https://public.template.gerege.mn);
+> биш. Жишиг deployment нь [open.gerege.mn](https://open.gerege.mn);
 > Gerege SSO ([sso.gerege.mn](https://sso.gerege.mn)) нь тусдаа таних систем.
 >
 > Нэвтрэлт БҮХЭЛДЭЭ платформын BFF-ээр явна — апп нь SSO ч, eID платформ ч дээр
@@ -23,7 +23,7 @@ Jetpack Compose; сүлжээ/JSON-ий гуравдагч сан ашиглах
 
 ## Архитектур
 
-- Апп → `https://public.template.gerege.mn/api/*` (BFF) — backend-тэй шууд харьцахгүй.
+- Апп → `https://open.gerege.mn/api/*` (BFF) — backend-тэй шууд харьцахгүй.
 - Session нь httpOnly cookie (`dgov_access`/`refresh`)-д. Cookie-ийн ГАНЦ эх
   сурвалж нь WebView-ийн `android.webkit.CookieManager`: HTTP хүсэлт бүрт
   `Cookie` толгойг тэндээс уншиж, хариуны `Set-Cookie`-г буцааж хадгална.
@@ -88,7 +88,7 @@ signing config нэмнэ.
 ## Тохиргоо
 
 - **Backend хаяг** — `BuildConfig.GEREGE_APP_URL`, анхдагч нь
-  `https://public.template.gerege.mn`. Build үед дарж болно:
+  `https://open.gerege.mn`. Build үед дарж болно:
 
   ```bash
   ./gradlew installDebug -PgeregeAppUrl=http://10.0.2.2:3000

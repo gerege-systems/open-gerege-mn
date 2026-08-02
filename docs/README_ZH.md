@@ -8,7 +8,7 @@
 可随时扩展到任何系统。您只需创造价值，而不必搭建底层管道 —
 身份认证、安全、AI 与服务骨架从第一天起就已备好。参考部署以
 **Gerege Template Platform** 的名义运行在
-[public.template.gerege.mn](https://public.template.gerege.mn)，在生产环境中展示平台的 eID 单点登录。
+[open.gerege.mn](https://open.gerege.mn)，在生产环境中展示平台的 eID 单点登录。
 
 本平台是 **Gerege Systems 有限公司**既定使命的代码化表达 —
 *「以简便的方式把政府与私营部门的服务送达公民」*。同一套基础既承载政府机构的服务，
@@ -98,7 +98,7 @@ gerege-template-platform/
   TanStack Query 数据层。
 - **动态语言** — 超级管理员可在运行时增删界面语言，并用 Gemini 补充翻译
   （`/admin/languages`）；内置词典仍是键的来源，也是数据库不可用时的兜底。
-  需要 public-gerege-core v0.5.0+。
+  需要 open-gerege-core v0.5.0+。
 - **可安装的 PWA** — manifest + 图标 + 基于 Serwist 的 service worker；
   只缓存静态资源 — 所有 `/api/*` 与认证/eID 路径均为 NetworkOnly，HTML 完全不缓存。
   配置见 [frontend/README_ZH.md](../frontend/README_ZH.md#pwa--安装为应用)。
@@ -133,10 +133,10 @@ docker compose up -d --build
 
 ## 文档
 
-📖 **文档站点：** <https://gerege-systems.github.io/public-gerege-template/zh/>
-（[Монгол](https://gerege-systems.github.io/public-gerege-template/)
-· [English](https://gerege-systems.github.io/public-gerege-template/en/)
-· [Русский](https://gerege-systems.github.io/public-gerege-template/ru/)）—
+📖 **文档站点：** <https://gerege-systems.github.io/open-gerege-mn/zh/>
+（[Монгол](https://gerege-systems.github.io/open-gerege-mn/)
+· [English](https://gerege-systems.github.io/open-gerege-mn/en/)
+· [Русский](https://gerege-systems.github.io/open-gerege-mn/ru/)）—
 源文件在 `docs-site/`，每次合并到 `main` 都会自动发布到 GitHub Pages。
 
 | 文档 | 内容 |

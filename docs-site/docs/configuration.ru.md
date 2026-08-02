@@ -1,7 +1,7 @@
 # Конфигурация (env)
 
 > Всё настраивается через переменные окружения. Эталонный пример —
-> [`backend/.env.example`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/.env.example).
+> [`backend/.env.example`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/.env.example).
 
 !!! danger "Никогда не коммитьте секреты"
     `backend/.env`, корневой `.env` и `backend.env` — все в
@@ -14,7 +14,7 @@
 | `PORT` | `8080` | Порт, который слушает API |
 | `ENVIRONMENT` | `production` | Включает строгие продакшен-проверки |
 | `DEBUG` | `false` | Подробное логирование |
-| `ALLOWED_ORIGINS` | `https://public.template.gerege.mn` | Список разрешённых origin для CORS (через запятую; `*` запрещён) |
+| `ALLOWED_ORIGINS` | `https://open.gerege.mn` | Список разрешённых origin для CORS (через запятую; `*` запрещён) |
 | `TRUSTED_PROXIES` | — | Адреса обратных прокси |
 
 ## База данных и Redis
@@ -55,7 +55,7 @@
 |---|---|---|
 | `SSO_ISSUER` | `https://sso.gerege.mn` | Значение по умолчанию, если не задано |
 | `SSO_CLIENT_ID` / `SSO_CLIENT_SECRET` | — | Пусто — поток SSO неактивен |
-| `SSO_REDIRECT_URI` | `https://public.template.gerege.mn/sso/callback` | Должен быть зарегистрирован у клиента SSO **точь-в-точь** |
+| `SSO_REDIRECT_URI` | `https://open.gerege.mn/sso/callback` | Должен быть зарегистрирован у клиента SSO **точь-в-точь** |
 | `SSO_SCOPE` | `openid profile email nationalid` | `nationalid` добавляет регистрационный номер гражданина |
 | `SSO_NATIVE_CLIENT_ID` | — | Клиент для мобильного потока (PKCE, публичный) |
 | `SSO_EID_PROXY_BASE_URL` | — | Если задано, интерфейс eID PKI идёт через прокси SSO |
@@ -68,7 +68,7 @@
 
 | Переменная | Назначение |
 |---|---|
-| `OAUTH_ISSUER` | Например, `https://public.template.gerege.mn`. Провайдер включается **только** при заданном значении |
+| `OAUTH_ISSUER` | Например, `https://open.gerege.mn`. Провайдер включается **только** при заданном значении |
 | `SSO_STATE_KEY` | Ключ HMAC для временного состояния входа/согласия (**≥32 байт**) |
 | `SSO_FIRSTPARTY_CLIENTS` | Собственные клиенты, пропускающие экран согласия |
 | `SSO_ADMIN_API_KEYS`, `SSO_ADMIN_SUBS` | Доступ к административному API |

@@ -66,7 +66,7 @@ dotnet run --project src\GeregeDesktop.Client -p:Platform=x64
 
 ### 选择服务器
 
-默认地址为 `https://public.template.gerege.mn`。指向本地 frontend：
+默认地址为 `https://open.gerege.mn`。指向本地 frontend：
 
 ```powershell
 $env:GEREGE_APP_URL = "http://localhost:3000"

@@ -13,7 +13,7 @@
 моделиороо мөр мөрөөрөө тохирно.
 
 > Тайлбар: энэ бол **Relying-Party консюмер** апп — иргэний eID **апп** (өөр төсөл)
-> биш. Жишиг deployment нь [public.template.gerege.mn](https://public.template.gerege.mn);
+> биш. Жишиг deployment нь [open.gerege.mn](https://open.gerege.mn);
 > Gerege SSO ([sso.gerege.mn](https://sso.gerege.mn)) нь тусдаа таних систем.
 >
 > Нэвтрэлт БҮХЭЛДЭЭ платформын BFF-ээр явна — апп нь SSO ч, eID платформ ч дээр
@@ -21,7 +21,7 @@
 
 ## Архитектур
 
-- Апп → `https://public.template.gerege.mn/api/*` (BFF) — backend-тэй шууд харьцахгүй.
+- Апп → `https://open.gerege.mn/api/*` (BFF) — backend-тэй шууд харьцахгүй.
 - Session нь httpOnly cookie (`dgov_access`/`refresh`)-д. `URLSession` +
   `HTTPCookieStorage.shared` нь cookie-г автоматаар хадгалж/илгээнэ.
 - BFF-ийн mutating route `x-dgov-csrf: 1` header шаарддаг (Origin header
@@ -68,5 +68,5 @@ Xcode дотор:
 
 ## Тохиргоо
 
-- Backend хаяг: `APIClient.baseURL` (default `https://public.template.gerege.mn`).
+- Backend хаяг: `APIClient.baseURL` (default `https://open.gerege.mn`).
   Локал BFF-д туршихад `http://localhost:3000` болгож, ATS exception нэмнэ.

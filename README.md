@@ -47,7 +47,7 @@ SQL-тэй [jackc/pgx](https://github.com/jackc/pgx) драйвертэй хос
 
 ```
 open-gerege-mn                ← ЭНЭ РЕПО (git удамшлын эх)
-   ├─► private-gerege-template ──► gerege урсгалын 6 апп
+   ├─► template-gerege-mn      ──► gerege урсгалын 6 апп
    └─► template-dgov-mn        ──► gov урсгалын 4 апп
 ```
 

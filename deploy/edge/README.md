@@ -98,7 +98,7 @@ docker compose up -d
 ## Хил хязгаар — аль домэйн хэний вэ
 
 Энэ репо нь **зөвхөн `open.gerege.mn`**-ий vhost-ыг эзэмшинэ.
-`template.gerege.mn` (хаалттай хувилбар) нь [`private-gerege-template`](https://github.com/gerege-systems/private-gerege-template)-ийн
+`template.gerege.mn` (хаалттай хувилбар) нь [`template-gerege-mn`](https://github.com/gerege-systems/template-gerege-mn)-ийн
 харьяа — тэр репо өөрийн `deploy/edge/template.gerege.mn.conf`-оор суулгана.
 
 > Түүхэн тэмдэглэл: 2026-07-29 хүртэл энэ репо `template.gerege.mn.conf`-ыг

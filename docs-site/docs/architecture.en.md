@@ -60,9 +60,9 @@ func main() {
 }
 ```
 
-The core comes in two layers: **`open-gerege-core`** (the open foundation,
-consumed directly by the government line) and **`private-gerege-core`**, which
-inherits from it via `go.mod` (closed, used by the Gerege line).
+The core is a **single layer**: **`open-gerege-core`**, consumed directly by
+both the government and the Gerege lines. (Until 2026-08-02 a closed
+`private-gerege-core` layer sat on top of it; it has been removed.)
 
 ## Frontend layout — `@gerege/ui-core`
 

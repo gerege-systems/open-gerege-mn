@@ -60,8 +60,8 @@ func main() {
 }
 ```
 
-内核分为两层：**`open-gerege-core`**（开放基座，政务线直接使用）与通过
-`go.mod` 继承它的 **`private-gerege-core`**（封闭，供 Gerege 线使用）。
+内核为**单层**：**`open-gerege-core`**，政务线与 Gerege 线均直接使用。
+（2026-08-02 之前其上还有封闭的 `private-gerege-core` 层，现已从链路中移除。）
 
 ## 前端目录结构 — `@gerege/ui-core`
 

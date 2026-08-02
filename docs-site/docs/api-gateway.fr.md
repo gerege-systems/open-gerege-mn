@@ -38,7 +38,7 @@ autorisées du client OAuth2 de l'application ; la révocation les retire. L'eff
 est **immédiat** — le proxy vérifie l'autorisation courante du client.
 
 ```text
-Application « public.template.gerege.mn »
+Application « open.gerege.mn »
   ├─ Connexion SSO .......... automatique (intégrée)
   ├─ [x] eid-sign ........... svc:eid-sign
   ├─ [ ] eid-proxy .......... non accordé → /rp/eid → 403

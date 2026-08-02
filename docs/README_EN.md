@@ -9,7 +9,7 @@ frontend + Gemini AI pipeline, wired together, security-hardened and ready to
 extend into any system. Build the value, not the plumbing — the identity,
 security, AI and service scaffolding come solved from day one. A reference
 deployment runs as **Gerege Template Platform** at
-[public.template.gerege.mn](https://public.template.gerege.mn), showcasing the platform's eID
+[open.gerege.mn](https://open.gerege.mn), showcasing the platform's eID
 single sign-on in production.
 
 The platform is the code expression of **Gerege Systems LLC**'s stated mission —

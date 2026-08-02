@@ -76,7 +76,7 @@ volumes collide.
 |---|---|---|
 | `sso-dgov-mn` | sso.gerege.mn | web 3008 |
 | `template-dgov-mn` | template.gerege.mn | web 3009 |
-| `public-template` | public.template.gerege.mn | web 3010, api relay 8094 |
+| `public-template` | open.gerege.mn | web 3010, api relay 8094 |
 
 The reference deployment of this repository is `public-template`; host-level notes
 (edge nginx, SSO client, first-install steps) live in `deploy/HOST.md`.

@@ -15,7 +15,7 @@
 | `PORT` | `8080` | API сонсох порт |
 | `ENVIRONMENT` | `production` | `production` үед хатуу горим асна |
 | `DEBUG` | `false` | Дэлгэрэнгүй лог |
-| `ALLOWED_ORIGINS` | `https://public.template.gerege.mn` | CORS allow-list (таслалаар; `*` хориотой) |
+| `ALLOWED_ORIGINS` | `https://open.gerege.mn` | CORS allow-list (таслалаар; `*` хориотой) |
 | `TRUSTED_PROXIES` | — | Reverse proxy-ийн IP-ууд |
 
 ## Өгөгдлийн сан ба Redis
@@ -56,7 +56,7 @@
 |---|---|---|
 | `SSO_ISSUER` | `https://sso.gerege.mn` | Хоосон бол энэ утга руу default-лана |
 | `SSO_CLIENT_ID` / `SSO_CLIENT_SECRET` | — | Хоосон бол SSO урсгал идэвхгүй |
-| `SSO_REDIRECT_URI` | `https://public.template.gerege.mn/sso/callback` | SSO client дээр **яг ийм** байдлаар бүртгэгдсэн байх ёстой |
+| `SSO_REDIRECT_URI` | `https://open.gerege.mn/sso/callback` | SSO client дээр **яг ийм** байдлаар бүртгэгдсэн байх ёстой |
 | `SSO_SCOPE` | `openid profile email nationalid` | `nationalid` нь иргэний дугаар нэмнэ |
 | `SSO_NATIVE_CLIENT_ID` | — | Мобайл (PKCE, public) урсгалын client |
 | `SSO_EID_PROXY_BASE_URL` | — | Тохируулбал eID PKI самбар SSO proxy-гоор явна |
@@ -69,7 +69,7 @@
 
 | Хувьсагч | Тайлбар |
 |---|---|
-| `OAUTH_ISSUER` | Жишээ `https://public.template.gerege.mn`. **Тохируулсан үед л** provider асна |
+| `OAUTH_ISSUER` | Жишээ `https://open.gerege.mn`. **Тохируулсан үед л** provider асна |
 | `SSO_STATE_KEY` | login/consent урсгалын transient state HMAC түлхүүр (**≥32 байт**) |
 | `SSO_FIRSTPARTY_CLIENTS` | Зөвшөөрөл алгасах first-party client-ууд |
 | `SSO_ADMIN_API_KEYS`, `SSO_ADMIN_SUBS` | Admin API хандалт |

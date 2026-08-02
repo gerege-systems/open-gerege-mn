@@ -76,7 +76,7 @@ tag / volume мөргөлдөнө.
 |---|---|---|
 | `sso-dgov-mn` | sso.gerege.mn | web 3008 |
 | `template-dgov-mn` | template.gerege.mn | web 3009 |
-| `public-template` | public.template.gerege.mn | web 3010, api relay 8094 |
+| `public-template` | open.gerege.mn | web 3010, api relay 8094 |
 
 Энэ репогийн амьд жишиг байршуулалт нь `public-template` — хостын түвшний
 тэмдэглэл (edge nginx, SSO client, анхны суулгалтын алхмууд) `deploy/HOST.md`

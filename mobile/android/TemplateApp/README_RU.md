@@ -15,7 +15,7 @@ eID PKI — пример того, как построить нативную м
 
 > Пояснение: это приложение-**потребитель (доверяющая сторона)** — а не гражданское
 > **приложение** eID (это другой проект). Эталонное развёртывание —
-> [public.template.gerege.mn](https://public.template.gerege.mn); Gerege SSO
+> [open.gerege.mn](https://open.gerege.mn); Gerege SSO
 > ([sso.gerege.mn](https://sso.gerege.mn)) — отдельная система идентификации.
 >
 > Вход ПОЛНОСТЬЮ идёт через BFF платформы — приложение не регистрирует собственный
@@ -24,7 +24,7 @@ eID PKI — пример того, как построить нативную м
 
 ## Архитектура
 
-- Приложение → `https://public.template.gerege.mn/api/*` (BFF) — с бэкендом
+- Приложение → `https://open.gerege.mn/api/*` (BFF) — с бэкендом
   напрямую не общается.
 - Сессия хранится в httpOnly-куках (`dgov_access`/`refresh`). ЕДИНСТВЕННЫЙ
   источник кук — `android.webkit.CookieManager` из WebView: каждый HTTP-запрос
@@ -91,7 +91,7 @@ signing config.
 ## Настройка
 
 - **Адрес бэкенда** — `BuildConfig.GEREGE_APP_URL`, по умолчанию
-  `https://public.template.gerege.mn`. Можно переопределить при сборке:
+  `https://open.gerege.mn`. Можно переопределить при сборке:
 
   ```bash
   ./gradlew installDebug -PgeregeAppUrl=http://10.0.2.2:3000

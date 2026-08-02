@@ -14,7 +14,7 @@
 | `PORT` | `8080` | منفذ استماع الواجهة الخلفية |
 | `ENVIRONMENT` | `production` | يفعّل ضوابط الإنتاج الصارمة |
 | `DEBUG` | `false` | تسجيل مفصّل |
-| `ALLOWED_ORIGINS` | `https://public.template.gerege.mn` | قائمة مصادر CORS المسموح بها (مفصولة بفواصل؛ و`*` ممنوعة) |
+| `ALLOWED_ORIGINS` | `https://open.gerege.mn` | قائمة مصادر CORS المسموح بها (مفصولة بفواصل؛ و`*` ممنوعة) |
 | `TRUSTED_PROXIES` | — | عناوين الوكلاء العكسيين |
 
 ## قاعدة البيانات وRedis
@@ -55,7 +55,7 @@
 |---|---|---|
 | `SSO_ISSUER` | `https://sso.gerege.mn` | القيمة الافتراضية عند عدم الضبط |
 | `SSO_CLIENT_ID` / `SSO_CLIENT_SECRET` | — | تركهما فارغين يُبقي مسار SSO خاملًا |
-| `SSO_REDIRECT_URI` | `https://public.template.gerege.mn/sso/callback` | يجب تسجيله **حرفيًّا** على عميل SSO |
+| `SSO_REDIRECT_URI` | `https://open.gerege.mn/sso/callback` | يجب تسجيله **حرفيًّا** على عميل SSO |
 | `SSO_SCOPE` | `openid profile email nationalid` | يضيف `nationalid` رقم الهوية المدنية |
 | `SSO_NATIVE_CLIENT_ID` | — | عميل المسار المحمول (PKCE، عام) |
 | `SSO_EID_PROXY_BASE_URL` | — | عند ضبطه تمرّ واجهة PKI الخاصّة بـ eID عبر وكيل SSO |
@@ -68,7 +68,7 @@
 
 | المتغيّر | الغرض |
 |---|---|
-| `OAUTH_ISSUER` | مثل `https://public.template.gerege.mn`. ولا يُفعَّل المزوّد **إلّا** عند ضبطه |
+| `OAUTH_ISSUER` | مثل `https://open.gerege.mn`. ولا يُفعَّل المزوّد **إلّا** عند ضبطه |
 | `SSO_STATE_KEY` | مفتاح HMAC للحالة المؤقّتة للدخول/الموافقة (**32 بايت فأكثر**) |
 | `SSO_FIRSTPARTY_CLIENTS` | عملاء الطرف الأوّل الذين يتخطّون شاشة الموافقة |
 | `SSO_ADMIN_API_KEYS`، `SSO_ADMIN_SUBS` | الوصول إلى واجهة الإدارة البرمجية |

@@ -46,9 +46,9 @@
 | Домэйн | Үүрэг |
 |---|---|
 | **sso.gerege.mn** | Gerege SSO — OIDC провайдер + eID Relying Party (eID креденшл эзэмшдэг) |
-| **public.template.gerege.mn** | Жишээ апп — Gerege SSO-ий relying party (SSO-оор нэвтэрдэг) |
+| **open.gerege.mn** | Жишээ апп — Gerege SSO-ий relying party (SSO-оор нэвтэрдэг) |
 
-Апп-ууд (`public.template.gerege.mn` гэх мэт) **sso.gerege.mn**-ээр дамжин нэвтэрч, зөвшөөрөгдсөн
+Апп-ууд (`open.gerege.mn` гэх мэт) **sso.gerege.mn**-ээр дамжин нэвтэрч, зөвшөөрөгдсөн
 eID service-үүдийг proxy-оор дуудна. eID Mongolia-тай харилцах RP креденшлийг зөвхөн
 SSO эзэмшдэг тул апп-ууд аюулгүй байдлын ачааллаас чөлөөлөгддөг.
 

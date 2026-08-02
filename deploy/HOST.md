@@ -1,13 +1,13 @@
-# public.template.gerege.mn — байршуулалтын тэмдэглэл
+# open.gerege.mn — байршуулалтын тэмдэглэл
 
 Нээлттэй суурь template-ийн амьд жишиг байршуулалт.
 
 | | |
 |---|---|
-| Домэйн | <https://public.template.gerege.mn> |
+| Домэйн | <https://open.gerege.mn> |
 | Хост | `66.181.175.199` (`grg`, дотоод `10.0.0.31`) — нэгдсэн Gerege хост |
 | Хэрэглэгч / зам | `grgdev` : `/home/grgdev/open-gerege-mn` |
-| Compose project | `public-template` |
+| Compose project | `public-template` (⚠️ зориуд хуучин нэрээрээ — доор үз) |
 | Портууд | web `3010`, api relay `8094` |
 | DB | `public_template` (тусдаа volume `public-template_dbdata`) |
 | Цөм | [`open-gerege-core`](https://github.com/gerege-systems/open-gerege-core) — **нээлттэй**, token шаардахгүй |
@@ -15,6 +15,17 @@
 `template.gerege.mn` (хаалттай хувилбар) нь **өөр стек** — ижил хост дээр
 `temp-gerege-mn` project нэрээр тусдаа ажиллана. Хоёулаа бие биедээ
 нөлөөлөхгүй.
+
+### Compose project яагаад `public-template` хэвээрээ вэ
+
+Домэйн `open.gerege.mn` болсон ч compose project нэр, контейнерийн нэр,
+volume-ууд **зориуд** хуучнаараа үлдсэн. Учир нь өгөгдлийн сангийн volume нь
+project нэрээр угсардаг (`public-template_dbdata`) — project-ыг `open-gerege-mn`
+болговол compose нь ХООСОН шинэ volume үүсгэж, амьд өгөгдөл орхигдоно.
+
+Project нэр нь зөвхөн дотоод (хостын untracked `.env`-ийн
+`COMPOSE_PROJECT_NAME`); гаднаас юу ч үүнийг харахгүй. Хэрэв хожим цэгцлэх бол
+volume-ыг гараар нүүлгэх шаардлагатай — тусдаа, төлөвлөсөн ажил байх ёстой.
 
 ## Хостын онцлог тохиргоо (git-д БАЙХГҮЙ)
 
@@ -34,10 +45,10 @@
 | Түлхүүр | Утга |
 |---|---|
 | `SSO_ISSUER` | `https://sso.gerege.mn` |
-| `SSO_CLIENT_ID` | `public-template-gerege-mn` |
+| `SSO_CLIENT_ID` | `open-gerege-mn` |
 | `SSO_CLIENT_SECRET` | (нууц — зөвхөн хостын `backend.env`) |
 | `SSO_SCOPE` | `openid profile email nationalid` |
-| `SSO_REDIRECT_URI` | `https://public.template.gerege.mn/sso/callback` |
+| `SSO_REDIRECT_URI` | `https://open.gerege.mn/sso/callback` |
 
 ⚠️ `SSO_REDIRECT_URI`-ийн зам нь **`/sso/callback`** — BFF-ийн бодит route
 (`frontend/src/app/sso/callback/route.ts`). `/api/auth/sso/callback` гэсэн
@@ -48,8 +59,8 @@ route БАЙХГҮЙ (`/api/auth/sso/` дор зөвхөн `start` ба `native`
 
 ```bash
 curl -sS -o /dev/null -w '%{redirect_url}\n' \
-  https://public.template.gerege.mn/api/auth/sso/start
-# → https://sso.gerege.mn/oauth2/auth?client_id=public-template-gerege-mn&…&redirect_uri=…%2Fsso%2Fcallback
+  https://open.gerege.mn/api/auth/sso/start
+# → https://sso.gerege.mn/oauth2/auth?client_id=open-gerege-mn&…&redirect_uri=…%2Fsso%2Fcallback
 ```
 
 `backend.env` нь uid `65532` (distroless nonroot)-ийн эзэмшилтэй тул `grgdev`
@@ -61,7 +72,7 @@ docker run --rm -i -v "$PWD:/w" busybox sh -c 'grep ^SSO_ /w/backend.env'
 
 ## Edge nginx
 
-vhost: `public.template.gerege.mn.conf` — edge контейнерийн `conf.d`
+vhost: `open.gerege.mn.conf` — edge контейнерийн `conf.d`
 (`/home/deploy/sso-gerege-mn/newsrv-nginx/conf.d`) дотор. Rate-limit zone-ууд
 нь `ptpl_auth` / `ptpl_app` (амьд `template.gerege.mn`-ий `tpl_*`-тай
 зөрчилдөхгүйн тулд өөр нэртэй).

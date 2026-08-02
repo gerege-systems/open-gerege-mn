@@ -12,7 +12,7 @@ import org.junit.Test
 // баталгаажаагүй байхад дотогш оруулна.
 class SsoPolicyTest {
 
-    private val base = "https://public.template.gerege.mn"
+    private val base = "https://open.gerege.mn"
 
     @Test
     fun `нэвтэрсэн хойдох зам таарна`() {

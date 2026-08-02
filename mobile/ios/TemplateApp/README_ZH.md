@@ -11,7 +11,7 @@
 与 [Android 客户端](../../android/TemplateApp/README_ZH.md)在界面、流程与数据模型上逐行对应。
 
 > 说明：这是一个**依赖方（RP）消费端**应用 — 不是公民的 eID **应用**（那是另一个项目）。
-> 参考部署是 [public.template.gerege.mn](https://public.template.gerege.mn)；Gerege SSO
+> 参考部署是 [open.gerege.mn](https://open.gerege.mn)；Gerege SSO
 > （[sso.gerege.mn](https://sso.gerege.mn)）是独立的身份系统。
 >
 > 登录**完全**通过平台 BFF 完成 —— 应用不在 SSO 或 eID 平台上注册自己的 client
@@ -19,7 +19,7 @@
 
 ## 架构
 
-- 应用 → `https://public.template.gerege.mn/api/*`（BFF）— 不与后端直接通信。
+- 应用 → `https://open.gerege.mn/api/*`（BFF）— 不与后端直接通信。
 - 会话保存在 httpOnly cookie（`dgov_access`/`refresh`）中。`URLSession` +
   `HTTPCookieStorage.shared` 会自动保存并发送 cookie。
 - BFF 的写操作路由要求 `x-dgov-csrf: 1` 请求头（因为没有 Origin 头，这一项即足够）。
@@ -67,5 +67,5 @@ open TemplateApp.xcodeproj
 
 ## 配置
 
-- 后端地址：`APIClient.baseURL`（默认 `https://public.template.gerege.mn`）。
+- 后端地址：`APIClient.baseURL`（默认 `https://open.gerege.mn`）。
   若要对本地 BFF 调试，请改为 `http://localhost:3000` 并添加 ATS 例外。

@@ -18,7 +18,7 @@
 хэлтэй (mn/en), эхнээсээ observable. **chi (net/http)** (HTTP), **pgx (pgxpool) +
 PostgreSQL** (өгөгдөл), **Redis + Ristretto** (кэш) дээр суурилсан.
 
-> **Жишиг deployment:** **Gerege Template Platform** ([public.template.gerege.mn](https://public.template.gerege.mn))
+> **Жишиг deployment:** **Gerege Template Platform** ([open.gerege.mn](https://open.gerege.mn))
 > — төрийн үйлчилгээний платформ бөгөөд Gerege SSO-ийн Relying Party — энэ суурин
 > дээр бүтээгдсэн жишээ бөгөөд eID нэвтрэлт болон бусад аппад зориулсан өөрийн OIDC
 > provider-ийг харуулдаг.
@@ -169,7 +169,7 @@ GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 
 # OIDC PROVIDER тал (платформ өөрөө issuer) — тохируулаагүй бол урсгал inert
-OAUTH_ISSUER=                    # issuer, жишээ https://public.template.gerege.mn (хоосон = provider унтарна)
+OAUTH_ISSUER=                    # issuer, жишээ https://open.gerege.mn (хоосон = provider унтарна)
 SSO_STATE_KEY=                   # >= 32 байт; login/consent state cookie HMAC
 SSO_FIRSTPARTY_CLIENTS=          # consent дэлгэцийг алгасах client_id-уудын CSV
 SSO_ADMIN_API_KEYS=              # /admin гадаргуугийн bootstrap key-үүдийн CSV

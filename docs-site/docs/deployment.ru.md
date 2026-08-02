@@ -76,7 +76,7 @@ server {
 |---|---|---|
 | `sso-dgov-mn` | sso.gerege.mn | web 3008 |
 | `template-dgov-mn` | template.gerege.mn | web 3009 |
-| `public-template` | public.template.gerege.mn | web 3010, api relay 8094 |
+| `public-template` | open.gerege.mn | web 3010, api relay 8094 |
 
 Эталонное развёртывание этого репозитория — `public-template`; заметки уровня
 хоста (edge nginx, SSO-клиент, шаги первой установки) лежат в `deploy/HOST.md`.

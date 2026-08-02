@@ -74,7 +74,7 @@ dotnet run --project src\GeregeDesktop.Client -p:Platform=x64
 
 ### Выбор сервера
 
-Адрес по умолчанию — `https://public.template.gerege.mn`. Указать локальный
+Адрес по умолчанию — `https://open.gerege.mn`. Указать локальный
 frontend:
 
 ```powershell

@@ -37,7 +37,7 @@ internal sealed class ApiClient
         {
             return parsed;
         }
-        return new Uri("https://public.template.gerege.mn");
+        return new Uri("https://open.gerege.mn");
     }
 
     private readonly HttpClient _http;

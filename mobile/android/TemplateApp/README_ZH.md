@@ -12,7 +12,7 @@
 与 [iOS 客户端](../../ios/TemplateApp/README_ZH.md)在界面、流程与数据模型上逐行对应。
 
 > 说明：这是一个**依赖方（RP）消费端**应用 — 不是公民的 eID **应用**（那是另一个项目）。
-> 参考部署是 [public.template.gerege.mn](https://public.template.gerege.mn)；
+> 参考部署是 [open.gerege.mn](https://open.gerege.mn)；
 > Gerege SSO（[sso.gerege.mn](https://sso.gerege.mn)）是独立的身份系统。
 >
 > 登录**完全**通过平台 BFF 完成 —— 应用不在 SSO 或 eID 平台上注册自己的 client
@@ -20,7 +20,7 @@
 
 ## 架构
 
-- 应用 → `https://public.template.gerege.mn/api/*`（BFF）— 不与后端直接通信。
+- 应用 → `https://open.gerege.mn/api/*`（BFF）— 不与后端直接通信。
 - 会话保存在 httpOnly cookie（`dgov_access`/`refresh`）中。Cookie 的**唯一**来源是
   WebView 的 `android.webkit.CookieManager`：每个 HTTP 请求从中读取 `Cookie` 头，
   响应的 `Set-Cookie` 再写回其中。这样 SSO WebView 中写入的 cookie 无需另行桥接，
@@ -81,7 +81,7 @@ Release APK 未签名（`assembleRelease`）— 上架前请添加自己的签�
 ## 配置
 
 - **后端地址** — `BuildConfig.GEREGE_APP_URL`，默认
-  `https://public.template.gerege.mn`。可在构建时覆盖：
+  `https://open.gerege.mn`。可在构建时覆盖：
 
   ```bash
   ./gradlew installDebug -PgeregeAppUrl=http://10.0.2.2:3000

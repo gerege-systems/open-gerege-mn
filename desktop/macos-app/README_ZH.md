@@ -81,7 +81,7 @@ open build/Build/Products/Debug/GeregeDesktop.app
 
 ### 选择服务器
 
-默认地址为 `https://public.template.gerege.mn`。指向本地 frontend：
+默认地址为 `https://open.gerege.mn`。指向本地 frontend：
 
 ```bash
 GEREGE_APP_URL=http://localhost:3000 open -a build/Build/Products/Debug/GeregeDesktop.app

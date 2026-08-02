@@ -35,7 +35,7 @@ per-app зөвшөөрлөөр олгогдоно.
 одоогийн олголтыг шалгадаг.
 
 ```text
-App "public.template.gerege.mn"
+App "open.gerege.mn"
   ├─ SSO login .............. автомат (built-in)
   ├─ [x] eid-sign ........... svc:eid-sign
   ├─ [ ] eid-proxy .......... олгогдоогүй → /rp/eid → 403

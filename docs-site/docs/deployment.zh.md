@@ -75,7 +75,7 @@ server {
 |---|---|---|
 | `sso-dgov-mn` | sso.gerege.mn | web 3008 |
 | `template-dgov-mn` | template.gerege.mn | web 3009 |
-| `public-template` | public.template.gerege.mn | web 3010、api relay 8094 |
+| `public-template` | open.gerege.mn | web 3010、api relay 8094 |
 
 本仓库的参考部署是 `public-template`；主机层面的说明（edge nginx、SSO 客户端、
 首次安装步骤）见 `deploy/HOST.md`。

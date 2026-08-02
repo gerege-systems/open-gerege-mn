@@ -8,7 +8,7 @@
 可随时扩展到任何系统。您只需创造价值，而不必搭建底层管道 —
 身份认证、安全、AI 与服务骨架从第一天起就已备好。参考部署以
 **Gerege Template Platform** 的名义运行在
-[public.template.gerege.mn](https://public.template.gerege.mn)，在生产环境中展示平台的 eID 单点登录。
+[open.gerege.mn](https://open.gerege.mn)，在生产环境中展示平台的 eID 单点登录。
 
 本平台是 **Gerege Systems 有限公司**既定使命的代码化表达 —
 *「以简便的方式把政府与私营部门的服务送达公民」*。同一套基础既承载政府机构的服务，

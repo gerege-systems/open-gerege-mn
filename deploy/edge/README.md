@@ -1,7 +1,7 @@
-# Edge nginx — public.template.gerege.mn
+# Edge nginx — open.gerege.mn
 
-`public.template.gerege.mn`-ий edge (урд талын) nginx vhost-ыг **энэ репо эзэмшинэ**:
-[`public.template.gerege.mn.conf`](public.template.gerege.mn.conf).
+`open.gerege.mn`-ий edge (урд талын) nginx vhost-ыг **энэ репо эзэмшинэ**:
+[`open.gerege.mn.conf`](open.gerege.mn.conf).
 
 ## Загвар
 
@@ -13,7 +13,7 @@
 хөнддөггүй. Тиймээс энэ репо өөрийн vhost-оо тэр хавтас руу **тусдаа
 бүртгэлгүй файлаар** суулгаж, өөрийн конфигоо бүрэн эзэмшиж чадна.
 
-**Үр дүн:** `public.template.gerege.mn`-ий ямар ч өөрчлөлт энэ репо дотор дуусна —
+**Үр дүн:** `open.gerege.mn`-ий ямар ч өөрчлөлт энэ репо дотор дуусна —
 өөр репо-д PR илгээх, өөр багийн deploy хүлээх шаардлагагүй.
 
 ## Хараат бус байдал
@@ -63,13 +63,13 @@ docker exec gerege-nginx nginx -t
 # Манай файл байрандаа байгаа эсэх
 CONF_D=$(docker inspect gerege-nginx \
   --format '{{range .Mounts}}{{if eq .Destination "/etc/nginx/conf.d"}}{{.Source}}{{end}}{{end}}')
-sudo ls -l "$CONF_D/public.template.gerege.mn.conf"
+sudo ls -l "$CONF_D/open.gerege.mn.conf"
 
 # Edge-ээс апп руу хүрч байгаа эсэх
 docker exec gerege-nginx wget -qO- http://public-template-web:3000/ >/dev/null && echo ok
 
 # Гаднаас
-curl -s -o /dev/null -w '%{http_code}\n' https://public.template.gerege.mn/
+curl -s -o /dev/null -w '%{http_code}\n' https://open.gerege.mn/
 ```
 
 | Шинж тэмдэг | Шалтгаан | Засвар |
@@ -77,7 +77,7 @@ curl -s -o /dev/null -w '%{http_code}\n' https://public.template.gerege.mn/
 | `444` / холболт тасрах | Vhost файл устсан (хэн нэгэн `git clean -fd` ажиллуулсан) → default server барьж авсан | `bash deploy/edge/install.sh` |
 | `502 Bad Gateway` | `public-template-web` унтарсан эсвэл edge сүлжээнд ороогүй | `docker compose up -d`; override файлыг шалга |
 | `conflicting server name` анхааруулга | Дундын `default.conf`-д энэ vhost давхар үлдсэн | Тэндээс хас — эзэмшигч нь энэ репо |
-| `nginx` асахгүй | Гэрчилгээ байхгүй | Certbot-оор `public.template.gerege.mn` гэрчилгээ ав |
+| `nginx` асахгүй | Гэрчилгээ байхгүй | Certbot-оор `open.gerege.mn` гэрчилгээ ав |
 
 ## Хамаарал
 
@@ -97,7 +97,7 @@ docker compose up -d
 
 ## Хил хязгаар — аль домэйн хэний вэ
 
-Энэ репо нь **зөвхөн `public.template.gerege.mn`**-ий vhost-ыг эзэмшинэ.
+Энэ репо нь **зөвхөн `open.gerege.mn`**-ий vhost-ыг эзэмшинэ.
 `template.gerege.mn` (хаалттай хувилбар) нь [`private-gerege-template`](https://github.com/gerege-systems/private-gerege-template)-ийн
 харьяа — тэр репо өөрийн `deploy/edge/template.gerege.mn.conf`-оор суулгана.
 

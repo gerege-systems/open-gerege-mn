@@ -14,7 +14,7 @@ eID PKI — пример того, как построить нативную м
 
 > Пояснение: это приложение-**потребитель (доверяющая сторона)** — а не гражданское
 > **приложение** eID (это другой проект).
-> Эталонное развёртывание — [public.template.gerege.mn](https://public.template.gerege.mn); Gerege SSO
+> Эталонное развёртывание — [open.gerege.mn](https://open.gerege.mn); Gerege SSO
 > ([sso.gerege.mn](https://sso.gerege.mn)) — отдельная система идентификации.
 >
 > Вход ПОЛНОСТЬЮ идёт через BFF платформы — приложение не регистрирует собственный
@@ -22,7 +22,7 @@ eID PKI — пример того, как построить нативную м
 
 ## Архитектура
 
-- Приложение → `https://public.template.gerege.mn/api/*` (BFF) — с бэкендом напрямую не общается.
+- Приложение → `https://open.gerege.mn/api/*` (BFF) — с бэкендом напрямую не общается.
 - Сессия хранится в httpOnly-куках (`dgov_access`/`refresh`). `URLSession` +
   `HTTPCookieStorage.shared` автоматически сохраняют и отправляют куки.
 - Изменяющие маршруты BFF требуют заголовок `x-dgov-csrf: 1` (заголовка `Origin`
@@ -71,5 +71,5 @@ open TemplateApp.xcodeproj
 
 ## Настройка
 
-- Адрес бэкенда: `APIClient.baseURL` (по умолчанию `https://public.template.gerege.mn`).
+- Адрес бэкенда: `APIClient.baseURL` (по умолчанию `https://open.gerege.mn`).
   Для проверки с локальным BFF смените на `http://localhost:3000` и добавьте исключение ATS.

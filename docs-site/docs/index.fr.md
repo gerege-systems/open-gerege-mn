@@ -48,9 +48,9 @@ La plateforme se compose de plusieurs services indépendants :
 | Domaine | Rôle |
 |---|---|
 | **sso.gerege.mn** | Gerege SSO — fournisseur OIDC + partie utilisatrice eID (détient les identifiants eID) |
-| **public.template.gerege.mn** | Application d'exemple — partie utilisatrice de Gerege SSO (se connecte via le SSO) |
+| **open.gerege.mn** | Application d'exemple — partie utilisatrice de Gerege SSO (se connecte via le SSO) |
 
-Les applications (comme `public.template.gerege.mn`) se connectent via
+Les applications (comme `open.gerege.mn`) se connectent via
 **sso.gerege.mn** et appellent les services eID autorisés par un proxy. Seul le
 SSO détient les identifiants de partie utilisatrice qui dialoguent avec eID
 Mongolia : les applications sont donc déchargées de cette responsabilité.

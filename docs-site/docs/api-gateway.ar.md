@@ -35,7 +35,7 @@
 للعميل.
 
 ```text
-التطبيق "public.template.gerege.mn"
+التطبيق "open.gerege.mn"
   ├─ الدخول عبر SSO ......... تلقائي (مدمج)
   ├─ [x] eid-sign ........... svc:eid-sign
   ├─ [ ] eid-proxy .......... غير ممنوح ← /rp/eid ← 403

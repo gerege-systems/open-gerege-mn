@@ -33,8 +33,8 @@ Internet ──► nginx (80/443, Let's Encrypt)
 
 ```bash
 # 1) получить код
-git clone git@github.com:gerege-systems/public-gerege-template.git /srv/public-gerege-template
-cd /srv/public-gerege-template
+git clone git@github.com:gerege-systems/open-gerege-mn.git /srv/open-gerege-mn
+cd /srv/open-gerege-mn
 
 # 2) создать файлы окружения (.env + backend.env)
 
@@ -87,7 +87,7 @@ server {
 [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) и публикуется по
 адресу:
 
-<https://gerege-systems.github.io/public-gerege-template/>
+<https://gerege-systems.github.io/open-gerege-mn/>
 
 - Каждый push в `main`, затрагивающий `docs-site/**`, запускает
   `.github/workflows/docs.yml`: сборка и публикация в **GitHub Pages**

@@ -28,7 +28,7 @@ export const brand = {
    * (`.github/workflows/docs.yml`). Экосистемийн нэгдсэн `docs.gerege.mn` биш
    * — толгой мөрний «Баримт бичиг» цэс template-ийн өөрийн баримт руу очно.
    */
-  docsUrl: 'https://gerege-systems.github.io/public-gerege-template/',
+  docsUrl: 'https://gerege-systems.github.io/open-gerege-mn/',
 
   /**
    * Баримтын сайт БОДИТООР ямар хэлтэй вэ — `docs-site/mkdocs.yml`-ийн

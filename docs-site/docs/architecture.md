@@ -40,7 +40,7 @@ Internet ──► nginx (TLS)
 ## Backend бүтэц — цөмөөс ирдэг
 
 Дээрх бүх чадвар (танилт, RBAC, gateway, audit, OIDC provider, eID/SSO, AI) нь
-**энэ репод бичигдээгүй** — `public-gerege-core` Go модулиас `go.mod`-оор ирнэ.
+**энэ репод бичигдээгүй** — `open-gerege-core` Go модулиас `go.mod`-оор ирнэ.
 Иймд `backend/` дотор ердөө **нэг Go файл** байна:
 
 ```
@@ -60,7 +60,7 @@ func main() {
 }
 ```
 
-Цөм нь хоёр давхар: **`public-gerege-core`** (нээлттэй суурь, төрийн урсгал
+Цөм нь хоёр давхар: **`open-gerege-core`** (нээлттэй суурь, төрийн урсгал
 шууд хэрэглэнэ) ба түүнээс `go.mod`-оор удамшсан **`private-gerege-core`**
 (хаалттай, Gerege урсгал хэрэглэнэ).
 

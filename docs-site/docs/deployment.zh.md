@@ -33,8 +33,8 @@ Internet ──► nginx (80/443, Let's Encrypt)
 
 ```bash
 # 1) 获取代码
-git clone git@github.com:gerege-systems/public-gerege-template.git /srv/public-gerege-template
-cd /srv/public-gerege-template
+git clone git@github.com:gerege-systems/open-gerege-mn.git /srv/open-gerege-mn
+cd /srv/open-gerege-mn
 
 # 2) 创建环境文件（.env + backend.env）
 
@@ -85,7 +85,7 @@ server {
 本站点由 `docs-site/` 通过
 [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) 构建，发布地址：
 
-<https://gerege-systems.github.io/public-gerege-template/>
+<https://gerege-systems.github.io/open-gerege-mn/>
 
 - 每次涉及 `docs-site/**` 的 `main` 推送都会触发
   `.github/workflows/docs.yml` 构建并发布到 **GitHub Pages**

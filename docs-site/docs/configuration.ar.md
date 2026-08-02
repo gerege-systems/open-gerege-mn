@@ -1,7 +1,7 @@
 # الإعدادات (متغيّرات البيئة)
 
 > يُضبط كلّ شيء عبر متغيّرات البيئة. والمثال المرجعي هو
-> [`backend/.env.example`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/.env.example).
+> [`backend/.env.example`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/.env.example).
 
 !!! danger "لا تُودِع الأسرار في المستودع أبدًا"
     ملفّات `backend/.env` و`.env` في الجذر و`backend.env` كلّها **مستثناة من

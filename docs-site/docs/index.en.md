@@ -10,7 +10,7 @@ identity, security, AI and service scaffolding come solved from day one.
 !!! tip "Open Source"
     This platform is an **open-source** project — read the full source, fork it,
     and run it for your own organization.
-    :material-github: [View on GitHub](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [View on GitHub](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 

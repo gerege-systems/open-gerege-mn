@@ -11,7 +11,7 @@
 !!! tip "Open Source"
     Эта платформа — **открытый** проект: читайте исходный код целиком, форкайте
     и запускайте для своей организации.
-    :material-github: [Посмотреть на GitHub](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [Посмотреть на GitHub](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 

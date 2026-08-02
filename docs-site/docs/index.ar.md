@@ -10,7 +10,7 @@
 !!! tip "مفتوحة المصدر"
     هذه المنصّة مشروع **مفتوح المصدر** — اطّلع على الشيفرة كاملةً، وانسخها
     (fork)، وشغّلها في مؤسّستك.
-    :material-github: [عرضها على GitHub](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [عرضها على GitHub](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 

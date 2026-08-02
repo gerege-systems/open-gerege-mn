@@ -47,7 +47,7 @@ corrección a mano:
 
 | Capa | Procedencia | Mecanismo |
 |---|---|---|
-| Núcleo del backend: autenticación, RBAC, pasarela, auditoría, proveedor OIDC, eID/SSO, IA | `public-gerege-core` (módulo Go) | dependencia en `go.mod` |
+| Núcleo del backend: autenticación, RBAC, pasarela, auditoría, proveedor OIDC, eID/SSO, IA | `open-gerege-core` (módulo Go) | dependencia en `go.mod` |
 | Capa de frontend: `lib/**`, `components/**`, la lógica de **158 rutas BFF** | `@gerege/ui-core` (paquete npm) | dependencia en `package.json` |
 
 Por eso el directorio `backend/` de este repositorio contiene **exactamente un

@@ -118,8 +118,8 @@ se registran.
 - **Interfaz interactiva de Swagger**: solo se sirve la especificación en bruto
   en `/swagger/doc.json` (cárgala en Swagger Editor o Postman).
 - La matriz completa de controles está en
-  [`backend/docs/SECURITY.md`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/docs/SECURITY.md).
+  [`backend/docs/SECURITY.md`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/docs/SECURITY.md).
 
 !!! tip "Comunicar una vulnerabilidad"
     No abras una incidencia pública. Sigue el proceso descrito en
-    [SECURITY.md](https://github.com/gerege-systems/public-gerege-template/blob/main/SECURITY.md).
+    [SECURITY.md](https://github.com/gerege-systems/open-gerege-mn/blob/main/SECURITY.md).

@@ -5,7 +5,7 @@
 
 > **Энэ репогийн тухай.** `template-gerege-mn`-ий нээлттэй залгамжлагч —
 > бүх түүх (245 commit) хадгалагдсан. Суурь нь
-> [`public-gerege-core`](https://github.com/gerege-systems/public-gerege-core)
+> [`open-gerege-core`](https://github.com/gerege-systems/open-gerege-core)
 > модуль. Вэб, PWA, **native мобайл клиентүүд** (`mobile/` — iOS SwiftUI,
 > Android Compose) болон **native desktop клиентүүд** (`desktop/` — macOS
 > SwiftUI, Windows WinUI 3) багтана.
@@ -46,14 +46,14 @@ SQL-тэй [jackc/pgx](https://github.com/jackc/pgx) драйвертэй хос
 Энэ репо флотын удамшлын мод дотор дараах байрлалтай:
 
 ```
-public-gerege-template        ← ЭНЭ РЕПО (git удамшлын эх)
+open-gerege-mn                ← ЭНЭ РЕПО (git удамшлын эх)
    ├─► private-gerege-template ──► gerege урсгалын 6 апп
    └─► template-dgov-mn        ──► gov урсгалын 4 апп
 ```
 
 | Юу удамшдаг | Хаанаас | Механизм |
 |---|---|---|
-| Go цөм | `public-gerege-core v1.0.0` | `backend/go.mod` |
+| Go цөм | `open-gerege-core v1.0.0` | `backend/go.mod` |
 | Frontend бүрэлдэхүүн | `@gerege/ui-core v0.4.0` | `frontend/package.json` (HTTPS tarball) |
 
 **Энэ репогийн өөрийнх — удамшдаггүй:**
@@ -108,7 +108,7 @@ gerege-template-platform/
 - **Аюулгүй хатууруулсан** — security headers (CSP, HSTS, COOP/COEP/CORP), CORS allow-list, rate limiting, серверийн бүрэн timeout-ууд, parameterized query, Postgres Row-Level Security + boot-үеийн мөрдөлтийн guard. [SECURITY.md](SECURITY.md)-г үз.
 - **Observability** — OpenTelemetry trace + Prometheus metrics + Zap structured log; production-д `/metrics` ба `/swagger` bearer token-оор хаагдана.
 - **Frontend BFF** — браузер зөвхөн ижил-origin Next.js route рүү залгаж, тэр нь server талаас backend руу проксиолдог (токен client JS-д хүрэхгүй); давхар CSRF хамгаалалт (custom header + origin), TanStack Query өгөгдлийн давхарга.
-- **Динамик хэл** — super admin нь интерфейсийн хэлийг ажиллаж байхад нэмж/хасч, орчуулгыг Gemini-ээр бөглөнө (`/admin/languages`); багцлагдсан dictionary нь түлхүүрийн эх сурвалж ба DB унасан үеийн суурь. public-gerege-core v0.5.0+.
+- **Динамик хэл** — super admin нь интерфейсийн хэлийг ажиллаж байхад нэмж/хасч, орчуулгыг Gemini-ээр бөглөнө (`/admin/languages`); багцлагдсан dictionary нь түлхүүрийн эх сурвалж ба DB унасан үеийн суурь. open-gerege-core v0.5.0+.
 - **Native мобайл клиентүүд** — **iOS** (SwiftUI) ба **Android** (Kotlin · Jetpack Compose) хоёр бие даасан апп, дэлгэц/урсгалаараа мөр мөрөөрөө тохирно. Нэвтрэлт нь платформын BFF-ээр (`/api/auth/sso/start`) WebView дотор явж, session нь httpOnly cookie-д үлдэнэ; профайл + eID PKI-г native дэлгэцэд харуулна. [mobile/ios/TemplateApp/README.md](mobile/ios/TemplateApp/README.md) · [mobile/android/TemplateApp/README.md](mobile/android/TemplateApp/README.md)
 - **Native desktop клиентүүд** — **macOS** (SwiftUI) ба **Windows** (WinUI 3 · .NET 9) хоёр бие даасан апп. Вэбийг ачаалдаггүй, өөрсдийн native дэлгэцтэй: **Gerege SSO-оор нэвтрэх → хяналтын самбар**. Нэвтрэлт нь платформын BFF-ээр (`/api/auth/sso/start`) явж, session нь httpOnly cookie-д үлдэнэ — токен клиент код руу хэзээ ч гарахгүй. [desktop/macos-app/README.md](desktop/macos-app/README.md) · [desktop/windows-app/README.md](desktop/windows-app/README.md)
 - **PWA (суулгаж болно)** — manifest + дүрс + Serwist service worker; кэш нь ЗӨВХӨН статик хөрөнгөд, `/api/*` ба нэвтрэлт/eID-ийн бүх зам NetworkOnly, HTML огт кэшлэгдэхгүй. Тохиргоо: [frontend/README.md](frontend/README.md#pwa--апп-болгож-суулгах).
@@ -140,10 +140,10 @@ docker compose up -d --build
 
 ## Баримтжуулалт
 
-📖 **Баримтын сайт:** <https://gerege-systems.github.io/public-gerege-template/>
-(монгол · [English](https://gerege-systems.github.io/public-gerege-template/en/)
-· [Русский](https://gerege-systems.github.io/public-gerege-template/ru/)
-· [中文](https://gerege-systems.github.io/public-gerege-template/zh/)) — эх нь
+📖 **Баримтын сайт:** <https://gerege-systems.github.io/open-gerege-mn/>
+(монгол · [English](https://gerege-systems.github.io/open-gerege-mn/en/)
+· [Русский](https://gerege-systems.github.io/open-gerege-mn/ru/)
+· [中文](https://gerege-systems.github.io/open-gerege-mn/zh/)) — эх нь
 `docs-site/`, `main` руу нэгдэх бүрд GitHub Pages руу автоматаар нийтлэгдэнэ.
 
 | Doc | Юу |

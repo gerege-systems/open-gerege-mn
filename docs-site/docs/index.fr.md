@@ -11,7 +11,7 @@ identité, sécurité, IA et ossature de service arrivent déjà résolues.
 !!! tip "Open source"
     Cette plateforme est un projet **open source** — lisez l'intégralité du code,
     forkez-le et exécutez-le pour votre propre organisation.
-    :material-github: [Voir sur GitHub](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [Voir sur GitHub](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 

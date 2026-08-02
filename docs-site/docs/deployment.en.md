@@ -33,8 +33,8 @@ Internet ──► nginx (80/443, Let's Encrypt)
 
 ```bash
 # 1) get the code
-git clone git@github.com:gerege-systems/public-gerege-template.git /srv/public-gerege-template
-cd /srv/public-gerege-template
+git clone git@github.com:gerege-systems/open-gerege-mn.git /srv/open-gerege-mn
+cd /srv/open-gerege-mn
 
 # 2) create the env files (.env + backend.env)
 
@@ -86,7 +86,7 @@ The reference deployment of this repository is `public-template`; host-level not
 This site is built from `docs-site/` with
 [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) and published at:
 
-<https://gerege-systems.github.io/public-gerege-template/>
+<https://gerege-systems.github.io/open-gerege-mn/>
 
 - Every push to `main` that touches `docs-site/**` makes
   `.github/workflows/docs.yml` build and publish to **GitHub Pages** (Pages

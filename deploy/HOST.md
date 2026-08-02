@@ -6,11 +6,11 @@
 |---|---|
 | Домэйн | <https://public.template.gerege.mn> |
 | Хост | `66.181.175.199` (`grg`, дотоод `10.0.0.31`) — нэгдсэн Gerege хост |
-| Хэрэглэгч / зам | `grgdev` : `/home/grgdev/public-gerege-template` |
+| Хэрэглэгч / зам | `grgdev` : `/home/grgdev/open-gerege-mn` |
 | Compose project | `public-template` |
 | Портууд | web `3010`, api relay `8094` |
 | DB | `public_template` (тусдаа volume `public-template_dbdata`) |
-| Цөм | [`public-gerege-core`](https://github.com/gerege-systems/public-gerege-core) — **нээлттэй**, token шаардахгүй |
+| Цөм | [`open-gerege-core`](https://github.com/gerege-systems/open-gerege-core) — **нээлттэй**, token шаардахгүй |
 
 `template.gerege.mn` (хаалттай хувилбар) нь **өөр стек** — ижил хост дээр
 `temp-gerege-mn` project нэрээр тусдаа ажиллана. Хоёулаа бие биедээ

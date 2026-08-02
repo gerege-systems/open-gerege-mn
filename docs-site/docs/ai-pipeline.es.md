@@ -161,4 +161,4 @@ en directo emite cerca de 8 fragmentos por minuto, así que baja ese límite con
 cuidado.
 
 El detalle completo está en el repositorio:
-[`backend/docs/AI_PIPELINE.md`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/docs/AI_PIPELINE.md).
+[`backend/docs/AI_PIPELINE.md`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/docs/AI_PIPELINE.md).

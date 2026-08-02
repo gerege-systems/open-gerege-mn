@@ -1,7 +1,7 @@
 # Configuration (env)
 
 > Tout se configure par variables d'environnement. L'exemple de référence est
-> [`backend/.env.example`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/.env.example).
+> [`backend/.env.example`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/.env.example).
 
 !!! danger "Ne versionnez jamais de secrets"
     `backend/.env`, le `.env` racine et `backend.env` sont tous **ignorés par

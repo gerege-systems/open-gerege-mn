@@ -1,15 +1,15 @@
 // Package main нь Gerege Template Platform-ын API эхлэх цэг.
 //
 // Бүх суурь чадвар (танилт, RBAC, API gateway, AI pipeline, eID/SSO) нь
-// github.com/gerege-systems/public-gerege-core модульд байрлана — энэ репо нь
+// github.com/gerege-systems/open-gerege-core модульд байрлана — энэ репо нь
 // тэрхүү суурийн лавлах хэрэгжилт (reference deployment) бөгөөд өөрийн
 // нэмэлт маршрут байхгүй.
 package main
 
 import (
-	"github.com/gerege-systems/public-gerege-core/cmd/api/server"
-	"github.com/gerege-systems/public-gerege-core/core/constants"
-	"github.com/gerege-systems/public-gerege-core/pkg/logger"
+	"github.com/gerege-systems/open-gerege-core/cmd/api/server"
+	"github.com/gerege-systems/open-gerege-core/core/constants"
+	"github.com/gerege-systems/open-gerege-core/pkg/logger"
 )
 
 func main() {

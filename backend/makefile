@@ -1,5 +1,5 @@
-# Энэ backend нь public-gerege-core-ын НИМГЭН хэрэглэгч болсон: бүх суурь код
-# github.com/gerege-systems/public-gerege-core модульд байрлана. Тиймээс swag
+# Энэ backend нь open-gerege-core-ын НИМГЭН хэрэглэгч болсон: бүх суурь код
+# github.com/gerege-systems/open-gerege-core модульд байрлана. Тиймээс swag
 # (OpenAPI) болон mockery target-ууд ЭНД БАЙХГҮЙ — тэдгээр нь core repo-д
 # амьдарна. Энд зөвхөн энэ аппын build/test/lint үлдэнэ.
 
@@ -28,8 +28,8 @@ lint: ## Run golangci-lint
 fmt: ## Format all Go files
 	gofmt -w .
 
-core-update: ## Bump public-gerege-core to its latest tagged release
-	go get github.com/gerege-systems/public-gerege-core@latest
+core-update: ## Bump open-gerege-core to its latest tagged release
+	go get github.com/gerege-systems/open-gerege-core@latest
 	go mod tidy
 
 pre-push: ci-lint ci-test ci-build ## Mirror CI checks locally before pushing

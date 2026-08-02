@@ -47,7 +47,7 @@ correction à la main :
 
 | Couche | Provenance | Mécanisme |
 |---|---|---|
-| Noyau backend — authentification, RBAC, passerelle, audit, fournisseur OIDC, eID/SSO, IA | `public-gerege-core` (module Go) | dépendance `go.mod` |
+| Noyau backend — authentification, RBAC, passerelle, audit, fournisseur OIDC, eID/SSO, IA | `open-gerege-core` (module Go) | dépendance `go.mod` |
 | Couche frontend — `lib/**`, `components/**`, la logique de **158 routes BFF** | `@gerege/ui-core` (paquet npm) | dépendance `package.json` |
 
 Résultat : le répertoire `backend/` de ce dépôt ne contient **qu'un seul fichier

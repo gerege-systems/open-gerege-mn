@@ -402,7 +402,7 @@ DevTools браузера → Application: *Manifest* (без ошибок), *Se
 вручную, никогда не перезаписываются; переводы с потерянными плейсхолдерами
 (`{name}`) не сохраняются.
 
-> Бэкенд: public-gerege-core **v0.5.0**+ (migration 49).
+> Бэкенд: open-gerege-core **v0.5.0**+ (migration 49).
 
 ---
 

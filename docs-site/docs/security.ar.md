@@ -109,8 +109,8 @@ chain_hash = SHA-256(prev_hash ‖ canonical-json(القيد))
 - **واجهة Swagger التفاعلية** — لا يُقدَّم سوى الوصف الخام على
   `/swagger/doc.json` (حمّله في Swagger Editor أو Postman).
 - مصفوفة الضوابط الكاملة موجودة في
-  [`backend/docs/SECURITY.md`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/docs/SECURITY.md).
+  [`backend/docs/SECURITY.md`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/docs/SECURITY.md).
 
 !!! tip "الإبلاغ عن ثغرة"
     الرجاء عدم فتح تذكرة علنية. اتّبع الإجراء الوارد في
-    [SECURITY.md](https://github.com/gerege-systems/public-gerege-template/blob/main/SECURITY.md).
+    [SECURITY.md](https://github.com/gerege-systems/open-gerege-mn/blob/main/SECURITY.md).

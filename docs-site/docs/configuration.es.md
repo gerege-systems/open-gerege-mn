@@ -1,7 +1,7 @@
 # Configuración (env)
 
 > Todo se configura mediante variables de entorno. El ejemplo canónico es
-> [`backend/.env.example`](https://github.com/gerege-systems/public-gerege-template/blob/main/backend/.env.example).
+> [`backend/.env.example`](https://github.com/gerege-systems/open-gerege-mn/blob/main/backend/.env.example).
 
 !!! danger "Nunca subas secretos al repositorio"
     `backend/.env`, el `.env` raíz y `backend.env` están todos **ignorados por

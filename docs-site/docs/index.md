@@ -10,7 +10,7 @@
 !!! tip "Нээлттэй эх (Open Source)"
     Энэхүү платформ бол **нээлттэй эх** төсөл — эх кодыг бүрэн эхээр нь үзэж,
     fork хийж, өөрийн байгууллагадаа ашиглаж болно.
-    :material-github: [GitHub дээр үзэх](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [GitHub дээр үзэх](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 

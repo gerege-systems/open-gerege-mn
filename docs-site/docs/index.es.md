@@ -11,7 +11,7 @@ seguridad, IA y andamiaje de servicio vienen resueltos desde el primer día.
 !!! tip "Código abierto"
     Esta plataforma es un proyecto de **código abierto**: lee el código completo,
     haz un fork y ejecútalo en tu propia organización.
-    :material-github: [Ver en GitHub](https://github.com/gerege-systems/public-gerege-template)
+    :material-github: [Ver en GitHub](https://github.com/gerege-systems/open-gerege-mn)
 
 <div class="grid cards" markdown>
 

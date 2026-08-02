@@ -98,7 +98,7 @@ gerege-template-platform/
   TanStack Query 数据层。
 - **动态语言** — 超级管理员可在运行时增删界面语言，并用 Gemini 补充翻译
   （`/admin/languages`）；内置词典仍是键的来源，也是数据库不可用时的兜底。
-  需要 public-gerege-core v0.5.0+。
+  需要 open-gerege-core v0.5.0+。
 - **可安装的 PWA** — manifest + 图标 + 基于 Serwist 的 service worker；
   只缓存静态资源 — 所有 `/api/*` 与认证/eID 路径均为 NetworkOnly，HTML 完全不缓存。
   配置见 [frontend/README_ZH.md](../frontend/README_ZH.md#pwa--安装为应用)。
@@ -133,10 +133,10 @@ docker compose up -d --build
 
 ## 文档
 
-📖 **文档站点：** <https://gerege-systems.github.io/public-gerege-template/zh/>
-（[Монгол](https://gerege-systems.github.io/public-gerege-template/)
-· [English](https://gerege-systems.github.io/public-gerege-template/en/)
-· [Русский](https://gerege-systems.github.io/public-gerege-template/ru/)）—
+📖 **文档站点：** <https://gerege-systems.github.io/open-gerege-mn/zh/>
+（[Монгол](https://gerege-systems.github.io/open-gerege-mn/)
+· [English](https://gerege-systems.github.io/open-gerege-mn/en/)
+· [Русский](https://gerege-systems.github.io/open-gerege-mn/ru/)）—
 源文件在 `docs-site/`，每次合并到 `main` 都会自动发布到 GitHub Pages。
 
 | 文档 | 内容 |

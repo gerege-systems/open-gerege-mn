@@ -37,6 +37,31 @@ volume-ыг гараар нүүлгэх шаардлагатай — тусда�
 - `BACKEND_URL`-ийг `http://public-template-api-1:8080` руу **pin** хийнэ.
   Үүнгүйгээр хуваалцсан сүлжээн дэх өөр `api` руу очиж бүх `/api/v1/*` 404 болно.
 
+## Хостын `.env` (git-д БАЙХГҮЙ)
+
+`docker compose` нь репогийн үндэс дэх `.env`-г уншина. Заавал зөв байх нэг
+түлхүүр:
+
+| Түлхүүр | Утга |
+|---|---|
+| `APP_ORIGIN` | `https://open.gerege.mn` |
+
+⚠️ Домэйн солигдоход **энэ утгыг дагуулж солих ёстой**. BFF-ийн `checkOrigin`
+нь browser-ийн `Origin`-г үүнтэй ЯГ тулгадаг тул хуучин утга үлдвэл нэвтрэлт
+ажиллаж, жагсаалт уншигдаж байхад **бүх өөрчлөх (POST) хүсэлт 403
+«Origin тохирохгүй байна.»** өгнө. Мөн интеграцийн
+`redirect_uri = ${APP_ORIGIN}/api/integrations/<provider>/callback` тул буруу
+утга Google Drive / Dropbox / Meet холболтыг ч тасална.
+`deploy/deploy.sh` эхэндээ үүнийг шалгаж, зөрвөл deploy-г зогсооно.
+
+Шалгах (нэвтрэхгүйгээр — 401 бол зөв, 403 бол `APP_ORIGIN` буруу):
+
+```bash
+curl -sS -X POST https://open.gerege.mn/api/gov/applications \
+  -H 'x-dgov-csrf: 1' -H 'Origin: https://open.gerege.mn' \
+  -H 'Content-Type: application/json' -d '{}'
+```
+
 ## SSO client (`backend.env`, git-д БАЙХГҮЙ)
 
 Энэ байршуулалт нь `sso.gerege.mn`-ий **өөрийн** OAuth2 client-ийг хэрэглэнэ —

@@ -13,6 +13,27 @@ cd "$REPO_DIR"
 
 echo "▶ Deploy commit: $(git rev-parse --short HEAD) — $(git log -1 --pretty=%s)"
 
+# APP_ORIGIN — BFF-ийн CSRF `Origin` шалгалтын жишиг. Буруу бол апп «ажиллаж
+# байгаа» дүр эсгэнэ: нэвтрэлт, жагсаалт уншилт хэвийн атал бүх POST 403
+# «Origin тохирохгүй байна.» өгнө (2026-08-03-нд домэйн солигдоод хуучин
+# public.template.gerege.mn үлдсэнээс болж яг ингэсэн). Тиймээс энд зогсооно.
+# Хүчээр алгасах: SKIP_ORIGIN_CHECK=1
+EXPECTED_ORIGIN="https://open.gerege.mn"
+if [ "${SKIP_ORIGIN_CHECK:-0}" != "1" ]; then
+  CUR_ORIGIN="$(grep -E '^APP_ORIGIN=' .env 2>/dev/null | tail -1 | cut -d= -f2-)"
+  CUR_ORIGIN="${CUR_ORIGIN%$'\r'}"          # CRLF-ээр засварласан .env
+  CUR_ORIGIN="${CUR_ORIGIN%\"}"; CUR_ORIGIN="${CUR_ORIGIN#\"}"
+  CUR_ORIGIN="${CUR_ORIGIN%\'}"; CUR_ORIGIN="${CUR_ORIGIN#\'}"
+  if [ "$CUR_ORIGIN" != "$EXPECTED_ORIGIN" ]; then
+    echo "✖ .env-ийн APP_ORIGIN буруу: '${CUR_ORIGIN:-<хоосон>}' (хүлээгдэж буй: $EXPECTED_ORIGIN)" >&2
+    echo "  Заавал зассаны дараа деплой хий — эс бөгөөс бүх POST хүсэлт 403 болно." >&2
+    echo "  Засах:  sed -i 's|^APP_ORIGIN=.*|APP_ORIGIN=$EXPECTED_ORIGIN|' .env  (мөр байхгүй бол нэм)" >&2
+    echo "  Алгасах (санаатай бол): SKIP_ORIGIN_CHECK=1 bash deploy/deploy.sh" >&2
+    exit 1
+  fi
+  echo "▶ APP_ORIGIN=$CUR_ORIGIN ✓"
+fi
+
 # INTEGRATION_ENC_KEY — superadmin MFA-ийн TOTP secret болон integrations OAuth
 # token-ийг AES-GCM-ээр шифрлэх түлхүүр. CD workflow нь GitHub secret-ээс энэ
 # скриптэд дамжуулна. backend.env-д БАЙХГҮЙ тохиолдолд Л нэг удаа бичнэ

@@ -12,7 +12,12 @@ import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 // Энэ платформ дээр зориудаар нээхгүй route-ууд (ж: kiosk-д gov/** хэрэггүй).
-const EXCLUDE = [];
+const EXCLUDE = [
+  // admin/platform/module нь ДИНАМИК route (module/[id]/route.ts) — энэ
+  // шалгагчийн 1:1 буулгалт [id] сегментийг илэрхийлж чаддаггүй тул
+  // энд чөлөөлөв. Бүрхүүл нь бодитоор байгаа.
+  'admin/platform/module',
+];
 
 // Зориудаар АППАД хэрэгжүүлсэн route-ууд — бүрхүүл биш, бүтэн код. Платформ
 // тусгайлсан утга агуулдаг тохиолдолд (ж: `aasa` доторх iOS bundle ID).

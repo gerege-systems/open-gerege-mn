@@ -21,12 +21,19 @@ export default async function OAuthLoginPage(props: {
   const next = `/oauth/login?login_challenge=${challenge}`;
 
   // Аль RP-ээс нэвтэрч буйг server талд авна (GetLogin — auth шаардахгүй).
+  // `Enroll` нь superadmin бүртгэлийн урсгал эсэхийг backend бүртгэгдсэн
+  // redirect_uri-аас гаргадаг (RP өөрөө зарлаж чадахгүй) — үнэн үед зөвхөн
+  // Google-ээр нэвтрэх сонголтыг үзүүлнэ. Мэдээлэл ирээгүй бол ЭНГИЙН дэлгэц.
   let rpName = '';
-  const info = await backendFetch<{ ClientName?: string; ClientID?: string }>(
+  let enroll = false;
+  const info = await backendFetch<{ ClientName?: string; ClientID?: string; Enroll?: boolean }>(
     `/provider/login?login_challenge=${encodeURIComponent(challenge)}`,
     { method: 'GET' },
   );
-  if (info.ok && info.data) rpName = info.data.ClientName || info.data.ClientID || '';
+  if (info.ok && info.data) {
+    rpName = info.data.ClientName || info.data.ClientID || '';
+    enroll = info.data.Enroll === true;
+  }
 
   return (
     <section className="signin-card" aria-labelledby="login-title">
@@ -46,10 +53,18 @@ export default async function OAuthLoginPage(props: {
           </div>
         </div>
       )}
-      {hasSession ? (
+      {/* enroll урсгалд байгаа session-ыг ДАХИН ХЭРЭГЛЭХГҮЙ: бүртгэл нь тухайн
+          Google хаягийн эзэмшлийг батлах ёстой тул (start нь `prompt=login`
+          илгээдэг) шинээр нэвтрүүлнэ. */}
+      {hasSession && !enroll ? (
         <AcceptClient challenge={challenge} />
       ) : (
-        <LoginForm next={next} googleLink={sp.glink === '1'} googleError={!!sp.gerror} />
+        <LoginForm
+          next={next}
+          googleLink={sp.glink === '1'}
+          googleError={!!sp.gerror}
+          googleOnly={enroll}
+        />
       )}
     </section>
   );

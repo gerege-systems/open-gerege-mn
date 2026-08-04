@@ -2,7 +2,7 @@ module github.com/gerege-systems/open-gerege-mn/backend
 
 go 1.26
 
-require github.com/gerege-systems/open-gerege-core v1.6.5
+require github.com/gerege-systems/open-gerege-core v1.7.0
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect

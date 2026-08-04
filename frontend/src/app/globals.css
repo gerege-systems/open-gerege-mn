@@ -2596,3 +2596,17 @@ html[data-desktop][data-titlebar="overlay"] .topbar { padding-left: calc(24px + 
    илүүц. Үүнийг DOM-оос мэдэх аргагүй (native fullscreen нь Fullscreen API-г
    өдөөдөггүй) — бүрхүүл өөрөө `webContents.insertCSS`-ээр дарж бичнэ
    (desktop/TemplateDesktop/src/windows.ts → FULLSCREEN_CSS). */
+
+/* ── Модулийн удирдлага (супер админ) ─────────────────────────────── */
+.modgroup { margin: 18px 0 8px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.modrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; }
+.modrow__main { min-width: 0; }
+.modrow__name { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.modrow__id { font-size: 12px; color: var(--muted); background: var(--surface-2, rgba(0,0,0,.04)); padding: 1px 6px; border-radius: 5px; }
+.modrow__meta { margin-top: 4px; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.modrow__side { display: flex; align-items: center; gap: 10px; flex: none; }
+/* Баталгаажуулах цонх — модуль унтраах нь бүх route-ыг 404 болгодог тул
+   санамсаргүй дарахаас сэргийлнэ. */
+.modconfirm { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.4); padding: 16px; }
+.modconfirm__box { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; max-width: 440px; width: 100%; }
+.modconfirm__actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }

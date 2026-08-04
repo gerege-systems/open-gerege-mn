@@ -1,0 +1,506 @@
+From 3840435f203173b007ecbd24f1b8fec2672d8cd5 Mon Sep 17 00:00:00 2001
+From: Gerege Systems Development Team <dev@gerege.mn>
+Date: Tue, 4 Aug 2026 09:32:21 +0000
+Subject: [PATCH 3/7] test(routes): golden route inventory + owner-module
+ invariant (Phase 0 safety net)
+
+- TestGoldenRoutes snapshots all 219 registered endpoints against
+  testdata/routes_golden.txt; refactor steps must keep it byte-identical
+  (update intentionally via -update)
+- TestEveryRouteHasOwnerModule asserts every endpoint belongs to exactly
+  one module manifest - no orphan routes can be introduced
+- TestPlatformModulesEndpoint covers the new public module-status API and
+  the 404 gate behaviour end-to-end
+---
+ core/http/routes/route_platform_test.go     |  75 +++++++
+ core/http/routes/routes_golden_test.go      | 169 +++++++++++++++
+ core/http/routes/testdata/routes_golden.txt | 219 ++++++++++++++++++++
+ 3 files changed, 463 insertions(+)
+ create mode 100644 core/http/routes/route_platform_test.go
+ create mode 100644 core/http/routes/routes_golden_test.go
+ create mode 100644 core/http/routes/testdata/routes_golden.txt
+
+diff --git a/core/http/routes/route_platform_test.go b/core/http/routes/route_platform_test.go
+new file mode 100644
+index 0000000..af89f1d
+--- /dev/null
++++ b/core/http/routes/route_platform_test.go
+@@ -0,0 +1,75 @@
++// Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
++
++package routes_test
++
++import (
++	"encoding/json"
++	"net/http"
++	"net/http/httptest"
++	"testing"
++
++	"github.com/go-chi/chi/v5"
++
++	"github.com/gerege-systems/open-gerege-core/core/http/routes"
++	"github.com/gerege-systems/open-gerege-core/kernel/module"
++)
++
++// TestPlatformModulesEndpoint — /v1/platform/modules нь модулиудын нийтийн
++// төлөвийг зөв хэлбэрээр буцаадаг ба унтраасан модуль enabled=false харагдана.
++func TestPlatformModulesEndpoint(t *testing.T) {
++	reg := module.Builtin()
++	if err := reg.Disable("gspace"); err != nil {
++		t.Fatal(err)
++	}
++
++	r := chi.NewRouter()
++	r.Route("/api", func(api chi.Router) {
++		api.Use(module.Gate(reg))
++		routes.NewPlatformRoute(api, reg).Routes()
++	})
++
++	rec := httptest.NewRecorder()
++	r.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/api/v1/platform/modules", nil))
++	if rec.Code != http.StatusOK {
++		t.Fatalf("status: %d", rec.Code)
++	}
++
++	var body struct {
++		Status bool `json:"status"`
++		Data   []struct {
++			ID      string `json:"id"`
++			Kind    string `json:"kind"`
++			Enabled bool   `json:"enabled"`
++		} `json:"data"`
++	}
++	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
++		t.Fatalf("json: %v (%s)", err, rec.Body.String())
++	}
++	if !body.Status || len(body.Data) < 20 {
++		t.Fatalf("хариу дутуу: status=%v модуль=%d", body.Status, len(body.Data))
++	}
++	seen := map[string]bool{}
++	for _, m := range body.Data {
++		seen[m.ID] = true
++		switch m.ID {
++		case "gspace":
++			if m.Enabled {
++				t.Error("gspace унтраасан байх ёстой")
++			}
++		case "auth":
++			if !m.Enabled || m.Kind != "core" {
++				t.Errorf("auth: enabled=%v kind=%s", m.Enabled, m.Kind)
++			}
++		}
++	}
++	if !seen["gov"] || !seen["ai"] || !seen["platform"] {
++		t.Fatalf("гол модулиуд жагсаалтад алга: %v", seen)
++	}
++
++	// Gate: унтарсан gspace-ийн route 404 (жагсаалтын endpoint өөрөө нээлттэй хэвээр).
++	rec2 := httptest.NewRecorder()
++	r.ServeHTTP(rec2, httptest.NewRequest(http.MethodGet, "/api/v1/gspace/", nil))
++	if rec2.Code != http.StatusNotFound {
++		t.Fatalf("унтарсан модулийн зам: %d, 404 хүлээсэн", rec2.Code)
++	}
++}
+diff --git a/core/http/routes/routes_golden_test.go b/core/http/routes/routes_golden_test.go
+new file mode 100644
+index 0000000..9f0be99
+--- /dev/null
++++ b/core/http/routes/routes_golden_test.go
+@@ -0,0 +1,169 @@
++// Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
++
++// Golden route inventory — modular refactor-ийн Phase 0 хамгаалалтын тор.
++//
++// Юуг хамгаалж байна вэ: (1) бүртгэгддэг endpoint-уудын БҮРЭН жагсаалт
++// testdata/routes_golden.txt-тэй үг үсэггүй тохирохыг — refactor-ийн явцад
++// route санамсаргүй алга болох/өөрчлөгдөхийг build дээр барина; (2) endpoint
++// бүр kernel/module-ийн builtin манифестийн ЯГ НЭГ модульд харьяалагдахыг —
++// "эзэнгүй" route гарахгүй гэсэн модульчлалын үндсэн инвариант.
++//
++// Route угсралт нь server.go-ийн /api блокийг stub хамаарлуудаар яг
++// давтдаг (усecase-ууд nil interface — бүртгэлийн үед дуудагддаггүй тул
++// аюулгүй; handler ажиллуулбал panic болно, гэхдээ энэ тест хүсэлт явуулдаггүй).
++// Шинэ route нэмбэл: (1) энд угсралтад нэм (server.go-той зэрэгцүүлж),
++// (2) `go test ./core/http/routes -run TestGoldenRoutes -update` ажиллуулж
++// golden файлыг шинэчилж commit хий, (3) эзэн модулийг kernel/module/builtin.go-д
++// зарла.
++package routes_test
++
++import (
++	"flag"
++	"fmt"
++	"net/http"
++	"os"
++	"path/filepath"
++	"sort"
++	"strings"
++	"testing"
++
++	"github.com/go-chi/chi/v5"
++	"golang.org/x/time/rate"
++
++	sitehandler "github.com/gerege-systems/open-gerege-core/core/http/handlers/v1/site"
++	"github.com/gerege-systems/open-gerege-core/core/http/middlewares"
++	"github.com/gerege-systems/open-gerege-core/core/http/routes"
++	"github.com/gerege-systems/open-gerege-core/kernel/module"
++)
++
++var update = flag.Bool("update", false, "golden файлыг дахин бичих")
++
++// kernelOwnedPatterns — модульд бус kernel-д харьяалагдах цөөн зам.
++var kernelOwnedPatterns = map[string]bool{
++	"GET /api/": true, // RootHandler "alive" хариу
++}
++
++// buildFullRouter нь server.go-ийн route угсралтыг stub хамаарлуудаар давтана.
++func buildFullRouter(t *testing.T) chi.Router {
++	t.Helper()
++
++	noopMW := func(h http.Handler) http.Handler { return h }
++	rl := func() *middlewares.RateLimiter { return middlewares.NewRateLimiter(rate.Limit(100), 100) }
++	reg := module.Builtin()
++
++	r := chi.NewRouter()
++
++	// OIDC нийтийн endpoint-ууд — /api-ийн гадна, үндэс дээр (server.go-той ижил).
++	routes.NewOIDCRoute(r, nil, nil, "https://issuer.test").Routes()
++
++	r.Route("/api", func(api chi.Router) {
++		api.Get("/", routes.RootHandler)
++		routes.NewAuthRoute(api, nil, nil, nil, noopMW, rl(), rl()).Routes()
++		routes.NewUsersRoute(api, nil, noopMW, true).Routes()
++		routes.NewEIDProfileRoute(api, nil, noopMW, rl()).Routes()
++		routes.NewRBACRoute(api, nil, nil, noopMW).Routes()
++		routes.NewOrgRoute(api, nil, nil, noopMW).Routes()
++		routes.NewGovRoute(api, nil, nil, noopMW, rl()).Routes()
++		routes.NewIntegrationsRoute(api, nil, noopMW).Routes()
++		routes.NewAssetsRoute(api, nil, noopMW, rl()).Routes()
++		routes.NewGSpaceRoute(api, nil, noopMW, rl()).Routes()
++		routes.NewGatewayRoute(api, nil, nil, noopMW).Routes()
++		routes.NewRelayRoute(api, nil, nil, noopMW).Routes()
++		routes.NewRegistryRoute(api, nil, nil, noopMW).Routes()
++		routes.NewCatalogRoute(api, nil, noopMW).Routes()
++		routes.NewApplicationsRoute(api, nil, nil, noopMW).Routes()
++		routes.NewCoreRoute(api, nil, nil, noopMW).Routes()
++		routes.NewSSORoute(api, nil).Routes()
++		routes.NewAdminRoute(api, nil, nil, nil, noopMW).Routes()
++		routes.NewSuperAdminRoute(api, nil, noopMW).Routes()
++		routes.NewSuperAdminOnboardRoute(api, nil, rl(), rl()).Routes()
++		routes.NewAIRoute(api, nil, noopMW, rl()).Routes()
++		routes.NewPublicAIRoute(api, nil, rl(), rl()).Routes()
++		routes.NewAuditRoute(api, nil, noopMW).Routes()
++		routes.NewSecurityRoute(api, nil, noopMW).Routes()
++		routes.NewSiteRoute(api, nil, nil, noopMW, sitehandler.AuthSurface{}).Routes()
++		routes.NewThemeRoute(api, nil, nil, noopMW).Routes()
++		routes.NewLanguageRoute(api, nil, noopMW).Routes()
++		routes.NewSignRoute(api, nil, nil, nil, noopMW).Routes()
++		routes.NewEIDProxyRoute(api, nil, nil, noopMW, noopMW).Routes()
++		routes.NewProviderRoute(api, nil, noopMW).Routes()
++		routes.NewPlatformRoute(api, reg).Routes()
++	})
++	return r
++}
++
++// walkRoutes нь "METHOD PATTERN" мөрүүдийг эрэмбэлж буцаана.
++func walkRoutes(t *testing.T, r chi.Router) []string {
++	t.Helper()
++	var lines []string
++	err := chi.Walk(r, func(method, route string, _ http.Handler, _ ...func(http.Handler) http.Handler) error {
++		lines = append(lines, fmt.Sprintf("%s %s", method, route))
++		return nil
++	})
++	if err != nil {
++		t.Fatalf("chi.Walk: %v", err)
++	}
++	sort.Strings(lines)
++	return lines
++}
++
++func TestGoldenRoutes(t *testing.T) {
++	lines := walkRoutes(t, buildFullRouter(t))
++	got := strings.Join(lines, "\n") + "\n"
++
++	golden := filepath.Join("testdata", "routes_golden.txt")
++	if *update {
++		if err := os.MkdirAll("testdata", 0o755); err != nil {
++			t.Fatal(err)
++		}
++		if err := os.WriteFile(golden, []byte(got), 0o644); err != nil {
++			t.Fatal(err)
++		}
++		t.Logf("golden шинэчлэгдлээ: %d route", len(lines))
++		return
++	}
++	wantBytes, err := os.ReadFile(golden)
++	if err != nil {
++		t.Fatalf("golden файл алга (%v) — `go test -run TestGoldenRoutes -update`-ээр үүсгэ", err)
++	}
++	if got != string(wantBytes) {
++		gotSet := map[string]bool{}
++		for _, l := range lines {
++			gotSet[l] = true
++		}
++		wantSet := map[string]bool{}
++		for _, l := range strings.Split(strings.TrimSpace(string(wantBytes)), "\n") {
++			wantSet[l] = true
++		}
++		for l := range wantSet {
++			if !gotSet[l] {
++				t.Errorf("route АЛГА БОЛСОН: %s", l)
++			}
++		}
++		for l := range gotSet {
++			if !wantSet[l] {
++				t.Errorf("ШИНЭ route (golden-д алга): %s", l)
++			}
++		}
++		t.Fatal("route inventory golden-оос зөрлөө — санаатай өөрчлөлт бол -update-ээр шинэчил")
++	}
++}
++
++// TestEveryRouteHasOwnerModule — endpoint бүр яг нэг модульд харьяалагдана.
++func TestEveryRouteHasOwnerModule(t *testing.T) {
++	reg := module.Builtin()
++	for _, line := range walkRoutes(t, buildFullRouter(t)) {
++		if kernelOwnedPatterns[line] {
++			continue
++		}
++		parts := strings.SplitN(line, " ", 2)
++		pattern := parts[1]
++		// chi pattern-ийг угтвар тааруулалтад шууд ашиглаж болно:
++		// модулийн угтварууд placeholder-оос өмнө төгсдөг статик замууд.
++		if id, ok := reg.ModuleForPath(pattern); !ok {
++			t.Errorf("ЭЗЭНГҮЙ route: %s — kernel/module/builtin.go-д эзэн модуль зарла", line)
++		} else if _, exists := reg.Get(id); !exists {
++			t.Errorf("%s: үл мэдэгдэх модуль %q", line, id)
++		}
++	}
++}
+diff --git a/core/http/routes/testdata/routes_golden.txt b/core/http/routes/testdata/routes_golden.txt
+new file mode 100644
+index 0000000..80667e2
+--- /dev/null
++++ b/core/http/routes/testdata/routes_golden.txt
+@@ -0,0 +1,219 @@
++DELETE /api/v1/admin/users/{id}
++DELETE /api/v1/applications/{id}
++DELETE /api/v1/auth/google/link
++DELETE /api/v1/gateway/services/{id}
++DELETE /api/v1/gspace/
++DELETE /api/v1/integrations/{provider}
++DELETE /api/v1/languages/{code}
++DELETE /api/v1/me/orgstamp/{regNo}
++DELETE /api/v1/me/signature
++DELETE /api/v1/org/{id}/members/{userID}
++DELETE /api/v1/rbac/roles/{id}
++DELETE /api/v1/registry/evidences/{id}
++DELETE /api/v1/registry/life-events/{id}
++DELETE /api/v1/registry/services/{id}
++DELETE /api/v1/relay/platforms/{id}
++DELETE /api/v1/relay/routes/{id}
++DELETE /api/v1/superadmin/admins/{id}
++DELETE /api/v1/superadmin/invites/{email}
++DELETE /api/v1/themes/{id}
++DELETE /api/v1/users/me/eid/organizations/{regNo}
++DELETE /api/v1/users/me/eid/organizations/{regNo}/signers
++GET /.well-known/jwks.json
++GET /.well-known/openid-configuration
++GET /api/
++GET /api/v1/admin/ai/prompts
++GET /api/v1/admin/users
++GET /api/v1/applications/
++GET /api/v1/applications/{id}
++GET /api/v1/audit/
++GET /api/v1/audit/verify
++GET /api/v1/auth/status/{sid}
++GET /api/v1/catalog/life-events
++GET /api/v1/catalog/services
++GET /api/v1/catalog/services/{id}
++GET /api/v1/core/organizations
++GET /api/v1/core/users
++GET /api/v1/eid-org/organizations
++GET /api/v1/eid-org/organizations/{regNo}/signers
++GET /api/v1/eid/activity
++GET /api/v1/eid/certificates
++GET /api/v1/eid/devices
++GET /api/v1/eid/summary
++GET /api/v1/gateway/logs
++GET /api/v1/gateway/overview
++GET /api/v1/gateway/services
++GET /api/v1/gov/applications
++GET /api/v1/gov/applications/{id}/timeline
++GET /api/v1/gov/appointments
++GET /api/v1/gov/life-events
++GET /api/v1/gov/notifications
++GET /api/v1/gov/officer/queue
++GET /api/v1/gov/officer/queue/{id}
++GET /api/v1/gov/officer/stats
++GET /api/v1/gov/overview
++GET /api/v1/gov/payments
++GET /api/v1/gov/references
++GET /api/v1/gov/services
++GET /api/v1/gspace/
++GET /api/v1/gspace/download
++GET /api/v1/integrations/
++GET /api/v1/integrations/{provider}/token
++GET /api/v1/languages/
++GET /api/v1/languages/enabled
++GET /api/v1/languages/{code}/dictionary
++GET /api/v1/me/orgstamp/{regNo}
++GET /api/v1/me/signature
++GET /api/v1/org/
++GET /api/v1/org/lookup/{regNo}
++GET /api/v1/org/{id}
++GET /api/v1/org/{id}/members
++GET /api/v1/platform/modules
++GET /api/v1/provider/consent
++GET /api/v1/provider/login
++GET /api/v1/rbac/me
++GET /api/v1/rbac/permissions
++GET /api/v1/rbac/roles
++GET /api/v1/registry/catalog
++GET /api/v1/registry/evidences
++GET /api/v1/registry/life-events
++GET /api/v1/registry/once-only
++GET /api/v1/registry/overview
++GET /api/v1/registry/services
++GET /api/v1/registry/services/{id}
++GET /api/v1/registry/services/{id}/once-only
++GET /api/v1/registry/services/{id}/versions
++GET /api/v1/relay/overview
++GET /api/v1/relay/platforms
++GET /api/v1/relay/requests
++GET /api/v1/relay/requests/{id}
++GET /api/v1/relay/routes
++GET /api/v1/security/events
++GET /api/v1/sign/status/{sid}
++GET /api/v1/sign/{id}
++GET /api/v1/sign/{id}/download
++GET /api/v1/site/appearance
++GET /api/v1/site/auth
++GET /api/v1/superadmin/access-mode
++GET /api/v1/superadmin/admins
++GET /api/v1/superadmin/admins/by-register
++GET /api/v1/superadmin/invites
++GET /api/v1/themes/
++GET /api/v1/themes/active
++GET /api/v1/themes/{id}
++GET /api/v1/users/me
++GET /api/v1/users/me/eid/activity
++GET /api/v1/users/me/eid/certificates
++GET /api/v1/users/me/eid/devices
++GET /api/v1/users/me/eid/organizations
++GET /api/v1/users/me/eid/organizations/{regNo}/signers
++GET /api/v1/users/me/eid/summary
++GET /oauth2/auth
++GET /oauth2/sessions/logout
++GET /userinfo
++PATCH /api/v1/languages/{code}
++POST /api/v1/admin/ai/knowledge/reindex
++POST /api/v1/admin/users
++POST /api/v1/ai/chat
++POST /api/v1/ai/stt
++POST /api/v1/ai/translate
++POST /api/v1/ai/tts
++POST /api/v1/applications/
++POST /api/v1/applications/{id}/rotate-secret
++POST /api/v1/auth/eid/poll
++POST /api/v1/auth/eid/start
++POST /api/v1/auth/eid/start-id
++POST /api/v1/auth/google
++POST /api/v1/auth/initiate
++POST /api/v1/auth/logout
++POST /api/v1/auth/refresh
++POST /api/v1/auth/superadmin/mfa
++POST /api/v1/auth/superadmin/onboard/eid/poll
++POST /api/v1/auth/superadmin/onboard/eid/start
++POST /api/v1/auth/superadmin/onboard/eid/start-id
++POST /api/v1/auth/superadmin/onboard/email/send
++POST /api/v1/auth/superadmin/onboard/email/verify
++POST /api/v1/auth/superadmin/onboard/google
++POST /api/v1/auth/superadmin/onboard/totp/init
++POST /api/v1/auth/superadmin/onboard/totp/verify
++POST /api/v1/gateway/services
++POST /api/v1/gov/applications
++POST /api/v1/gov/applications/{id}/cancel
++POST /api/v1/gov/applications/{id}/provide-info
++POST /api/v1/gov/appointments
++POST /api/v1/gov/appointments/{id}/cancel
++POST /api/v1/gov/notifications/read-all
++POST /api/v1/gov/notifications/{id}/read
++POST /api/v1/gov/officer/queue/{id}/assign
++POST /api/v1/gov/officer/queue/{id}/complete
++POST /api/v1/gov/officer/queue/{id}/decide
++POST /api/v1/gov/officer/queue/{id}/request-info
++POST /api/v1/gov/payments/{id}/pay
++POST /api/v1/gov/references
++POST /api/v1/gspace/upload
++POST /api/v1/integrations/
++POST /api/v1/languages/
++POST /api/v1/languages/{code}/translate
++POST /api/v1/org/
++POST /api/v1/org/{id}/members
++POST /api/v1/provider/consent/accept
++POST /api/v1/provider/consent/reject
++POST /api/v1/provider/login/accept
++POST /api/v1/provider/login/reject
++POST /api/v1/provider/logout/accept
++POST /api/v1/public/ai/chat
++POST /api/v1/public/ai/chat/stream
++POST /api/v1/public/ai/tts
++POST /api/v1/rbac/roles
++POST /api/v1/registry/evidences
++POST /api/v1/registry/life-events
++POST /api/v1/registry/services
++POST /api/v1/registry/services/{id}/archive
++POST /api/v1/registry/services/{id}/publish
++POST /api/v1/relay/assignments/{id}/respond
++POST /api/v1/relay/platforms
++POST /api/v1/relay/requests
++POST /api/v1/relay/requests/{id}/forward
++POST /api/v1/relay/routes
++POST /api/v1/relay/webhook
++POST /api/v1/security/events
++POST /api/v1/sign/init
++POST /api/v1/sign/initiate
++POST /api/v1/sso/callback
++POST /api/v1/sso/logout
++POST /api/v1/sso/native
++POST /api/v1/sso/start
++POST /api/v1/superadmin/admins
++POST /api/v1/superadmin/admins/by-register
++POST /api/v1/superadmin/invites
++POST /api/v1/themes/
++POST /api/v1/users/me/eid/organizations
++POST /api/v1/users/me/eid/organizations/{regNo}/signers
++POST /api/v1/users/me/eid/organizations/{regNo}/signers/resend
++POST /oauth2/introspect
++POST /oauth2/revoke
++POST /oauth2/token
++POST /userinfo
++PUT /api/v1/admin/ai/prompts/{key}
++PUT /api/v1/admin/users/{id}/active
++PUT /api/v1/admin/users/{id}/role
++PUT /api/v1/applications/{id}
++PUT /api/v1/applications/{id}/secret
++PUT /api/v1/applications/{id}/services
++PUT /api/v1/gateway/services/{id}
++PUT /api/v1/languages/{code}/translations
++PUT /api/v1/me/latin-name
++PUT /api/v1/me/org-name-latin/{regNo}
++PUT /api/v1/me/orgstamp/{regNo}
++PUT /api/v1/me/signature
++PUT /api/v1/org/{id}/members/{userID}
++PUT /api/v1/rbac/roles/{id}
++PUT /api/v1/rbac/roles/{id}/permissions
++PUT /api/v1/registry/evidences/{id}
++PUT /api/v1/registry/services/{id}
++PUT /api/v1/registry/services/{id}/evidences
++PUT /api/v1/site/appearance
++PUT /api/v1/superadmin/access-mode
++PUT /api/v1/superadmin/admins/{id}/grant
++PUT /api/v1/themes/{id}
++PUT /api/v1/themes/{id}/active
+-- 
+2.43.0
+

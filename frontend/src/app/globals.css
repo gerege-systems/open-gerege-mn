@@ -1252,7 +1252,13 @@ html[lang="en"] .i18n-banner { display: block; }
   align-self: start;
 }
 .is-collapsed .sidepanel { border-right: 0; }
-.sidepanel__head { display: flex; flex-direction: column; justify-content: center; gap: 1px; height: var(--topbar-h, 64px); padding: 0 16px; border-bottom: 1px solid var(--border); }
+.sidepanel__head { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 1px; height: var(--topbar-h, 64px); padding: 0 16px; border-bottom: 1px solid var(--border); }
+/* Задралын горимын товч — цэсний толгойн баруун талд. Толгой нь
+   баганан layout-той тул урсгалыг эвдэхгүйн тулд absolute байрлуулна. */
+.sidepanel__expand { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; }
+.sidepanel__expand:hover { color: var(--fg); background: var(--surface-2, rgba(0,0,0,.04)); }
+.sidepanel__expand[aria-pressed="true"] { color: var(--fg); border-color: var(--fg); }
+.is-collapsed .sidepanel__expand { display: none; }
 .sidepanel__brand-name { font-size: 12px; color: var(--muted); }
 .sidepanel__title { font-family: var(--font-display); font-size: 16px; font-weight: 650; color: var(--fg); }
 /* Гурван түвшний зүүн цэс: Систем (icon rail) → Дэд систем (accordion бар) →

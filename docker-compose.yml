@@ -133,6 +133,13 @@ services:
       # Google OAuth — BFF start route consent URL-д client_id-г хэрэглэнэ
       # (нууц биш). Хоосон бол Google товч "тохируулаагүй" руу чиглүүлнэ.
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      # Төвийн SSO — супер админы онбординг BFF нь authorize URL бүтээхэд
+      # issuer/client_id/scope-ыг хэрэглэнэ (нууц биш; client secret нь
+      # зөвхөн backend талд). Хоосон бол SSO товч "тохируулаагүй" руу
+      # чиглүүлнэ — чимээгүй бүтэлгүйтэхгүй.
+      SSO_ISSUER: ${SSO_ISSUER:-}
+      SSO_CLIENT_ID: ${SSO_CLIENT_ID:-}
+      SSO_SCOPE: ${SSO_SCOPE:-}
       # Гуравдагч интеграцийн OAuth (BFF талд token exchange хийдэг тул client
       # secret ч энд орно). Хоосон бол тухайн карт "Удахгүй" төлөвтэй inert.
       # redirect_uri = ${APP_ORIGIN}/api/integrations/<provider>/callback

@@ -1,0 +1,913 @@
+From c8dedc3e4f26297acca7beae1eabd59bd8943bae Mon Sep 17 00:00:00 2001
+From: Gerege Systems Development Team <dev@gerege.mn>
+Date: Tue, 4 Aug 2026 10:03:52 +0000
+Subject: [PATCH 5/7] feat(platform): persist module state and add runtime
+ enable/disable admin API
+
+Phase 3 lifecycle: migration 52 adds platform_modules (state only - the
+manifest catalog stays in code, so stale rows are warnings, never boot
+failures). New platform usecase wires registry rules -> DB persistence ->
+best-effort audit. Admin surface:
+
+  GET /api/v1/platform/admin/modules      detailed list (RequireAdmin)
+  PUT /api/v1/platform/admin/modules/{id} toggle without restart
+
+Disabled state is restored on boot (lenient fixed-point over dependency
+order). Swagger regenerated; golden inventory +2 admin routes.
+---
+ cmd/api/server/server.go                      |  24 +++-
+ .../usecases/platform/platform_usecase.go     |  89 +++++++++++++++
+ .../platform/platform_usecase_test.go         |  90 +++++++++++++++
+ .../platformmodules_postgres.go               |  50 +++++++++
+ core/http/routes/route_platform.go            | 103 ++++++++++++++++--
+ core/http/routes/route_platform_test.go       |   3 +-
+ core/http/routes/routes_golden_test.go        |   3 +-
+ core/http/routes/testdata/routes_golden.txt   |   2 +
+ docs/docs.go                                  |  88 +++++++++++++++
+ docs/swagger.json                             |  88 +++++++++++++++
+ docs/swagger.yaml                             |  57 ++++++++++
+ kernel/module/registry.go                     |  24 ++++
+ migrations/52_platform_modules.down.sql       |   3 +
+ migrations/52_platform_modules.up.sql         |  29 +++++
+ 14 files changed, 641 insertions(+), 12 deletions(-)
+ create mode 100644 core/business/usecases/platform/platform_usecase.go
+ create mode 100644 core/business/usecases/platform/platform_usecase_test.go
+ create mode 100644 core/datasources/repositories/postgres/platformmodules/platformmodules_postgres.go
+ create mode 100644 migrations/52_platform_modules.down.sql
+ create mode 100644 migrations/52_platform_modules.up.sql
+
+diff --git a/cmd/api/server/server.go b/cmd/api/server/server.go
+index b834a13..953cd85 100644
+--- a/cmd/api/server/server.go
++++ b/cmd/api/server/server.go
+@@ -92,6 +92,8 @@ import (
+ 	"github.com/gerege-systems/open-gerege-core/pkg/verify"
+ 	"github.com/gerege-systems/open-gerege-core/pkg/xyp"
+ 
++	platformuc "github.com/gerege-systems/open-gerege-core/core/business/usecases/platform"
++	platformmodulespostgres "github.com/gerege-systems/open-gerege-core/core/datasources/repositories/postgres/platformmodules"
+ 	"github.com/gerege-systems/open-gerege-core/kernel/module"
+ 	corefindmod "github.com/gerege-systems/open-gerege-core/modules/corefind"
+ 	gspacemod "github.com/gerege-systems/open-gerege-core/modules/gspace"
+@@ -417,6 +419,26 @@ func NewApp() (*App, error) {
+ 	auditRepo := auditpostgres.NewAuditRepository(pool)
+ 	auditUC := audit.NewUsecase(auditRepo)
+ 
++	// Модулийн lifecycle — DB-д хадгалагдсан унтраалттай төлвийг сэргээж
++	// (зөөлөн: stale мөр warning), admin toggle-ийн usecase-ийг угсарна.
++	platformModulesStore := platformmodulespostgres.NewRepository(pool)
++	if disabledIDs, err := platformModulesStore.ListDisabled(ctx); err != nil {
++		// Migration хараахан гүйгээгүй орчинд boot-ыг унагаахгүй — default
++		// (бүгд идэвхтэй) төлвөөр үргэлжилнэ.
++		logger.Warn("platform_modules уншигдсангүй — default төлвөөр үргэлжилнэ", logger.Fields{
++			constants.LoggerCategory: constants.LoggerCategoryServer,
++			"error":                  err.Error(),
++		})
++	} else {
++		for _, rerr := range modReg.RestoreDisabled(disabledIDs) {
++			logger.Warn("хадгалагдсан модулийн төлөв сэргээгдсэнгүй", logger.Fields{
++				constants.LoggerCategory: constants.LoggerCategoryServer,
++				"error":                  rerr.Error(),
++			})
++		}
++	}
++	platformUC := platformuc.NewUsecase(modReg, platformModulesStore, auditUC)
++
+ 	// Super admin — админ хэрэглэгчдийг удирдах (үүсгэх/эрх олгох/хасах) +
+ 	// super admin урилга (allow-list). users давхаргаар (кэш-зөв мутациуд)
+ 	// ажиллаж, мутаци бүрийг audit log-д бичнэ.
+@@ -650,7 +672,7 @@ func NewApp() (*App, error) {
+ 		api.Use(module.Gate(modReg))
+ 
+ 		api.Get("/", routes.RootHandler)
+-		routes.NewPlatformRoute(api, modReg).Routes()
++		routes.NewPlatformRoute(api, platformUC, authMiddleware).Routes()
+ 		routes.NewAuthRoute(api, authUC, auditUC, WalletProvisioner, authMiddleware, authRateLimiter, pollRateLimiter).Routes()
+ 		routes.NewUsersRoute(api, usersUC, authMiddleware, ssoEidProxy != nil).Routes()
+ 		routes.NewEIDProfileRoute(api, authUC, authMiddleware, govWriteRateLimiter).Routes()
+diff --git a/core/business/usecases/platform/platform_usecase.go b/core/business/usecases/platform/platform_usecase.go
+new file mode 100644
+index 0000000..abad73b
+--- /dev/null
++++ b/core/business/usecases/platform/platform_usecase.go
+@@ -0,0 +1,89 @@
++// Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
++
++// Package platform нь модулийн lifecycle-ийн usecase: модулиудын төлвийг
++// жагсаах, business модулийг restart-гүйгээр асаах/унтраах. Дүрмүүд нь
++// kernel/module Registry-д (core хамгаалалт, хамаарлын дараалал) — энэ
++// давхарга нь түүнийг DB persistence + audit-тэй холбоно.
++package platform
++
++import (
++	"context"
++	"fmt"
++
++	"github.com/gerege-systems/open-gerege-core/core/apperror"
++	audituc "github.com/gerege-systems/open-gerege-core/core/business/usecases/audit"
++	"github.com/gerege-systems/open-gerege-core/kernel/module"
++	"github.com/gerege-systems/open-gerege-core/pkg/logger"
++)
++
++// Store нь модулийн төлвийн persistence (platform_modules хүснэгт).
++type Store interface {
++	ListDisabled(ctx context.Context) ([]string, error)
++	SetEnabled(ctx context.Context, id string, enabled bool) error
++}
++
++// Usecase — модулийн lifecycle-ийн үйлдлүүд.
++type Usecase interface {
++	// List нь бүх модулийн одоогийн төлвийг буцаана.
++	List(ctx context.Context) []module.Status
++	// SetEnabled нь business модулийг асааж/унтраана: registry дүрэм
++	// шалгана → DB-д хадгална → audit бичнэ. Registry-ийн алдаа (core
++	// модуль, хамаарал г.м.) хэрэглэгчид ил буцна.
++	SetEnabled(ctx context.Context, id string, enabled bool) error
++}
++
++type usecase struct {
++	registry *module.Registry
++	store    Store
++	audit    audituc.Usecase
++}
++
++// NewUsecase нь platform usecase үүсгэнэ. store nil бол persistence-гүй
++// (зөвхөн in-memory) ажиллана — тест болон нимгэн орчинд.
++func NewUsecase(registry *module.Registry, store Store, audit audituc.Usecase) Usecase {
++	return &usecase{registry: registry, store: store, audit: audit}
++}
++
++func (u *usecase) List(_ context.Context) []module.Status {
++	return u.registry.List()
++}
++
++func (u *usecase) SetEnabled(ctx context.Context, id string, enabled bool) error {
++	// 1) Registry — бизнес дүрмийн цорын ганц эх сурвалж. Дүрмийн зөрчил
++	// (core модуль, хамаарал, бүртгэлгүй ID) нь хэрэглэгчийн алдаа тул
++	// BadRequest болж ил буцна.
++	var err error
++	if enabled {
++		err = u.registry.Enable(id)
++	} else {
++		err = u.registry.Disable(id)
++	}
++	if err != nil {
++		return apperror.BadRequest(err.Error())
++	}
++
++	// 2) Persistence — restart-ын дараа төлөв хадгалагдана.
++	if u.store != nil {
++		if err := u.store.SetEnabled(ctx, id, enabled); err != nil {
++			return fmt.Errorf("модулийн төлөв хадгалах: %w", err)
++		}
++	}
++
++	// 3) Audit — hash-chain бүртгэлд админы үйлдэл үлдэнэ. Бусад flow-той
++	// ижил best-effort: audit унасан ч үйлдэл амжилттай хэвээр (эс бөгөөс
++	// audit-ийн түр саатал модулийн удирдлагыг гацаана).
++	if u.audit != nil {
++		action := "module.disable"
++		if enabled {
++			action = "module.enable"
++		}
++		if err := u.audit.RecordEvent(ctx, action, "platform", id, map[string]any{
++			"enabled": enabled,
++		}); err != nil {
++			logger.Warn("модулийн audit бичигдсэнгүй", logger.Fields{
++				"module": id, "error": err.Error(),
++			})
++		}
++	}
++	return nil
++}
+diff --git a/core/business/usecases/platform/platform_usecase_test.go b/core/business/usecases/platform/platform_usecase_test.go
+new file mode 100644
+index 0000000..b1d07a4
+--- /dev/null
++++ b/core/business/usecases/platform/platform_usecase_test.go
+@@ -0,0 +1,90 @@
++// Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
++
++package platform
++
++import (
++	"context"
++	"errors"
++	"testing"
++
++	"github.com/gerege-systems/open-gerege-core/core/apperror"
++	"github.com/gerege-systems/open-gerege-core/kernel/module"
++)
++
++// fakeStore — persistence-ийн дуудлагуудыг бүртгэдэг хуурамч store.
++type fakeStore struct {
++	calls map[string]bool
++	err   error
++}
++
++func (f *fakeStore) ListDisabled(context.Context) ([]string, error) { return nil, nil }
++func (f *fakeStore) SetEnabled(_ context.Context, id string, enabled bool) error {
++	if f.err != nil {
++		return f.err
++	}
++	if f.calls == nil {
++		f.calls = map[string]bool{}
++	}
++	f.calls[id] = enabled
++	return nil
++}
++
++func testRegistry(t *testing.T) *module.Registry {
++	t.Helper()
++	r, err := module.New(
++		module.Manifest{ID: "auth", Kind: module.KindCore},
++		module.Manifest{ID: "gspace", Kind: module.KindBusiness},
++	)
++	if err != nil {
++		t.Fatal(err)
++	}
++	return r
++}
++
++func TestSetEnabledPersistsAndTogglesRegistry(t *testing.T) {
++	reg := testRegistry(t)
++	store := &fakeStore{}
++	uc := NewUsecase(reg, store, nil)
++
++	if err := uc.SetEnabled(context.Background(), "gspace", false); err != nil {
++		t.Fatalf("disable: %v", err)
++	}
++	if reg.Enabled("gspace") {
++		t.Fatal("registry-д унтараагүй")
++	}
++	if v, ok := store.calls["gspace"]; !ok || v {
++		t.Fatalf("store-д enabled=false хадгалагдаагүй: %v", store.calls)
++	}
++
++	if err := uc.SetEnabled(context.Background(), "gspace", true); err != nil {
++		t.Fatalf("enable: %v", err)
++	}
++	if !reg.Enabled("gspace") {
++		t.Fatal("registry-д асаагүй")
++	}
++}
++
++func TestSetEnabledRejectsCoreModuleAsBadRequest(t *testing.T) {
++	uc := NewUsecase(testRegistry(t), &fakeStore{}, nil)
++	err := uc.SetEnabled(context.Background(), "auth", false)
++	if err == nil {
++		t.Fatal("core модуль унтрах ёсгүй")
++	}
++	var de *apperror.DomainError
++	if !errors.As(err, &de) {
++		t.Fatalf("apperror.DomainError хүлээсэн, гарсан: %T", err)
++	}
++}
++
++func TestSetEnabledRollsForwardOnStoreError(t *testing.T) {
++	reg := testRegistry(t)
++	uc := NewUsecase(reg, &fakeStore{err: errors.New("db down")}, nil)
++	if err := uc.SetEnabled(context.Background(), "gspace", false); err == nil {
++		t.Fatal("store-ийн алдаа ил гарах ёстой")
++	}
++	// Registry-ийн төлөв store-оос түрүүнд өөрчлөгддөг — админд алдаа
++	// харагдсан тул дахин оролдоно; gate аль хэдийн хаасан нь аюулгүй тал.
++	if reg.Enabled("gspace") {
++		t.Log("registry унтарсан (хүлээгдсэн зан төлөв)")
++	}
++}
+diff --git a/core/datasources/repositories/postgres/platformmodules/platformmodules_postgres.go b/core/datasources/repositories/postgres/platformmodules/platformmodules_postgres.go
+new file mode 100644
+index 0000000..a333b11
+--- /dev/null
++++ b/core/datasources/repositories/postgres/platformmodules/platformmodules_postgres.go
+@@ -0,0 +1,50 @@
++// Gerege Systems Development Team болон Claude AI хамтран бүтээв, 2026.
++
++// Package platformmodules нь platform_modules (модулийн идэвхийн төлөв)
++// хүснэгтийн Postgres gateway. Нийтийн config тул RLS-гүй (plain pool query);
++// бичих эрх нь route давхаргад RequireAdmin-аар хамгаалагдана.
++package platformmodules
++
++import (
++	"context"
++	"fmt"
++
++	"github.com/jackc/pgx/v5"
++	"github.com/jackc/pgx/v5/pgxpool"
++)
++
++type repository struct {
++	pool *pgxpool.Pool
++}
++
++// NewRepository нь platform_modules repo үүсгэнэ.
++func NewRepository(pool *pgxpool.Pool) *repository {
++	return &repository{pool: pool}
++}
++
++// ListDisabled нь унтраалттай гэж хадгалагдсан модулийн ID-нуудыг буцаана.
++// (Мөргүй буюу enabled=true модулиуд default идэвхтэй тул сонирхолгүй.)
++func (r *repository) ListDisabled(ctx context.Context) ([]string, error) {
++	rows, err := r.pool.Query(ctx, `SELECT id FROM platform_modules WHERE enabled = false ORDER BY id`)
++	if err != nil {
++		return nil, fmt.Errorf("query platform modules: %w", err)
++	}
++	ids, err := pgx.CollectRows(rows, pgx.RowTo[string])
++	if err != nil {
++		return nil, fmt.Errorf("scan platform modules: %w", err)
++	}
++	return ids, nil
++}
++
++// SetEnabled нь модулийн төлвийг upsert хийнэ.
++func (r *repository) SetEnabled(ctx context.Context, id string, enabled bool) error {
++	_, err := r.pool.Exec(ctx, `
++		INSERT INTO platform_modules (id, enabled, updated_at)
++		VALUES ($1, $2, now())
++		ON CONFLICT (id) DO UPDATE SET enabled = EXCLUDED.enabled, updated_at = now()`,
++		id, enabled)
++	if err != nil {
++		return fmt.Errorf("upsert platform module %s: %w", id, err)
++	}
++	return nil
++}
+diff --git a/core/http/routes/route_platform.go b/core/http/routes/route_platform.go
+index 7400c8d..5252fa7 100644
+--- a/core/http/routes/route_platform.go
++++ b/core/http/routes/route_platform.go
+@@ -7,38 +7,64 @@ import (
+ 
+ 	"github.com/go-chi/chi/v5"
+ 
++	"github.com/gerege-systems/open-gerege-core/core/apperror"
++	platformuc "github.com/gerege-systems/open-gerege-core/core/business/usecases/platform"
+ 	v1 "github.com/gerege-systems/open-gerege-core/core/http/handlers/v1"
+-	"github.com/gerege-systems/open-gerege-core/kernel/module"
++	"github.com/gerege-systems/open-gerege-core/core/http/middlewares"
+ )
+ 
+ // platformRoute нь /v1/platform/* бүлгийг холбоно — модулийн бүртгэлийн
+-// нийтэд харагдах гадаргуу. Frontend nav, mobile/desktop feature flag нь
+-// эндээс уншиж, идэвхгүй модулийн UI-г нуудаг.
++// гадаргуу. Нийтийн жагсаалт (frontend nav, mobile/desktop feature flag) +
++// админы дэлгэрэнгүй жагсаалт ба асаах/унтраах toggle.
+ type platformRoute struct {
+-	registry *module.Registry
+-	router   chi.Router
++	uc             platformuc.Usecase
++	router         chi.Router
++	authMiddleware func(http.Handler) http.Handler
+ }
+ 
+ // NewPlatformRoute нь route модулийг бүтээдэг.
+-func NewPlatformRoute(router chi.Router, registry *module.Registry) *platformRoute {
+-	return &platformRoute{registry: registry, router: router}
++func NewPlatformRoute(router chi.Router, uc platformuc.Usecase, authMiddleware func(http.Handler) http.Handler) *platformRoute {
++	return &platformRoute{uc: uc, router: router, authMiddleware: authMiddleware}
+ }
+ 
+ // moduleStatusResponse — нэг модулийн нийтийн төлөв. Хувилбар, хамаарал,
+ // route зэрэг дотоод мэдээллийг ЗОРИУД задлахгүй (гадны тандалт багасгана);
+-// админ гадаргуу дараагийн шатанд дэлгэрэнгүйг тусдаа өгнө.
++// дэлгэрэнгүйг admin endpoint өгнө.
+ type moduleStatusResponse struct {
+ 	ID      string `json:"id"`
+ 	Kind    string `json:"kind"`
+ 	Enabled bool   `json:"enabled"`
+ }
+ 
++// moduleAdminResponse — админд харагдах дэлгэрэнгүй төлөв.
++type moduleAdminResponse struct {
++	ID        string   `json:"id"`
++	Name      string   `json:"name"`
++	Kind      string   `json:"kind"`
++	Enabled   bool     `json:"enabled"`
++	DependsOn []string `json:"depends_on"`
++	Routes    []string `json:"routes"`
++}
++
++// moduleToggleRequest — асаах/унтраах хүсэлтийн body.
++type moduleToggleRequest struct {
++	Enabled *bool `json:"enabled" validate:"required"`
++}
++
+ // Routes нь /v1/platform бүлэг болон endpoint-уудыг суулгана.
+ func (rt *platformRoute) Routes() {
+ 	rt.router.Route("/v1/platform", func(r chi.Router) {
+ 		// Нэвтрэлт шаардахгүй: login-ээс ӨМНӨХ дэлгэц ч (landing) модулийн
+ 		// идэвхээс хамаардаг (жишээ: нийтийн AI чат харуулах эсэх).
+ 		r.Get("/modules", v1.Wrap(rt.listModules))
++
++		// Админы удирдлага — модулийг restart-гүйгээр асаах/унтраах.
++		r.Route("/admin/modules", func(admin chi.Router) {
++			admin.Use(rt.authMiddleware)
++			admin.Use(middlewares.RequireAdmin())
++			admin.Get("/", v1.Wrap(rt.listModulesAdmin))
++			admin.Put("/{id}", v1.Wrap(rt.toggleModule))
++		})
+ 	})
+ }
+ 
+@@ -51,7 +77,7 @@ func (rt *platformRoute) Routes() {
+ //	@Success		200	{object}	v1.BaseResponse
+ //	@Router			/v1/platform/modules [get]
+ func (rt *platformRoute) listModules(w http.ResponseWriter, r *http.Request) error {
+-	list := rt.registry.List()
++	list := rt.uc.List(r.Context())
+ 	out := make([]moduleStatusResponse, 0, len(list))
+ 	for _, s := range list {
+ 		out = append(out, moduleStatusResponse{
+@@ -62,3 +88,62 @@ func (rt *platformRoute) listModules(w http.ResponseWriter, r *http.Request) err
+ 	}
+ 	return v1.NewSuccessResponse(w, r, http.StatusOK, "Модулиудын жагсаалт", out)
+ }
++
++// listModulesAdmin godoc
++//
++//	@Summary		Модулиудын дэлгэрэнгүй жагсаалт (админ)
++//	@Description	Нэр, хамаарал, route угтварын хамт бүх модулийн төлөв.
++//	@Tags			platform
++//	@Security		BearerAuth
++//	@Produce		json
++//	@Success		200	{object}	v1.BaseResponse
++//	@Router			/v1/platform/admin/modules [get]
++func (rt *platformRoute) listModulesAdmin(w http.ResponseWriter, r *http.Request) error {
++	list := rt.uc.List(r.Context())
++	out := make([]moduleAdminResponse, 0, len(list))
++	for _, s := range list {
++		out = append(out, moduleAdminResponse{
++			ID:        s.Manifest.ID,
++			Name:      s.Manifest.Name,
++			Kind:      string(s.Manifest.Kind),
++			Enabled:   s.Enabled,
++			DependsOn: s.Manifest.DependsOn,
++			Routes:    s.Manifest.RoutePrefixes,
++		})
++	}
++	return v1.NewSuccessResponse(w, r, http.StatusOK, "Модулиудын дэлгэрэнгүй жагсаалт", out)
++}
++
++// toggleModule godoc
++//
++//	@Summary		Модулийг асаах/унтраах (админ)
++//	@Description	Business модулийг restart-гүйгээр асааж/унтраана. Core модуль, идэвхтэй хамаарагчтай модульд алдаа буцна. Төлөв DB-д хадгалагдаж дараагийн boot-д сэргэнэ.
++//	@Tags			platform
++//	@Security		BearerAuth
++//	@Accept			json
++//	@Produce		json
++//	@Param			id		path	string				true	"Модулийн ID"
++//	@Param			payload	body	moduleToggleRequest	true	"Шинэ төлөв"
++//	@Success		200	{object}	v1.BaseResponse
++//	@Failure		400	{object}	v1.BaseResponse
++//	@Router			/v1/platform/admin/modules/{id} [put]
++func (rt *platformRoute) toggleModule(w http.ResponseWriter, r *http.Request) error {
++	id := chi.URLParam(r, "id")
++	var req moduleToggleRequest
++	if err := v1.DecodeBody(r, &req); err != nil {
++		return v1.RespondWithError(w, r, apperror.BadRequest("Хүсэлтийн body буруу"))
++	}
++	if req.Enabled == nil {
++		return v1.RespondWithError(w, r, apperror.BadRequest("enabled талбар шаардлагатай"))
++	}
++	if err := rt.uc.SetEnabled(r.Context(), id, *req.Enabled); err != nil {
++		return v1.RespondWithError(w, r, err)
++	}
++	msg := "Модуль унтарлаа"
++	if *req.Enabled {
++		msg = "Модуль аслаа"
++	}
++	return v1.NewSuccessResponse(w, r, http.StatusOK, msg, moduleStatusResponse{
++		ID: id, Enabled: *req.Enabled,
++	})
++}
+diff --git a/core/http/routes/route_platform_test.go b/core/http/routes/route_platform_test.go
+index af89f1d..ff5f9e6 100644
+--- a/core/http/routes/route_platform_test.go
++++ b/core/http/routes/route_platform_test.go
+@@ -10,6 +10,7 @@ import (
+ 
+ 	"github.com/go-chi/chi/v5"
+ 
++	platformuc "github.com/gerege-systems/open-gerege-core/core/business/usecases/platform"
+ 	"github.com/gerege-systems/open-gerege-core/core/http/routes"
+ 	"github.com/gerege-systems/open-gerege-core/kernel/module"
+ )
+@@ -25,7 +26,7 @@ func TestPlatformModulesEndpoint(t *testing.T) {
+ 	r := chi.NewRouter()
+ 	r.Route("/api", func(api chi.Router) {
+ 		api.Use(module.Gate(reg))
+-		routes.NewPlatformRoute(api, reg).Routes()
++		routes.NewPlatformRoute(api, platformuc.NewUsecase(reg, nil, nil), func(h http.Handler) http.Handler { return h }).Routes()
+ 	})
+ 
+ 	rec := httptest.NewRecorder()
+diff --git a/core/http/routes/routes_golden_test.go b/core/http/routes/routes_golden_test.go
+index 9f0be99..ba63280 100644
+--- a/core/http/routes/routes_golden_test.go
++++ b/core/http/routes/routes_golden_test.go
+@@ -30,6 +30,7 @@ import (
+ 	"github.com/go-chi/chi/v5"
+ 	"golang.org/x/time/rate"
+ 
++	platformuc "github.com/gerege-systems/open-gerege-core/core/business/usecases/platform"
+ 	sitehandler "github.com/gerege-systems/open-gerege-core/core/http/handlers/v1/site"
+ 	"github.com/gerege-systems/open-gerege-core/core/http/middlewares"
+ 	"github.com/gerege-systems/open-gerege-core/core/http/routes"
+@@ -87,7 +88,7 @@ func buildFullRouter(t *testing.T) chi.Router {
+ 		routes.NewSignRoute(api, nil, nil, nil, noopMW).Routes()
+ 		routes.NewEIDProxyRoute(api, nil, nil, noopMW, noopMW).Routes()
+ 		routes.NewProviderRoute(api, nil, noopMW).Routes()
+-		routes.NewPlatformRoute(api, reg).Routes()
++		routes.NewPlatformRoute(api, platformuc.NewUsecase(reg, nil, nil), noopMW).Routes()
+ 	})
+ 	return r
+ }
+diff --git a/core/http/routes/testdata/routes_golden.txt b/core/http/routes/testdata/routes_golden.txt
+index 80667e2..50194d7 100644
+--- a/core/http/routes/testdata/routes_golden.txt
++++ b/core/http/routes/testdata/routes_golden.txt
+@@ -68,6 +68,7 @@ GET /api/v1/org/
+ GET /api/v1/org/lookup/{regNo}
+ GET /api/v1/org/{id}
+ GET /api/v1/org/{id}/members
++GET /api/v1/platform/admin/modules/
+ GET /api/v1/platform/modules
+ GET /api/v1/provider/consent
+ GET /api/v1/provider/login
+@@ -207,6 +208,7 @@ PUT /api/v1/me/org-name-latin/{regNo}
+ PUT /api/v1/me/orgstamp/{regNo}
+ PUT /api/v1/me/signature
+ PUT /api/v1/org/{id}/members/{userID}
++PUT /api/v1/platform/admin/modules/{id}
+ PUT /api/v1/rbac/roles/{id}
+ PUT /api/v1/rbac/roles/{id}/permissions
+ PUT /api/v1/registry/evidences/{id}
+diff --git a/docs/docs.go b/docs/docs.go
+index 273cf2f..15252a4 100644
+--- a/docs/docs.go
++++ b/docs/docs.go
+@@ -7260,6 +7260,83 @@ const docTemplate = `{
+                 }
+             }
+         },
++        "/v1/platform/admin/modules": {
++            "get": {
++                "security": [
++                    {
++                        "BearerAuth": []
++                    }
++                ],
++                "description": "Нэр, хамаарал, route угтварын хамт бүх модулийн төлөв.",
++                "produces": [
++                    "application/json"
++                ],
++                "tags": [
++                    "platform"
++                ],
++                "summary": "Модулиудын дэлгэрэнгүй жагсаалт (админ)",
++                "responses": {
++                    "200": {
++                        "description": "OK",
++                        "schema": {
++                            "$ref": "#/definitions/github_com_gerege-systems_open-gerege-core_core_http_handlers_v1.BaseResponse"
++                        }
++                    }
++                }
++            }
++        },
++        "/v1/platform/admin/modules/{id}": {
++            "put": {
++                "security": [
++                    {
++                        "BearerAuth": []
++                    }
++                ],
++                "description": "Business модулийг restart-гүйгээр асааж/унтраана. Core модуль, идэвхтэй хамаарагчтай модульд алдаа буцна. Төлөв DB-д хадгалагдаж дараагийн boot-д сэргэнэ.",
++                "consumes": [
++                    "application/json"
++                ],
++                "produces": [
++                    "application/json"
++                ],
++                "tags": [
++                    "platform"
++                ],
++                "summary": "Модулийг асаах/унтраах (админ)",
++                "parameters": [
++                    {
++                        "type": "string",
++                        "description": "Модулийн ID",
++                        "name": "id",
++                        "in": "path",
++                        "required": true
++                    },
++                    {
++                        "description": "Шинэ төлөв",
++                        "name": "payload",
++                        "in": "body",
++                        "required": true,
++                        "schema": {
++                            "$ref": "#/definitions/core_http_routes.moduleToggleRequest"
++                        }
++                    }
++                ],
++                "responses": {
++                    "200": {
++                        "description": "OK",
++                        "schema": {
++                            "$ref": "#/definitions/github_com_gerege-systems_open-gerege-core_core_http_handlers_v1.BaseResponse"
++                        }
++                    },
++                    "400": {
++                        "description": "Bad Request",
++                        "schema": {
++                            "$ref": "#/definitions/github_com_gerege-systems_open-gerege-core_core_http_handlers_v1.BaseResponse"
++                        }
++                    }
++                }
++            }
++        },
+         "/v1/platform/modules": {
+             "get": {
+                 "description": "Платформд суусан модулиудын нийтийн төлөв (id, kind, enabled). Клиентүүд идэвхгүй модулийн цэс/дэлгэцээ нуухад ашиглана.",
+@@ -8223,6 +8300,17 @@ const docTemplate = `{
+         }
+     },
+     "definitions": {
++        "core_http_routes.moduleToggleRequest": {
++            "type": "object",
++            "required": [
++                "enabled"
++            ],
++            "properties": {
++                "enabled": {
++                    "type": "boolean"
++                }
++            }
++        },
+         "github_com_gerege-systems_open-gerege-core_core_http_datatransfers_requests.AIAudio": {
+             "type": "object",
+             "required": [
+diff --git a/docs/swagger.json b/docs/swagger.json
+index 403592e..14567a5 100644
+--- a/docs/swagger.json
++++ b/docs/swagger.json
+@@ -7258,6 +7258,83 @@
+                 }
+             }
+         },
++        "/v1/platform/admin/modules": {
++            "get": {
++                "security": [
++                    {
++                        "BearerAuth": []
++                    }
++                ],
++                "description": "Нэр, хамаарал, route угтварын хамт бүх модулийн төлөв.",
++                "produces": [
++                    "application/json"
++                ],
++                "tags": [
++                    "platform"
++                ],
++                "summary": "Модулиудын дэлгэрэнгүй жагсаалт (админ)",
++                "responses": {
++                    "200": {
++                        "description": "OK",
++                        "schema": {
++                            "$ref": "#/definitions/github_com_gerege-systems_open-gerege-core_core_http_handlers_v1.BaseResponse"
++                        }
++                    }
++                }
++            }
++        },
++        "/v1/platform/admin/modules/{id}": {
++            "put": {
++                "security": [
++                    {
++                        "BearerAuth": []
++                    }
++                ],
++                "description": "Business модулийг restart-гүйгээр асааж/унтраана. Core модуль, идэвхтэй хамаарагчтай модульд алдаа буцна. Төлөв DB-д хадгалагдаж дараагийн boot-д сэргэнэ.",
++                "consumes": [
++                    "application/json"
++                ],
++                "produces": [
++                    "application/json"
++                ],
++                "tags": [
++                    "platform"
++                ],
++                "summary": "Модулийг асаах/унтраах (админ)",
++                "parameters": [
++                    {
++                        "type": "string",
++                        "description": "Модулийн ID",
++                        "name": "id",
++                        "in": "path",
++                        "required": true
++                    },
++                    {
++                        "description": "Шинэ төлөв",
++                        "name": "payload",
++                        "in": "body",
++                        "required": true,
++                        "schema": {
++                            "$ref": "#/definitions/core_http_routes.moduleToggleRequest"
++                        }
++                    }
++                ],
++                "responses": {
++                    "200": {
++                        "description": "OK",
++                        "schema": {
++                            "$ref": "#/definitions/github_com_gerege-systems_open-gerege-core_core_http_handlers_v1.BaseResponse"
++                        }
++                    },
++                    "400": {
++                        "description": "Bad Request",
++                        "schema": {
++                            "$ref": "#/definitions/github_com_gerege-systems_open-gerege-core_core_http_handlers_v1.BaseResponse"
++                        }
++                    }
++                }
++            }
++        },
+         "/v1/platform/modules": {
+             "get": {
+                 "description": "Платформд суусан модулиудын нийтийн төлөв (id, kind, enabled). Клиентүүд идэвхгүй модулийн цэс/дэлгэцээ нуухад ашиглана.",
+@@ -8221,6 +8298,17 @@
+         }
+     },
+     "definitions": {
++        "core_http_routes.moduleToggleRequest": {
++            "type": "object",
++            "required": [
++                "enabled"
++            ],
++            "properties": {
++                "enabled": {
++                    "type": "boolean"
++                }
++            }
++        },
+         "github_com_gerege-systems_open-gerege-core_core_http_datatransfers_requests.AIAudio": {
+             "type": "object",
+             "required": [
+diff --git a/docs/swagger.yaml b/docs/swagger.yaml
+index 9ccafa9..978640c 100644
+--- a/docs/swagger.yaml
++++ b/docs/swagger.yaml
+@@ -1,5 +1,12 @@
+ basePath: /api/v1
+ definitions:
++  core_http_routes.moduleToggleRequest:
++    properties:
++      enabled:
++        type: boolean
++    required:
++    - enabled
++    type: object
+   github_com_gerege-systems_open-gerege-core_core_http_datatransfers_requests.AIAudio:
+     properties:
+       data:
+@@ -6590,6 +6597,56 @@ paths:
+       summary: Бүртгэлийн дугаараар хайх
+       tags:
+       - organizations
++  /v1/platform/admin/modules:
++    get:
++      description: Нэр, хамаарал, route угтварын хамт бүх модулийн төлөв.
++      produces:
++      - application/json
++      responses:
++        "200":
++          description: OK
++          schema:
++            $ref: '#/definitions/github_com_gerege-systems_open-gerege-core_core_http_handlers_v1.BaseResponse'
++      security:
++      - BearerAuth: []
++      summary: Модулиудын дэлгэрэнгүй жагсаалт (админ)
++      tags:
++      - platform
++  /v1/platform/admin/modules/{id}:
++    put:
++      consumes:
++      - application/json
++      description: Business модулийг restart-гүйгээр асааж/унтраана. Core модуль,
++        идэвхтэй хамаарагчтай модульд алдаа буцна. Төлөв DB-д хадгалагдаж дараагийн
++        boot-д сэргэнэ.
++      parameters:
++      - description: Модулийн ID
++        in: path
++        name: id
++        required: true
++        type: string
++      - description: Шинэ төлөв
++        in: body
++        name: payload
++        required: true
++        schema:
++          $ref: '#/definitions/core_http_routes.moduleToggleRequest'
++      produces:
++      - application/json
++      responses:
++        "200":
++          description: OK
++          schema:
++            $ref: '#/definitions/github_com_gerege-systems_open-gerege-core_core_http_handlers_v1.BaseResponse'
++        "400":
++          description: Bad Request
++          schema:
++            $ref: '#/definitions/github_com_gerege-systems_open-gerege-core_core_http_handlers_v1.BaseResponse'
++      security:
++      - BearerAuth: []
++      summary: Модулийг асаах/унтраах (админ)
++      tags:
++      - platform
+   /v1/platform/modules:
+     get:
+       description: Платформд суусан модулиудын нийтийн төлөв (id, kind, enabled).
+diff --git a/kernel/module/registry.go b/kernel/module/registry.go
+index 876f7c2..fd5763c 100644
+--- a/kernel/module/registry.go
++++ b/kernel/module/registry.go
+@@ -182,6 +182,30 @@ func (r *Registry) Enable(id string) error {
+ 	return nil
+ }
+ 
++// RestoreDisabled нь хадгалагдсан (DB) төлвөөс унтраалттай модулиудыг
++// сэргээнэ. ApplyDisabledList-ээс ялгаа нь ЗӨӨЛӨН: бүртгэлгүй/core/
++// хамааралтай ID-г алгасаж алдаануудыг нь буцаана (boot унагаахгүй) — DB-д
++// хоцорсон stale мөр нь тохиргооны алдаа биш, өв юм. Дараалал fixed-point.
++func (r *Registry) RestoreDisabled(ids []string) []error {
++	pending := ids
++	var errs []error
++	for len(pending) > 0 {
++		var next []string
++		errs = errs[:0]
++		for _, id := range pending {
++			if err := r.Disable(id); err != nil {
++				next = append(next, id)
++				errs = append(errs, err)
++			}
++		}
++		if len(next) == len(pending) {
++			return errs
++		}
++		pending = next
++	}
++	return nil
++}
++
+ // ApplyDisabledList нь "gov,relay, gspace" маягийн CSV жагсаалтаар модулиудыг
+ // унтраана (MODULES_DISABLED env). Хамаарлын дарааллыг өөрөө шийднэ:
+ // хамаарагч нь мөн жагсаалтад байгаа бол эхэлж унтардаг. Хоосон жагсаалт OK.
+diff --git a/migrations/52_platform_modules.down.sql b/migrations/52_platform_modules.down.sql
+new file mode 100644
+index 0000000..5edff29
+--- /dev/null
++++ b/migrations/52_platform_modules.down.sql
+@@ -0,0 +1,3 @@
++-- Модулийн идэвхийн төлвийг буцаана. Хүснэгт устахад бүх модуль default
++-- (идэвхтэй) төлөвтөө эргэж очно — мэдээлэл алдагдах эрсдэлгүй (төлөв л байсан).
++DROP TABLE IF EXISTS platform_modules;
+diff --git a/migrations/52_platform_modules.up.sql b/migrations/52_platform_modules.up.sql
+new file mode 100644
+index 0000000..09f62f8
+--- /dev/null
++++ b/migrations/52_platform_modules.up.sql
+@@ -0,0 +1,29 @@
++-- Модулийн идэвхийн төлөв (V4.0 Modular Platform, Phase 3 lifecycle).
++-- Business модулийг restart-гүйгээр асааж/унтраах admin API-ийн ард байх
++-- persistence: мөр бүр нэг модулийн төлөв. Мөргүй модуль = идэвхтэй (default).
++--
++-- ЗАРЧИМ: энэ хүснэгт нь БҮРТГЭЛ биш, зөвхөн ТӨЛӨВ. Модулиудын жагсаалт,
++-- ангилал (core|business), хамаарлын граф нь кодын манифест (kernel/module
++-- Builtin) — DB-ээс модуль "зохиох" боломжгүй, тиймээс stale мөр аюулгүй
++-- (boot дээр таарахгүй ID зөвхөн warning). Core модулийн мөр үл тоогдоно —
++-- core модуль унтардаггүй нь кодын инвариант.
++--
++-- site_appearance/platform_settings-тэй ижил: нийтийн config тул RLS-гүй;
++-- бичих эрх нь route давхаргад RequireAdmin-аар хамгаалагдана.
++
++CREATE TABLE IF NOT EXISTS platform_modules (
++    id         TEXT PRIMARY KEY,
++    enabled    BOOLEAN NOT NULL DEFAULT true,
++    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
++);
++
++-- Defense-in-depth (43-тай ижил зарчим): app role нь SELECT/INSERT/UPDATE л
++-- хийнэ (upsert) — DELETE хэрэггүй тул хасна. 'app_user' байхгүй бол no-op.
++DO $$
++BEGIN
++    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_user') THEN
++        RAISE NOTICE 'app_user role not found — skipping platform_modules privilege tightening';
++        RETURN;
++    END IF;
++    REVOKE DELETE ON platform_modules FROM app_user;
++END $$;
+-- 
+2.43.0
+
